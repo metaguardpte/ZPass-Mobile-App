@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/util/toast_utils.dart';
-import 'package:flutter_gen/gen_l10n/zpass_localizations.dart';
 
 /// 双击返回退出
 class DoubleTapBackExitApp extends StatefulWidget {
@@ -35,7 +35,7 @@ class _DoubleTapBackExitAppState extends State<DoubleTapBackExitApp> {
   Future<bool> _isExit() async {
     if (_lastTime == null || DateTime.now().difference(_lastTime!) > widget.duration) {
       _lastTime = DateTime.now();
-      Toast.show(ZPassLocalizations.of(context)!.appExitTips);
+      Toast.show(S.current.appExitTips);
       return Future.value(false);
     }
     Toast.cancelToast();

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:sp_util/sp_util.dart';
@@ -17,8 +18,9 @@ import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/handle_error_utils.dart';
 import 'package:zpass/util/log_utils.dart';
-import 'package:flutter_gen/gen_l10n/zpass_localizations.dart';
 import 'package:zpass/util/theme_utils.dart';
+
+import 'generated/l10n.dart';
 
 Future<void> main() async {
 //  debugProfileBuildsEnabled = true;
@@ -130,8 +132,13 @@ class MyApp extends StatelessWidget {
       themeMode: provider.getThemeMode(),
       home: home ?? const SplashPage(),
       onGenerateRoute: Routers.router.generator,
-      localizationsDelegates: ZPassLocalizations.localizationsDelegates,
-      supportedLocales: ZPassLocalizations.supportedLocales,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: S.delegate.supportedLocales,
       locale: localeProvider.locale,
       navigatorKey: navigatorKey,
       navigatorObservers: [

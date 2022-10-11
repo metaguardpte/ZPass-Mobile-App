@@ -37,6 +37,9 @@ Dart plugin: https://plugins.jetbrains.com/plugin/6351-dart
 ## International Auto Generate
 ```shell
 flutter gen-l10n
+
+# For CI/CD
+flutter pub global run intl_utils:generate
 ```
 
 ## JSON Auto Generate

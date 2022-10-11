@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zpass/base/base_provider.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
 import 'package:zpass/modules/tab_home/tab_home.dart';
 import 'package:zpass/modules/tab_me/tab_me.dart';
@@ -11,7 +12,6 @@ import 'package:zpass/res/dimens.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/double_tap_back_exit_app.dart';
-import 'package:flutter_gen/gen_l10n/zpass_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -82,15 +82,15 @@ class _HomePageState extends ProviderState<HomePage, HomeProvider>
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: const Icon(Icons.home),
-          label: ZPassLocalizations.of(context)!.tabHome,
+          label: S.current.tabHome,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.business),
-          label: ZPassLocalizations.of(context)!.tabSignal,
+          label: S.current.tabSignal,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.school),
-          label: ZPassLocalizations.of(context)!.tabMe,
+          label: S.current.tabMe,
         ),
       ],
       type: BottomNavigationBarType.fixed,

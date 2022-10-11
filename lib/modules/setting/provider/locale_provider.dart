@@ -5,7 +5,7 @@ import 'package:zpass/res/constant.dart';
 
 class LocaleProvider extends ChangeNotifier {
 
-  Locale? get locale {
+  Locale get locale {
     final String locale = SpUtil.getString(Constant.locale) ?? '';
     switch(locale) {
       case 'zh':
@@ -13,7 +13,7 @@ class LocaleProvider extends ChangeNotifier {
       case 'en':
         return const Locale('en', 'US');
       default:
-        return null;
+        return const Locale('en', 'US');
     }
   }
 
