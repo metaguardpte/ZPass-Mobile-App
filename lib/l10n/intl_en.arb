@@ -1,6 +1,11 @@
 {
   "appName": "ZPass",
   "appSlogan": "Your digital assets management and automation tool.",
+  "appExitTips": "Press back again to Exit",
+
+  "tabHome": "Home",
+  "tabSignal": "Signal",
+  "tabMe": "Me",
 
   "errorPageNotFound": "Page not found"
 }

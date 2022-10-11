@@ -1,6 +1,11 @@
 {
   "appName": "ZPass",
   "appSlogan": "Your digital assets management and automation tool.",
+  "appExitTips": "再次点击返回退出",
 
-  "errorPageNotFound": "Page not found"
+  "tabHome": "主页",
+  "tabSignal": "数据",
+  "tabMe": "我的",
+
+  "errorPageNotFound": "未知页面"
 }
