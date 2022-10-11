@@ -35,6 +35,8 @@ Dart plugin: https://plugins.jetbrains.com/plugin/6351-dart
 ```
 
 ## International Auto Generate
+For null-safety please update Android Studio plugin: Flutter Intl.
+
 ```shell
 flutter gen-l10n
 
