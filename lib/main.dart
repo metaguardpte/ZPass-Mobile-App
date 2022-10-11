@@ -12,6 +12,7 @@ import 'package:zpass/modules/setting/provider/locale_provider.dart';
 import 'package:zpass/modules/setting/provider/theme_provider.dart';
 import 'package:zpass/res/constant.dart';
 import 'package:zpass/routers/not_found_page.dart';
+import 'package:zpass/routers/router_observer.dart';
 import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/handle_error_utils.dart';
@@ -34,7 +35,7 @@ Future<void> main() async {
   /// 1.22 预览功能: 在输入频率与显示刷新率不匹配情况下提供平滑的滚动效果
   // GestureBinding.instance?.resamplingEnabled = true;
   /// 异常处理
-  handleError(() => runApp(MyApp()));
+  handleError(() => runApp(const MyApp()));
 
   /// 隐藏状态栏。为启动页、引导页设置。完成后修改回显示状态栏。
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
@@ -118,13 +119,12 @@ class MyApp extends StatelessWidget {
 
   Widget _buildMaterialApp(ThemeProvider provider, LocaleProvider localeProvider) {
     return MaterialApp(
-      title: 'Flutter Deer',
+      title: 'ZPass',
       // showPerformanceOverlay: true, //显示性能标签
       // debugShowCheckedModeBanner: false, // 去除右上角debug的标签
       // checkerboardRasterCacheImages: true,
       // showSemanticsDebugger: true, // 显示语义视图
       // checkerboardOffscreenLayers: true, // 检查离屏渲染
-
       theme: theme ?? provider.getTheme(),
       darkTheme: provider.getTheme(isDarkMode: true),
       themeMode: provider.getThemeMode(),
@@ -134,6 +134,9 @@ class MyApp extends StatelessWidget {
       supportedLocales: ZPassLocalizations.supportedLocales,
       locale: localeProvider.locale,
       navigatorKey: navigatorKey,
+      navigatorObservers: [
+        RouterObserver(),
+      ],
       builder: (BuildContext context, Widget? child) {
         /// 仅针对安卓
         if (Device.isAndroid) {
