@@ -39,7 +39,7 @@ Dart plugin: https://plugins.jetbrains.com/plugin/6351-dart
 flutter gen-l10n
 ```
 
-## JSON Auto generate
+## JSON Auto Generate
 
 `ZPass Mobile`遵循`Flutter`开发规范，依赖`json_serializable`和`build_runner`来管理工程源代码中的`JSON`实体自动化解析模版，因此每次源代码中修改了`JSON`对象时，须在工程根目录下运行以下`JSON`模版代码同步命令：
 
