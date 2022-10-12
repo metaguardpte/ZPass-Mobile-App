@@ -1,24 +1,18 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
-import 'package:sp_util/sp_util.dart';
-import 'package:zpass/base/network/httpclient.dart';
-import 'package:zpass/base/network/intercept.dart';
+import 'package:zpass/main_initializer.dart';
 import 'package:zpass/modules/home/splash_page.dart';
 import 'package:zpass/modules/setting/provider/connectivity_provider.dart';
 import 'package:zpass/modules/setting/provider/locale_provider.dart';
 import 'package:zpass/modules/setting/provider/theme_provider.dart';
-import 'package:zpass/res/constant.dart';
 import 'package:zpass/routers/not_found_page.dart';
 import 'package:zpass/routers/router_observer.dart';
 import 'package:zpass/routers/routers.dart';
-import 'package:zpass/rpc/rpc_manager.dart';
 import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/handle_error_utils.dart';
-import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 
 import 'generated/l10n.dart';
@@ -32,8 +26,14 @@ Future<void> main() async {
   /// 确保初始化完成
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 强制竖屏
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+  Provider.debugCheckInvalidValueType = null;
   //不申请任何权限的最小同步初始化
-  await _initAheadOfWorld();
+  await MainInitializer.initBeforeAuthorize();
 
   /// 1.22 预览功能: 在输入频率与显示刷新率不匹配情况下提供平滑的滚动效果
   // GestureBinding.instance?.resamplingEnabled = true;
@@ -43,51 +43,6 @@ Future<void> main() async {
   /// 隐藏状态栏。为启动页、引导页设置。完成后修改回显示状态栏。
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
   // 相关问题跟踪：https://github.com/flutter/flutter/issues/73351
-}
-
-///
-/// IMPORTANT 请勿在此处添加任何需要用户权限授权的代码
-///
-Future<void> _initAheadOfWorld() async {
-  // 强制竖屏
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
-  Provider.debugCheckInvalidValueType = null;
-
-  // rpc通道初始化
-  RpcManager.instance.startListening();
-  // sp初始化
-  await SpUtil.getInstance();
-  // 初始化路由
-  Routers.initRoutes();
-  // 日志
-  Log.init();
-  // 网络
-  _initDio();
-}
-
-void _initDio() {
-  final List<Interceptor> interceptors = <Interceptor>[];
-
-  /// 统一添加身份验证请求头
-  interceptors.add(AuthInterceptor());
-
-  /// 刷新Token
-  interceptors.add(TokenInterceptor());
-
-  /// 打印Log(生产模式去除)
-  if (!Constant.inProduction) {
-    interceptors.add(LoggingInterceptor());
-  }
-
-  /// 适配数据(根据自己的数据结构，可自行选择添加)
-  interceptors.add(AdapterInterceptor());
-  configDio(
-    baseUrl: 'https://api.github.com/',
-    interceptors: interceptors,
-  );
 }
 
 class MyApp extends StatelessWidget {
