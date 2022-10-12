@@ -119,3 +119,10 @@
 -keep class io.flutter.view.**{ *; }
 -keep class io.flutter.**{ *; }
 -keep class io.flutter.plugins.**{ *; }
+
+# gson
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }

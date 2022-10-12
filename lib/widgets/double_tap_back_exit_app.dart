@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zpass/generated/l10n.dart';
+import 'package:zpass/rpc/proxies/system_navigator_proxy.dart';
 import 'package:zpass/util/toast_utils.dart';
 
 /// 双击返回退出
@@ -40,7 +43,12 @@ class _DoubleTapBackExitAppState extends State<DoubleTapBackExitApp> {
     }
     Toast.cancelToast();
     /// 不推荐使用 `dart:io` 的 exit(0)
-    await SystemNavigator.pop();
+    if (Platform.isAndroid) {
+      // SystemNavigatorProxy.exit();
+      await SystemNavigator.pop();
+    } else {
+      await SystemNavigator.pop();
+    }
     return Future.value(true);
   }
 }

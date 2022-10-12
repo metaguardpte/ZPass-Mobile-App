@@ -15,6 +15,7 @@ import 'package:zpass/res/constant.dart';
 import 'package:zpass/routers/not_found_page.dart';
 import 'package:zpass/routers/router_observer.dart';
 import 'package:zpass/routers/routers.dart';
+import 'package:zpass/rpc/rpc_manager.dart';
 import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/handle_error_utils.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -55,6 +56,8 @@ Future<void> _initAheadOfWorld() async {
   ]);
   Provider.debugCheckInvalidValueType = null;
 
+  // rpc通道初始化
+  RpcManager.instance.startListening();
   // sp初始化
   await SpUtil.getInstance();
   // 初始化路由
