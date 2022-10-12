@@ -13,6 +13,9 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		9E3AA46928F6725F002B523B /* RpcManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3AA46828F6725F002B523B /* RpcManager.swift */; };
+		9E3AA46C28F672D8002B523B /* LogUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3AA46B28F672D8002B523B /* LogUtils.swift */; };
+		9E3AA46E28F67558002B523B /* RpcNativeCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3AA46D28F67558002B523B /* RpcNativeCaller.swift */; };
 		AD265FA06379CA784FEA2EFB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D10CD0D7D27BEB09E78E6F /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +49,9 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9E3AA46828F6725F002B523B /* RpcManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RpcManager.swift; sourceTree = "<group>"; };
+		9E3AA46B28F672D8002B523B /* LogUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogUtils.swift; sourceTree = "<group>"; };
+		9E3AA46D28F67558002B523B /* RpcNativeCaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RpcNativeCaller.swift; sourceTree = "<group>"; };
 		A67D6D9B3B50A49D12ED8E9C /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +110,8 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				9E3AA46A28F672CD002B523B /* utils */,
+				9E3AA46728F67248002B523B /* rpc */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
@@ -114,6 +122,23 @@
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 			);
 			path = Runner;
+			sourceTree = "<group>";
+		};
+		9E3AA46728F67248002B523B /* rpc */ = {
+			isa = PBXGroup;
+			children = (
+				9E3AA46828F6725F002B523B /* RpcManager.swift */,
+				9E3AA46D28F67558002B523B /* RpcNativeCaller.swift */,
+			);
+			path = rpc;
+			sourceTree = "<group>";
+		};
+		9E3AA46A28F672CD002B523B /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				9E3AA46B28F672D8002B523B /* LogUtils.swift */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 		B0E54908BA57FCC78C4352DA /* Frameworks */ = {
@@ -271,8 +296,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E3AA46C28F672D8002B523B /* LogUtils.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
+				9E3AA46E28F67558002B523B /* RpcNativeCaller.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				9E3AA46928F6725F002B523B /* RpcManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,6 +518,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zpassapp.zpass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
