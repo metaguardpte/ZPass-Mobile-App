@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/home/home_page.dart';
+import 'package:zpass/modules/home/home_page_v2.dart';
 import 'package:zpass/routers/i_router.dart';
 import 'package:zpass/routers/not_found_page.dart';
 
@@ -22,7 +23,7 @@ class Routers {
       });
 
     router.define(home, handler: Handler(
-      handlerFunc: (BuildContext? context, Map<String, List<String>> params) => const HomePage()));
+      handlerFunc: (BuildContext? context, Map<String, List<String>> params) => const HomePageV2()));
     
     _listRouter.clear();
     /// 各自路由由各自模块管理，统一在此添加初始化
