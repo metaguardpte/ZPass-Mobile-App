@@ -47,11 +47,11 @@ abstract class ProviderState<T extends StatefulWidget, P extends BaseProvider> e
     );
   }
 
-  @override
-  void dispose() {
-    provider.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   provider.dispose();
+  //   super.dispose();
+  // }
 }
 
 mixin TabPageFocusable {
