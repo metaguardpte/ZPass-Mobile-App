@@ -53,7 +53,10 @@ dependencies:
   rxdart: ^0.27.5
   json_annotation: ^4.7.0
   convex_bottom_bar: ^3.1.0+1
-
+  image_picker: ^0.8.6
+  zxing2: ^0.1.1
+  image: ^3.2.0
+  qr_code_scanner: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -82,8 +85,10 @@ flutter:
   assets:
     - assets/images/
     - assets/images/home/
+    - assets/images/signin/
     - assets/images/2.0x/
     - assets/images/3.0x/
+    - assets/images/signin/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
