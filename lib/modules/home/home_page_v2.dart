@@ -11,6 +11,8 @@ import 'package:zpass/modules/home/tabs/tab_identities.dart';
 import 'package:zpass/modules/home/tabs/tab_logins.dart';
 import 'package:zpass/modules/home/tabs/tab_notes.dart';
 import 'package:zpass/modules/home/widgets/home_drawer_builder.dart';
+import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
+import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
 import 'package:zpass/res/zpass_fonts_icons.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
@@ -80,7 +82,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
         appBar: HomeAppBarBuilder(_onActionPerform).build(context),
         resizeToAvoidBottomInset: false,
         backgroundColor: context.backgroundColor,
-        endDrawer: HomeDrawerBuilder().build(context),
+        endDrawer: HomeDrawerBuilder(_onActionPerform).build(context),
         body: _buildPageView(),
         bottomNavigationBar: _buildAppNavigationBar(),
       ),
@@ -128,6 +130,12 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
     switch (action) {
       case HomePageAction.setting:
         _scaffoldKey.currentState?.openEndDrawer();
+        break;
+      case HomePageAction.locale:
+        LocaleDialog().show(context);
+        break;
+      case HomePageAction.theme:
+        ThemeDialog().show(context);
         break;
       default:
         Log.d("_onActionPerform: ${action.name}", tag: "HomePageV2");

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:zpass/modules/home/home_page_v2.dart';
 import 'package:zpass/modules/home/widgets/home_widget_builder.dart';
+import 'package:zpass/util/callback_funcation.dart';
+import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 
 class HomeDrawerBuilder extends HomeWidgetBuilder {
+  final FunctionCallback<HomePageAction> onActionCallback;
+
+  HomeDrawerBuilder(this.onActionCallback);
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -22,13 +29,15 @@ class HomeDrawerBuilder extends HomeWidgetBuilder {
               ),
             ),
           ),
-          const ListTile(
-            leading: Icon(Icons.message),
-            title: Text('Language'),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: Text(HomePageAction.locale.name),
+            onTap: () => _navigate(context, HomePageAction.locale),
           ),
-          const ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Theme'),
+          ListTile(
+            leading: const Icon(Icons.light_mode),
+            title: Text(HomePageAction.theme.name),
+            onTap: () => _navigate(context, HomePageAction.theme),
           ),
           const ListTile(
             leading: Icon(Icons.settings),
@@ -39,4 +48,8 @@ class HomeDrawerBuilder extends HomeWidgetBuilder {
     );
   }
 
+  void _navigate(BuildContext context, HomePageAction action) {
+    Log.d("navigate to ${action.name}", tag: "HomeDrawerBuilder");
+    onActionCallback.call(action);
+  }
 }

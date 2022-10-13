@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zpass/util/theme_utils.dart';
 
 ///
 /// 内容靠底的弹窗
@@ -24,51 +25,57 @@ import 'package:flutter/material.dart';
 ///
 abstract class ContentAlignBottomDialog {
   final String? name;
-  var _isShowing = false;
+  var _showing = false;
+
+  bool get isShowing => _showing;
 
   ContentAlignBottomDialog({this.name});
 
   Future<bool> show(BuildContext context,
-      {bool isDismissible = true, Function? onDismissCallback}) async {
-    if (_isShowing) {
+      {bool isDismissible = true,
+      Function? onDismiss,
+      Color? backgroundColor}) async {
+    if (_showing) {
       return Future.value(false);
     }
-    _isShowing = true;
     onStartShow();
 
     return showModalBottomSheet(
         context: context,
         isDismissible: isDismissible,
-        backgroundColor: Colors.transparent,
+        backgroundColor: backgroundColor ?? context.dialogBackgroundColor,
         barrierColor: const Color(0xCC000000),
         isScrollControlled: true,
         routeSettings: RouteSettings(name: "BottomDialog-${name ?? "unknown"}"),
+        clipBehavior: Clip.antiAlias,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         builder: (BuildContext context) {
           return SingleChildScrollView(
             child: buildContent(context),
           );
         }).whenComplete(() {
-      _isShowing = false;
-      onDismissCallback?.call();
-      onDismiss.call(context);
+      _showing = false;
+      onDismiss?.call();
     }).then((value) => Future.value(true));
   }
 
+  @protected
   Widget buildContent(BuildContext context);
 
-  bool isShowing() {
-    return _isShowing;
-  }
-
+  @protected
   dismiss(BuildContext context) {
-    if (_isShowing) {
-      Navigator.pop(context);
+    if (!_showing) {
+      return;
     }
+    _showing = false;
+    Navigator.pop(context);
   }
 
-  void onDismiss(BuildContext context) {
-    _isShowing = false;
+  @mustCallSuper
+  @protected
+  void onStartShow() {
+    _showing = true;
   }
-
-  void onStartShow() {}
 }
