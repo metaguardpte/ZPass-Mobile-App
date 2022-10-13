@@ -5,9 +5,10 @@
   "appSlogan": "Your digital assets management and automation tool.",
   "appExitTips": "Press back again to Exit",
 
-  "tabHome": "Home",
-  "tabSignal": "Signal",
-  "tabMe": "Me",
+  "tabLogins": "Logins",
+  "tabSecureNotes": "Secure Notes",
+  "tabCreditCards": "Credit Cards",
+  "tabIdentities": "Identities",
 
   "errorPageNotFound": "Page not found"
 }

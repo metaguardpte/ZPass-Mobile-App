@@ -5,15 +5,17 @@ import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
 import 'package:zpass/modules/home/widgets/home_bottom_bar_builder.dart';
-import 'package:zpass/modules/home/widgets/home_bottom_bar_style.dart';
-import 'package:zpass/modules/tab_home/tab_home.dart';
-import 'package:zpass/modules/tab_me/tab_me.dart';
-import 'package:zpass/modules/tab_signal/tab_signal.dart';
+import 'package:zpass/modules/tab_cards/tab_cards.dart';
+import 'package:zpass/modules/tab_identities/tab_identities.dart';
+import 'package:zpass/modules/tab_logins/tab_logins.dart';
+import 'package:zpass/modules/tab_notes/tab_notes.dart';
+import 'package:zpass/res/zpass_fonts_icons.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/double_tap_back_exit_app.dart';
 
 class HomePageV2 extends StatefulWidget {
+  static const int dockedFake = 2;
   const HomePageV2({Key? key}) : super(key: key);
 
   @override
@@ -33,14 +35,18 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
     });
     WidgetsBinding.instance.addObserver(this);
     _items = <TabItem>[
-      TabItem(icon: Icons.home_outlined, activeIcon: Icons.home, title: S.current.tabHome),
-      TabItem(icon: Icons.close, activeIcon: Icons.close, title: S.current.tabSignal),
-      TabItem(icon: Icons.school_outlined, activeIcon: Icons.school, title: S.current.tabMe),
+      TabItem(icon: ZPassFonts.logins, activeIcon: ZPassFonts.loginsActive, title: S.current.tabLogins),
+      TabItem(icon: ZPassFonts.secureNotes, activeIcon: ZPassFonts.secureNotesActive, title: S.current.tabSecureNotes),
+      const TabItem(icon: Icons.add_rounded, title: "Fake"),
+      TabItem(icon: ZPassFonts.creditCards, activeIcon: ZPassFonts.creditCardsActive, title: S.current.tabCreditCards),
+      TabItem(icon: ZPassFonts.identities, activeIcon: ZPassFonts.identitiesActive, title: S.current.tabIdentities),
     ];
     _pageList = [
-      const TabHomePage(),
-      const TabSignalPage(),
-      const TabMePage(),
+      const TabLoginsPage(),
+      const TabNotesPage(),
+      Container(),
+      const TabCardsPage(),
+      const TabIdentitiesPage(),
     ];
     super.initState();
   }
@@ -71,15 +77,16 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       count: _items.length,
       backgroundColor: context.backgroundColor,
       onTapNotify: (i) {
-        var intercept = i == 1;
+        var intercept = i == HomePageV2.dockedFake;
         if (intercept) {
-          Navigator.pushNamed(context, '/fab');
+          Navigator.pushNamed(context, '/fake');
         }
         return !intercept;
       },
       onTap: (int index) => _pageController.jumpToPage(index),
       shadowColor: const Color(0x508792a4),
-      // height: 55,
+      elevation: 4,
+      height: 55,
     );
   }
 

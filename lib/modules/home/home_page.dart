@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
-import 'package:zpass/modules/tab_home/tab_home.dart';
-import 'package:zpass/modules/tab_me/tab_me.dart';
-import 'package:zpass/modules/tab_signal/tab_signal.dart';
+import 'package:zpass/modules/tab_cards/tab_cards.dart';
+import 'package:zpass/modules/tab_logins/tab_logins.dart';
+import 'package:zpass/modules/tab_notes/tab_notes.dart';
 import 'package:zpass/res/colors.dart';
 import 'package:zpass/res/dimens.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -38,9 +38,9 @@ class _HomePageState extends ProviderState<HomePage, HomeProvider>
 
   void _initData() {
     _pageList = [
-      const TabHomePage(),
-      const TabSignalPage(),
-      const TabMePage(),
+      const TabLoginsPage(),
+      const TabNotesPage(),
+      const TabCardsPage(),
     ];
   }
 
@@ -82,15 +82,15 @@ class _HomePageState extends ProviderState<HomePage, HomeProvider>
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: const Icon(Icons.home),
-          label: S.current.tabHome,
+          label: S.current.tabLogins,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.business),
-          label: S.current.tabSignal,
+          label: S.current.tabSecureNotes,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.school),
-          label: S.current.tabMe,
+          label: S.current.tabCreditCards,
         ),
       ],
       type: BottomNavigationBarType.fixed,

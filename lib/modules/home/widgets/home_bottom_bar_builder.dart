@@ -1,6 +1,9 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:zpass/modules/home/home_page_v2.dart';
 import 'package:zpass/res/colors.dart';
+import 'package:zpass/res/dimens.dart';
+import 'package:zpass/res/gaps.dart';
 
 class HomeBottomBarBuilder extends DelegateBuilder {
   late final List<TabItem> items;
@@ -13,12 +16,12 @@ class HomeBottomBarBuilder extends DelegateBuilder {
     var navigationItem = items[index];
     var color = active ? Colours.app_main : Colours.unselected_item_color;
 
-    if (index == items.length ~/ 2) {
+    if (index == HomePageV2.dockedFake) {
       return Container(
         margin: const EdgeInsets.fromLTRB(5, 10, 5, 15),
         decoration: const BoxDecoration(shape: BoxShape.circle, color: Colours.app_main),
-        child: const Icon(
-          Icons.add,
+        child: Icon(
+          items[index].icon,
           size: 40,
           color: Colors.white,
         ),
@@ -30,13 +33,14 @@ class HomeBottomBarBuilder extends DelegateBuilder {
     var title = navigationItem.title ?? "";
     return Container(
       color: Colors.transparent,
-      margin: const EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 7),
       padding: const EdgeInsets.only(bottom: 2),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Icon(icon, color: color,),
-          Text(title, style: TextStyle(color: color, fontSize: 11))
+          const SizedBox(height: 2,),
+          Text(title, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w400))
         ],
       ),
     );
