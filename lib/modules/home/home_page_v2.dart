@@ -13,7 +13,9 @@ import 'package:zpass/modules/home/tabs/tab_notes.dart';
 import 'package:zpass/modules/home/widgets/home_drawer_builder.dart';
 import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
 import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
+import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/res/zpass_fonts_icons.dart';
+import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/double_tap_back_exit_app.dart';
@@ -97,7 +99,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       onTapNotify: (i) {
         var intercept = i == HomePageV2.dockedFake;
         if (intercept) {
-          Navigator.pushNamed(context, '/${HomePageAction.create.name}');
+          NavigatorUtils.push(context, RouterUser.login);
         }
         return !intercept;
       },
@@ -132,9 +134,11 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
         _scaffoldKey.currentState?.openEndDrawer();
         break;
       case HomePageAction.locale:
+        _scaffoldKey.currentState?.closeEndDrawer();
         LocaleDialog().show(context);
         break;
       case HomePageAction.theme:
+        _scaffoldKey.currentState?.closeEndDrawer();
         ThemeDialog().show(context);
         break;
       default:
