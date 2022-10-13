@@ -68,6 +68,7 @@ class ThemeUtils {
 
 extension ThemeExtension on BuildContext {
   bool get isDark => ThemeUtils.isDark(this);
+  Color get primaryColor => Theme.of(this).primaryColor;
   Color get backgroundColor => Theme.of(this).scaffoldBackgroundColor;
   Color get dialogBackgroundColor => Theme.of(this).canvasColor;
 }

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
+import 'package:zpass/modules/home/widgets/home_app_bar_builder.dart';
 import 'package:zpass/modules/home/widgets/home_bottom_bar_builder.dart';
 import 'package:zpass/modules/tab_cards/tab_cards.dart';
 import 'package:zpass/modules/tab_identities/tab_identities.dart';
@@ -63,6 +64,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   Widget buildContent(BuildContext context) {
     return DoubleTapBackExitApp(
       child: Scaffold(
+        appBar: HomeAppBarBuilder().build(context),
         resizeToAvoidBottomInset: false,
         backgroundColor: context.backgroundColor,
         body: _buildPageView(),
@@ -84,9 +86,10 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
         return !intercept;
       },
       onTap: (int index) => _pageController.jumpToPage(index),
-      shadowColor: const Color(0x508792a4),
-      elevation: 4,
+      shadowColor: const Color(0x408792a4),
+      elevation: 2,
       height: 55,
+      top: -20,
     );
   }
 

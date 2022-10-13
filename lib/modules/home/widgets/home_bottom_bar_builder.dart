@@ -2,8 +2,6 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/home/home_page_v2.dart';
 import 'package:zpass/res/colors.dart';
-import 'package:zpass/res/dimens.dart';
-import 'package:zpass/res/gaps.dart';
 
 class HomeBottomBarBuilder extends DelegateBuilder {
   late final List<TabItem> items;
@@ -18,8 +16,12 @@ class HomeBottomBarBuilder extends DelegateBuilder {
 
     if (index == HomePageV2.dockedFake) {
       return Container(
-        margin: const EdgeInsets.fromLTRB(5, 10, 5, 15),
-        decoration: const BoxDecoration(shape: BoxShape.circle, color: Colours.app_main),
+        margin: const EdgeInsets.fromLTRB(5, 8, 5, 20),
+        decoration: const BoxDecoration(shape: BoxShape.circle, gradient: LinearGradient(
+          colors: [Color(0xFF5273FE), Color(0xFF4342FF)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        )),
         child: Icon(
           items[index].icon,
           size: 40,
@@ -40,7 +42,7 @@ class HomeBottomBarBuilder extends DelegateBuilder {
         children: <Widget>[
           Icon(icon, color: color,),
           const SizedBox(height: 2,),
-          Text(title, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w400))
+          Text(title, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w400))
         ],
       ),
     );

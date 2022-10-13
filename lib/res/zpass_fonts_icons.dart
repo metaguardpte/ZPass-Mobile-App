@@ -23,13 +23,13 @@ class ZPassFonts {
 
   static const IconData creditCards = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData creditCardsActive = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData identities = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData identitiesActive = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData identitiesActive = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData identities = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData information = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData logins = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData loginsActive = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData more = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData scan = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData secureNotes = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData secureNotesActive = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData secureNotesActive = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData scan = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData secureNotes = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
