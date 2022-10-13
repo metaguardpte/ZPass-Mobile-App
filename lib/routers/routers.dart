@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/home/home_page.dart';
 import 'package:zpass/modules/home/home_page_v2.dart';
+import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/routers/i_router.dart';
 import 'package:zpass/routers/not_found_page.dart';
 
@@ -27,7 +28,7 @@ class Routers {
     
     _listRouter.clear();
     /// 各自路由由各自模块管理，统一在此添加初始化
-
+    _listRouter.add(RouterScanner());
     /// 初始化路由
     void initRouter(IRouterProvider routerProvider) {
       routerProvider.initRouter(router);

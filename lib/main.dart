@@ -14,8 +14,8 @@ import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/handle_error_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
-
 import 'generated/l10n.dart';
+import 'modules/user/signin/signin_page.dart';
 
 Future<void> main() async {
 //  debugProfileBuildsEnabled = true;
@@ -27,10 +27,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 强制竖屏
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   Provider.debugCheckInvalidValueType = null;
   //不申请任何权限的最小同步初始化
   await MainInitializer.initBeforeAuthorize();
@@ -41,7 +39,8 @@ Future<void> main() async {
   handleError(() => runApp(const MyApp()));
 
   /// 隐藏状态栏。为启动页、引导页设置。完成后修改回显示状态栏。
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.bottom]);
   // 相关问题跟踪：https://github.com/flutter/flutter/issues/73351
 }
 
@@ -61,7 +60,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
       ],
       child: Consumer2<ThemeProvider, LocaleProvider>(
-        builder: (_, ThemeProvider provider, LocaleProvider localeProvider, __) {
+        builder:
+            (_, ThemeProvider provider, LocaleProvider localeProvider, __) {
           return _buildMaterialApp(provider, localeProvider);
         },
       ),
@@ -70,14 +70,15 @@ class MyApp extends StatelessWidget {
     /// Toast 配置
     return OKToast(
         backgroundColor: Colors.black54,
-        textPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        textPadding:
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         radius: 20.0,
         position: ToastPosition.bottom,
-        child: app
-    );
+        child: app);
   }
 
-  Widget _buildMaterialApp(ThemeProvider provider, LocaleProvider localeProvider) {
+  Widget _buildMaterialApp(
+      ThemeProvider provider, LocaleProvider localeProvider) {
     return MaterialApp(
       title: 'ZPass',
       // showPerformanceOverlay: true, //显示性能标签
