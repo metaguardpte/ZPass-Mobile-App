@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zpass/modules/home/widgets/app_bar_builder.dart';
+import 'package:zpass/modules/home/home_page_v2.dart';
+import 'package:zpass/modules/home/widgets/home_widget_builder.dart';
 import 'package:zpass/res/zpass_fonts_icons.dart';
+import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/load_image.dart';
 
-class HomeAppBarBuilder extends AppBarBuilder {
+class HomeAppBarBuilder extends HomeWidgetBuilder {
+  final FunctionCallback<HomePageAction> onActionCallback;
+
+  HomeAppBarBuilder(this.onActionCallback);
+
   @override
   PreferredSizeWidget build(BuildContext context) {
     final Color? iconColor = ThemeUtils.getIconColor(context);
@@ -26,18 +32,18 @@ class HomeAppBarBuilder extends AppBarBuilder {
       ),
       actions: [
         IconButton(
-          tooltip: 'scan',
-          onPressed: () => _navigate(context, "scan"),
+          tooltip: HomePageAction.scan.name,
+          onPressed: () => _navigate(context, HomePageAction.scan),
           icon: Icon(ZPassFonts.scan, color: iconColor,),
         ),
         IconButton(
-          tooltip: 'message',
-          onPressed: () => _navigate(context, "message"),
+          tooltip: HomePageAction.message.name,
+          onPressed: () => _navigate(context, HomePageAction.message),
           icon: Icon(ZPassFonts.information, color: iconColor,),
         ),
         IconButton(
-          tooltip: 'setting',
-          onPressed: () => _navigate(context, "setting"),
+          tooltip: HomePageAction.setting.name,
+          onPressed: () => _navigate(context, HomePageAction.setting),
           icon: Icon(ZPassFonts.more, color: iconColor,),
         ),
       ]
@@ -49,7 +55,8 @@ class HomeAppBarBuilder extends AppBarBuilder {
     return false;
   }
 
-  void _navigate(BuildContext context, String type) {
-    Log.d("navigate to $type", tag: "HomeAppBarBuilder");
+  void _navigate(BuildContext context, HomePageAction action) {
+    Log.d("navigate to ${action.name}", tag: "HomeAppBarBuilder");
+    onActionCallback.call(action);
   }
 }

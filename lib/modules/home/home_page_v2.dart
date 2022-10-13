@@ -6,10 +6,11 @@ import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
 import 'package:zpass/modules/home/widgets/home_app_bar_builder.dart';
 import 'package:zpass/modules/home/widgets/home_bottom_bar_builder.dart';
-import 'package:zpass/modules/tab_cards/tab_cards.dart';
-import 'package:zpass/modules/tab_identities/tab_identities.dart';
-import 'package:zpass/modules/tab_logins/tab_logins.dart';
-import 'package:zpass/modules/tab_notes/tab_notes.dart';
+import 'package:zpass/modules/home/tabs/tab_cards.dart';
+import 'package:zpass/modules/home/tabs/tab_identities.dart';
+import 'package:zpass/modules/home/tabs/tab_logins.dart';
+import 'package:zpass/modules/home/tabs/tab_notes.dart';
+import 'package:zpass/modules/home/widgets/home_drawer_builder.dart';
 import 'package:zpass/res/zpass_fonts_icons.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
@@ -23,10 +24,20 @@ class HomePageV2 extends StatefulWidget {
   State<HomePageV2> createState() => _HomePageV2State();
 }
 
+enum HomePageAction {
+  create,
+  scan,
+  message,
+  setting,
+  locale,
+  theme,
+}
+
 class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with WidgetsBindingObserver {
   late final List<TabItem> _items;
   late final List<Widget> _pageList;
   late final PageController _pageController = PageController();
+  late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -63,10 +74,13 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   @override
   Widget buildContent(BuildContext context) {
     return DoubleTapBackExitApp(
+      backConsumer: _onBackPress,
       child: Scaffold(
-        appBar: HomeAppBarBuilder().build(context),
+        key: _scaffoldKey,
+        appBar: HomeAppBarBuilder(_onActionPerform).build(context),
         resizeToAvoidBottomInset: false,
         backgroundColor: context.backgroundColor,
+        endDrawer: HomeDrawerBuilder().build(context),
         body: _buildPageView(),
         bottomNavigationBar: _buildAppNavigationBar(),
       ),
@@ -81,7 +95,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       onTapNotify: (i) {
         var intercept = i == HomePageV2.dockedFake;
         if (intercept) {
-          Navigator.pushNamed(context, '/fake');
+          Navigator.pushNamed(context, '/${HomePageAction.create.name}');
         }
         return !intercept;
       },
@@ -100,6 +114,24 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       onPageChanged: (int index) => provider.homeTabIndex = index,
       children: _pageList,
     );
+  }
+
+  bool _onBackPress() {
+    if (_scaffoldKey.currentState?.isEndDrawerOpen ?? false) {
+      _scaffoldKey.currentState?.closeEndDrawer();
+      return true;
+    }
+    return false;
+  }
+
+  void _onActionPerform(HomePageAction action) {
+    switch (action) {
+      case HomePageAction.setting:
+        _scaffoldKey.currentState?.openEndDrawer();
+        break;
+      default:
+        Log.d("_onActionPerform: ${action.name}", tag: "HomePageV2");
+    }
   }
 
   @override

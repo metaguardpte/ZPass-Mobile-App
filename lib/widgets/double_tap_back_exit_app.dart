@@ -3,16 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zpass/generated/l10n.dart';
-import 'package:zpass/rpc/proxies/system_navigator_proxy.dart';
+import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/toast_utils.dart';
 
 /// 双击返回退出
 class DoubleTapBackExitApp extends StatefulWidget {
+  final NullParamFunctionReturn<bool>? backConsumer;
 
   const DoubleTapBackExitApp({
     super.key,
     required this.child,
     this.duration = const Duration(milliseconds: 2500),
+    this.backConsumer,
   });
 
   final Widget child;
@@ -30,9 +32,17 @@ class _DoubleTapBackExitAppState extends State<DoubleTapBackExitApp> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _isExit,
+      onWillPop: _consume,
       child: widget.child,
     );
+  }
+
+  Future<bool> _consume() {
+    if (widget.backConsumer?.call() ?? false) {
+      // back event handled by outside, return false to interrupt it
+      return Future.value(false);
+    }
+    return _isExit();
   }
 
   Future<bool> _isExit() async {

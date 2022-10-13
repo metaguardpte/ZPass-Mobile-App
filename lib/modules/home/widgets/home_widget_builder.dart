@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 /// AppBar builder.
-abstract class AppBarBuilder {
+abstract class HomeWidgetBuilder {
   /// * [context] BuildContext instance;
-  PreferredSizeWidget build(BuildContext context);
+  Widget build(BuildContext context);
 
   bool applyLeading() {
     return false;
