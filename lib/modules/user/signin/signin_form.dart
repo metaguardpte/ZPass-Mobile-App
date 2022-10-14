@@ -18,7 +18,20 @@ class _SignInFormState extends State<SignInForm> {
     if (kDebugMode) {
       print('SignIn');
     }
-    Toast.showMiddleToast('hhh',type: ToastType.error);
+    if(Email.isEmpty){
+      Toast.showMiddleToast(S.current.signinTip + S.current.email,type: ToastType.error);
+      return ;
+    }
+    else if(Psw.isEmpty){
+      Toast.showMiddleToast(S.current.signinTip + S.current.password,type: ToastType.error);
+      return ;
+    }
+    else if(SeKey.isEmpty){
+      Toast.showMiddleToast(S.current.signinTip + S.current.seKey,type: ToastType.error);
+      return ;
+    }
+
+    //submit
   }
   var SeKey = '';
   var Psw = '';
