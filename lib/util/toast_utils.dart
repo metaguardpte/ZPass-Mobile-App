@@ -37,6 +37,7 @@ class Toast {
   static void showMiddleToast(String? msg,
       {int duration = 2000, ToastType type = ToastType.info}) {
     showToastWidget(
+      duration:Duration(milliseconds: duration),
       Container(
         constraints:const BoxConstraints(maxWidth: 270, minWidth: 200),
         padding: const EdgeInsets.fromLTRB(21, 24, 21, 0),
