@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/util/callback_funcation.dart';
 
 import '../../../widgets/load_image.dart';
@@ -53,7 +54,7 @@ class _PswInputState extends State<PswInput> {
             width: 20,
             height: 20,
           ),
-          hintText: 'Password',
+          hintText: S.current.password,
           hintStyle: const TextStyle(color: Color.fromRGBO(147, 151, 157, 1)),
           border: const OutlineInputBorder(
             borderSide: BorderSide.none,

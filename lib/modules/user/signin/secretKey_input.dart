@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/scanner/scanner.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
@@ -46,7 +47,7 @@ class _SecretKeyState extends State<SecretKey> {
             width: 20,
             height: 20,
           ),
-          hintText: 'Secret Key',
+          hintText: S.current.seKey,
           hintStyle:const TextStyle(color: Color.fromRGBO(147, 151, 157, 1)),
           border: const OutlineInputBorder(
             borderSide: BorderSide.none,

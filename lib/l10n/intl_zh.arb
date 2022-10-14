@@ -10,5 +10,14 @@
   "tabCreditCards": "Credit Cards",
   "tabIdentities": "Identities",
 
-  "errorPageNotFound": "未知页面"
+  "errorPageNotFound": "未知页面",
+
+  "email":"邮箱",
+    "password":"密码",
+    "seKey":"Secret Key",
+    "login":"登录",
+    "havntAccount":"尚未拥有账号",
+    "createAccount":"创建账号",
+    "zpassLink":"zpassapp.com",
+    "signinTip":"请输入您的"
 }
