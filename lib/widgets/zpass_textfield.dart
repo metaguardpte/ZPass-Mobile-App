@@ -18,6 +18,7 @@ class ZPassTextField extends StatefulWidget {
     this.hintText,
     this.textFieldTips,
     this.selectionText,
+    this.suffixBtnTitle,
     this.textFieldHeight = 50.0,
     this.type = TextFieldType.text,
     this.loading = false,
@@ -31,6 +32,7 @@ class ZPassTextField extends StatefulWidget {
   final String? hintText;
   final String? textFieldTips;
   final String? selectionText;
+  final String? suffixBtnTitle;
   final TextFieldType? type;
   final bool? loading;
   final FunctionCallback<String>? onTextChange;
@@ -42,7 +44,15 @@ class ZPassTextField extends StatefulWidget {
 }
 
 class _ZPassTextFieldState extends State<ZPassTextField> {
-  bool _isSecret = false;
+  bool _isSecret = true;
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -78,7 +88,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.only(left: 10),
               child: widget.type == TextFieldType.selection ? _buildSelectionText() : _buildTextField(),
             ),
           ),
@@ -90,16 +100,29 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
 
   Widget _buildTextField() {
     return TextField(
+      controller: _controller,
       style: const TextStyle(fontSize: 16, color: Color(0xFF16181A)),
       enabled: !widget.loading!,
-      onChanged: widget.onTextChange,
-      obscureText: _isSecret,
+      onChanged: _onChange,
+      obscureText: widget.type == TextFieldType.password ? _isSecret : false,
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: widget.hintText ?? "",
         hintStyle: const TextStyle(color: Color(0xFF93979D), fontSize: 13),
+        suffixIcon: _buildCleanBtn(),
+        suffixIconConstraints: const BoxConstraints(maxWidth: 34, maxHeight: 34),
       ),
     );
+  }
+
+  Widget _buildCleanBtn() {
+    return _controller.text.isNotEmpty ? GestureDetector(
+      onTap: _onCleanTextTap,
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        child: const LoadAssetImage("ic_clean", width: 17, height: 17,),
+      ),
+    ) : Gaps.empty;
   }
 
   Widget _buildSelectionText() {
@@ -129,13 +152,14 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
         onTap: widget.onSendCodeTap,
         behavior: HitTestBehavior.opaque,
         child: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: Text(
-            S.current.sendCode ?? "",
+            widget.suffixBtnTitle ?? S.current.sendCode,
             style: const TextStyle(
                 fontSize: 15,
                 color: Color(0xFF4954FF),
-                fontWeight: FontWeight.w500),
+                fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       );
@@ -183,5 +207,20 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
     setState(() {
       _isSecret = !_isSecret;
     });
+  }
+
+  _onChange(value) {
+    if (widget.onTextChange != null) {
+      widget.onTextChange!.call(value);
+    }
+    setState(() {});
+  }
+
+  _onCleanTextTap() {
+    _controller.clear();
+    if (widget.onTextChange != null) {
+      widget.onTextChange!.call("");
+    }
+    setState(() {});
   }
 }

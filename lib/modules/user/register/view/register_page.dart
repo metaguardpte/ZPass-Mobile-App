@@ -10,6 +10,7 @@ import 'package:zpass/modules/user/register/widgets/register_secret_key.dart';
 import 'package:zpass/modules/user/register/widgets/register_setup_password.dart';
 import 'package:zpass/modules/user/register/widgets/register_stepper.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/custom_scroll_behavior.dart';
 import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/widgets/zpass_button_gradient.dart';
@@ -32,6 +33,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   final PageController _controller = PageController();
   List<Widget> _contentWidgets = [];
   final List<String> _titles = [S.current.registerTitleCreate, S.current.registerTitlePassword, S.current.registerTitleSecret];
+  final List<String> _planTypes = [S.current.registerPlanTypePilot];
 
   @override
   void dispose() {
@@ -115,7 +117,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   Widget _buildBottomView() {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.only(bottom: 16, top: 10),
       child: SafeArea(
         top: false,
         child: Column(
@@ -130,13 +132,16 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
 
   Widget _buildProtocol() {
     return Selector<RegisterProvider, int>(
-        builder: (_, index, __) {
-          bool visible = index < 1;
-          return Visibility(
+      builder: (_, index, __) {
+        bool visible = index < 1;
+        return Visibility(
           visible: visible,
-          child: const RegisterProtocolCheckbox(),
+          child: RegisterProtocolCheckbox(
+              onChange: (value) => provider.protocolChecked = value,
+          ),
         );
-      }, selector: (_, provider) => provider.stepIndex,
+      },
+      selector: (_, provider) => provider.stepIndex,
     );
   }
 
@@ -144,28 +149,33 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     return Selector<RegisterProvider, Tuple2<bool, int>>(
       builder: (_, tuple, __) {
         final int index = tuple.item2;
-        return ZPassButtonGradient(
-          text: index == _stepCount - 1 ? S.current.btnFinish : S.current.btnNext,
-          startColor: const Color(0xFF5273FE),
-          endColor: const Color(0xFF4342FF),
-          height: 46,
-          width: double.infinity,
-          borderRadius: 23,
-          loading: tuple.item1,
-          onPress: (){
-            provider.loading = true;
-            Future.delayed(const Duration(milliseconds: 2000), () {
-              provider.loading = false;
-              _nextStep();
-            });
-          },
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 24),
+          child: ZPassButtonGradient(
+            text: index == _stepCount - 1 ? S.current.btnFinish : S.current.btnNext,
+            startColor: const Color(0xFF5273FE),
+            endColor: const Color(0xFF4342FF),
+            height: 46,
+            width: double.infinity,
+            borderRadius: 23,
+            loading: tuple.item1,
+            onPress: _nextStep,
+          ),
         );
       },
       selector: (_, provider) => Tuple2(provider.loading, provider.stepIndex),
     );
   }
 
-  void _nextStep() {
+  void _nextStep() async {
+    if (provider.stepIndex == 0) {
+      final result = await _doCheckEmailVerifyCode();
+      if (!result) return;
+    } else if (provider.stepIndex == 1) {
+
+    } else if (provider.stepIndex == 2) {
+
+    }
     provider.stepIndex++;
     _controller.nextPage(duration: const Duration(milliseconds: 350), curve: Curves.linear);
   }
@@ -181,6 +191,22 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
       return;
     }
     _previousStep();
+  }
+
+  Future<bool> _doCheckEmailVerifyCode() async {
+    if (provider.emailVerifyCode.isEmpty || provider.emailVerifyCode.length < 6) {
+      Toast.show(S.current.emailVerifyCodeHint);
+      return Future.value(false);
+    }
+    if (!provider.protocolChecked) {
+      Toast.show(S.current.registerProtocolNotCheck);
+      return Future.value(false);
+    }
+    final error = (await provider.doCheckEmailVerifyCode()) ?? "";
+    if (error.isNotEmpty) {
+      Toast.show(error);
+    }
+    return Future.value(error.isEmpty);
   }
 
   @override

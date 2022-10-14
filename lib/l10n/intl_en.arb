@@ -15,12 +15,16 @@
   "registerTitleSecret": "Keep your secret key created",
   "errorPageNotFound": "Page not found",
   "registerPlanType": "Plan Type",
+  "registerPlanTypePilot": "Pilot",
   "registerPlanTypeHint": "Select your account type",
   "businessEmail": "Business Email",
   "businessEmailHint": "Enter your business email",
   "sendCode": "Send Code",
+  "resendCode": "Resend Code",
+  "emailVerifyCodeHint": "Please enter verify code",
   "email": "Email",
   "emailHint": "Enter your Email",
+  "emailInvalid": "Invalid email format",
   "registerEmailTips": "· Please enter a work email address only as we DO NOT \naccept web-mail addresses (gmail, yahoo, hotmail, etc.)",
   "domainName": "Domain Name",
   "domainNameHint": "Enter your domain name",
@@ -28,6 +32,12 @@
   "enterCode": "Enter Code",
   "registerEmailCodeDialogTitle": "Paste Code",
   "registerEmailCodeDialogMessage": "Do you want to paste this code",
+  "registerEmailCodeTips": "We sent a 6-digit verification code to \n「{email}」\nDid not receive the code? Please carefully check your \"Junk Emails\" and blocked Emails.",
+  "@registerEmailCodeTips": {
+    "placeholders": {
+      "email": {}
+    }
+  },
   "paste": "Paste",
   "cancel": "Cancel",
   "userServiceAgreement": "User Service Agreement",
@@ -43,5 +53,6 @@
   "registerSecretKeyMessage": "You MUST save the Secret Key and keep it safe NOW! Although this App will help to save the key, you will still be asked to provide it when you launch ZPass from a new device.",
   "registerSecretKeyTitle": "Important!",
   "registerSecretKeyCopy": "Copy Secret Key",
-  "registerSecretKeySave": "Download and Save Your Secret Key"
+  "registerSecretKeySave": "Download and Save Your Secret Key",
+  "registerProtocolNotCheck": "Please check user service and privacy notice"
 }

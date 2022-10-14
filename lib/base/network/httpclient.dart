@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:zpass/base/app_config.dart';
 import 'package:zpass/base/network/base_resp.dart';
 import 'package:zpass/base/network/error_handle.dart';
 import 'package:zpass/res/constant.dart';
@@ -43,7 +44,7 @@ class HttpClient {
         // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
         return true;
       },
-      baseUrl: _baseUrl,
+      baseUrl: AppConfig.baseUrl,
 //      contentType: Headers.formUrlEncodedContentType, // 适用于post form表单提交
     );
     _dio = Dio(options);
