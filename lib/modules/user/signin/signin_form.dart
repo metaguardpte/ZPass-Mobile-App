@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/signin/secretKey_input.dart';
+import 'package:zpass/util/toast_utils.dart';
 import '../../../widgets/load_image.dart';
 
 class SignInForm extends StatefulWidget {
@@ -16,6 +17,7 @@ class _SignInFormState extends State<SignInForm> {
     if (kDebugMode) {
       print('123213');
     }
+    Toast.showMiddleToast('hhh');
   }
   var SeKey = '';
   var Psw = '';
@@ -86,7 +88,9 @@ class _SignInFormState extends State<SignInForm> {
             onChange: getSeKey,
           ),
         ),
-        Container(
+        GestureDetector(
+            onTap: handelSignIn,
+            child:Container(
             margin: const EdgeInsets.fromLTRB(0, 24, 0, 0),
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
             width: double.infinity,
@@ -106,8 +110,7 @@ class _SignInFormState extends State<SignInForm> {
                       Color.fromRGBO(67, 66, 255, 1)
                     ]),
                 borderRadius: BorderRadius.all(Radius.circular(23))),
-            child: GestureDetector(
-              onTap: handelSignIn,
+
               child: const Text(
                 'Login',
                 style: TextStyle(fontSize: 16, color: Colors.white),
