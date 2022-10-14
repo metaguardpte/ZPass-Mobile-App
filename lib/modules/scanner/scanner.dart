@@ -71,8 +71,9 @@ class _ScannerModeState extends State<ScannerMode> {
     NavigatorUtils.goBackWithParams(context, {"data": data});
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) async {
     this.controller = controller;
+    await controller.resumeCamera();
     controller.scannedDataStream.listen((Barcode? scanData) {
       if (scanData?.code != null) {
         BackToParentPage(scanData?.code);
