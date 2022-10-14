@@ -43,7 +43,9 @@ class MainInitializer {
     /// 适配数据(根据自己的数据结构，可自行选择添加)
     interceptors.add(AdapterInterceptor());
     configDio(
-      baseUrl: 'https://api.github.com/',
+      baseUrl: Constant.inProduction
+          ? "https://ro8d3r7nxb.execute-api.ap-southeast-1.amazonaws.com/Prod"
+          : 'https://l8ee0j8yb8.execute-api.ap-southeast-1.amazonaws.com/Prod',
       interceptors: interceptors,
     );
   }

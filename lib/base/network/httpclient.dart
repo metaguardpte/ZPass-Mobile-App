@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:zpass/base/network/base_resp.dart';
 import 'package:zpass/base/network/error_handle.dart';
 import 'package:zpass/res/constant.dart';
-import 'package:zpass/util/log_utils.dart';
 
 /// 默认dio配置
 int _connectTimeout = 15000;
@@ -28,10 +27,6 @@ void configDio({
   _baseUrl = baseUrl ?? _baseUrl;
   _interceptors = interceptors ?? _interceptors;
 }
-
-typedef NetSuccessCallback<T> = Function(T data);
-typedef NetSuccessListCallback<T> = Function(List<T> data);
-typedef NetErrorCallback = Function(int code, String msg);
 
 class HttpClient {
 
@@ -79,7 +74,7 @@ class HttpClient {
   Dio get dio => _dio;
 
   // 数据返回格式统一，统一处理异常
-  Future<BaseResp<T>> _request<T>(String method, String url, {
+  Future<BaseResp> _request(String method, String url, {
     Object? data,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
@@ -100,10 +95,10 @@ class HttpClient {
       final bool isCompute = !Constant.isDriverTest && data.length > 10 * 1024;
       debugPrint('isCompute:$isCompute');
       final Map<String, dynamic> map = isCompute ? await compute(parseData, data) : parseData(data);
-      return BaseResp<T>.fromJson(map);
+      return BaseResp.fromJson(map);
     } catch(e) {
       debugPrint(e.toString());
-      return BaseResp<T>(ExceptionHandle.parseError, '数据解析错误！', null);
+      return BaseResp(code: ExceptionHandle.parseError, message: "data parse error", data: null);
     }
   }
 
@@ -113,75 +108,18 @@ class HttpClient {
     return options;
   }
 
-  Future<dynamic> requestNetwork<T>(Method method, String url, {
-    NetSuccessCallback<T?>? onSuccess,
-    NetErrorCallback? onError,
+  Future<dynamic> requestNetwork(Method method, String url, {
     Object? params,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     Options? options,
   }) {
-    return _request<T>(method.value, url,
+    return _request(method.value, url,
       data: params,
       queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken,
-    ).then<void>((BaseResp<T> result) {
-      if (result.code == 0) {
-        onSuccess?.call(result.data);
-      } else {
-        _onError(result.code, result.message, onError);
-      }
-    }, onError: (dynamic e) {
-      _cancelLogPrint(e, url);
-      final NetError error = ExceptionHandle.handleException(e);
-      _onError(error.code, error.msg, onError);
-    });
-  }
-
-  /// 统一处理(onSuccess返回T对象，onSuccessList返回 List<T>)
-  void asyncRequestNetwork<T>(Method method, String url, {
-    NetSuccessCallback<T?>? onSuccess,
-    NetErrorCallback? onError,
-    Object? params,
-    Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
-    Options? options,
-  }) {
-    Stream.fromFuture(_request<T>(method.value, url,
-      data: params,
-      queryParameters: queryParameters,
-      options: options,
-      cancelToken: cancelToken,
-    )).asBroadcastStream()
-        .listen((result) {
-      if (result.code == 0) {
-        if (onSuccess != null) {
-          onSuccess(result.data);
-        }
-      } else {
-        _onError(result.code, result.message, onError);
-      }
-    }, onError: (dynamic e) {
-      _cancelLogPrint(e, url);
-      final NetError error = ExceptionHandle.handleException(e);
-      _onError(error.code, error.msg, onError);
-    });
-  }
-
-  void _cancelLogPrint(dynamic e, String url) {
-    if (e is DioError && CancelToken.isCancel(e)) {
-      Log.e('取消请求接口： $url');
-    }
-  }
-
-  void _onError(int? code, String msg, NetErrorCallback? onError) {
-    if (code == null) {
-      code = ExceptionHandle.unknownError;
-      msg = '未知异常';
-    }
-    Log.e('接口请求异常： code: $code, mag: $msg');
-    onError?.call(code, msg);
+    ).catchError((e) => throw ExceptionHandle.handleException(e));
   }
 }
 

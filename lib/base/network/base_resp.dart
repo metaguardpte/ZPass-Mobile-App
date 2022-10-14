@@ -1,29 +1,34 @@
-import 'package:zpass/res/constant.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class BaseResp<T> {
+part 'base_resp.g.dart';
 
-  BaseResp(this.code, this.message, this.data);
+@JsonSerializable()
+class BaseResp {
+  int code;
+  String? message;
+  dynamic data;
 
-  BaseResp.fromJson(Map<String, dynamic> json) {
-    code = json[Constant.code] as int?;
-    message = json[Constant.message] as String;
-    if (json.containsKey(Constant.data)) {
-      data = _generateOBJ<T>(json[Constant.data] as Object);
-    }
+  BaseResp({required this.code, required this.data, this.message});
+
+  factory BaseResp.fromJson(Map<String, dynamic> json) => _$BaseRespFromJson(json);
+  Map<String, dynamic> toJson() => _$BaseRespToJson(this);
+
+  bool isHttpOK() {
+    return code == 200;
   }
 
-  int? code;
-  late String message;
-  T? data;
+  bool hasError() {
+    Map<String, dynamic>? dataMap = data as Map<String, dynamic>?;
+    return dataMap!= null && dataMap.containsKey("error") && dataMap["error"] != null;
+  }
 
-  T? _generateOBJ<O>(Object json) {
-    if (T.toString() == 'String') {
-      return json.toString() as T;
-    } else if (T.toString() == 'Map<dynamic, dynamic>') {
-      return json as T;
-    } else {
-      /// List类型数据由fromJsonAsT判断处理
-      // return JsonConvert.fromJsonAsT<T>(json);
-    }
+  dynamic getPayload() {
+    Map<String, dynamic>? dataMap = data as Map<String, dynamic>?;
+    return dataMap?["payload"];
+  }
+
+  dynamic getError() {
+    Map<String, dynamic>? dataMap = data as Map<String, dynamic>?;
+    return dataMap?["error"];
   }
 }
