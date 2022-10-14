@@ -11,6 +11,7 @@
   "tabIdentities": "Identities",
 
   "errorPageNotFound": "未知页面",
+  "tipsLoading": "加载中",
 
   "email":"邮箱",
   "password":"密码",
@@ -32,7 +33,6 @@
   "sendCode": "Send Code",
   "resendCode": "Resend Code",
   "emailVerifyCodeHint": "Please enter verify code",
-  "email": "Email",
   "emailHint": "Enter your Email",
   "emailInvalid": "Invalid email format",
   "registerEmailTips": "· Please enter a work email address only as we DO NOT \naccept web-mail addresses (gmail, yahoo, hotmail, etc.)",
