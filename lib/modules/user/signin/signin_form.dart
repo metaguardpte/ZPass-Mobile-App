@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:zpass/modules/user/signin/psw_input.dart';
+import 'package:zpass/modules/user/signin/secretKey_input.dart';
 import '../../../widgets/load_image.dart';
 
 class SignInForm extends StatefulWidget {
@@ -15,19 +17,33 @@ class _SignInFormState extends State<SignInForm> {
       print('123213');
     }
   }
+  var SeKey = '';
+  var Psw = '';
+  var Email = '';
 
-  getQRcode() {
+  getEmail(value) {
     if (kDebugMode) {
-      print('get QrCode ');
+      print('get Email ');
+      print(value);
     }
-  }
-  switchPassword(){
-    if (kDebugMode) {
-      print('switch Password');
-    }
+    Email = value;
   }
 
-  var _showPasword = false;
+  getPsw(value) {
+    if (kDebugMode) {
+      print('get Password ');
+      print(value);
+    }
+    Psw = value;
+  }
+
+  getSeKey(value) {
+    if (kDebugMode) {
+      print('get Secret Key ');
+      print(value);
+    }
+    SeKey = value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +56,7 @@ class _SignInFormState extends State<SignInForm> {
               color: Color.fromRGBO(246, 246, 246, 1),
               borderRadius: BorderRadius.all(Radius.circular(7.5))),
           child: TextField(
-            obscureText: _showPasword,
+            onChanged: getEmail,
             decoration: const InputDecoration(
                 icon: LoadAssetImage(
                   'signin/email@2x',
@@ -53,59 +69,21 @@ class _SignInFormState extends State<SignInForm> {
           ),
         ),
         Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-          decoration: const BoxDecoration(
-              color: Color.fromRGBO(246, 246, 246, 1),
-              borderRadius: BorderRadius.all(Radius.circular(7.5))),
-          child: TextField(
-            decoration: InputDecoration(
-                contentPadding: EdgeInsets.zero,
-                suffixIcon: IconButton(
-                    onPressed: switchPassword,
-                    icon: const LoadAssetImage(
-                      'signin/pass-off@2x',
-                      width: 20,
-                      height: 20,
-                    )),
-                icon: const LoadAssetImage(
-                  'signin/LockKey@2x',
-                  width: 20,
-                  height: 20,
-                ),
-                hintText: 'Password',
-                hintStyle: const TextStyle(color: Color.fromRGBO(147, 151, 157, 1)),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                )),
-          ),
-        ),
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+            decoration: const BoxDecoration(
+                color: Color.fromRGBO(246, 246, 246, 1),
+                borderRadius: BorderRadius.all(Radius.circular(7.5))),
+            child: PswInput(
+              onChange: getPsw,
+            )),
         Container(
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
           decoration: const BoxDecoration(
               color: Color.fromRGBO(246, 246, 246, 1),
               borderRadius: BorderRadius.all(Radius.circular(7.5))),
-          child: TextField(
-            decoration: InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
-                suffixIcon: IconButton(
-                    onPressed: getQRcode,
-                    icon: const LoadAssetImage(
-                      'signin/qrcode@2x',
-                      width: 20,
-                      height: 20,
-                    )),
-                icon: const LoadAssetImage(
-                  'signin/safe@2x',
-                  width: 20,
-                  height: 20,
-                ),
-                hintText: 'Secret Key',
-                hintStyle: TextStyle(color: Color.fromRGBO(147, 151, 157, 1)),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                )),
+          child: SecretKey(
+            onChange: getSeKey,
           ),
         ),
         Container(
