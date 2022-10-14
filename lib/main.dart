@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
       theme: theme ?? provider.getTheme(),
       darkTheme: provider.getTheme(isDarkMode: true),
       themeMode: provider.getThemeMode(),
-      home: home ?? const SplashPage(),
+      home: const SignInPage(),
       onGenerateRoute: Routers.router.generator,
       localizationsDelegates: const [
         S.delegate,
