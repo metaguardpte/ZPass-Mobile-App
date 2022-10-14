@@ -36,7 +36,7 @@ class TokenInterceptor extends QueuedInterceptor {
     params['refresh_token'] = SpUtil.getString(Constant.refreshToken) ?? "";
     try {
       _tokenDio ??= Dio();
-      _tokenDio!.options = HttpClient.instance.dio.options;
+      _tokenDio!.options = HttpClient.instance.options;
       final Response<dynamic> response = await _tokenDio!.post<dynamic>('lgn/refreshToken', data: params);
       if (response.statusCode == ExceptionHandle.success) {
         return (json.decode(response.data.toString()) as Map<String, dynamic>)['access_token'] as String;

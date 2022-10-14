@@ -71,7 +71,7 @@ class HttpClient {
 
   static late Dio _dio;
 
-  Dio get dio => _dio;
+  BaseOptions get options => _dio.options;
 
   // 数据返回格式统一，统一处理异常
   Future<BaseResp> _request(String method, String url, {
@@ -94,7 +94,7 @@ class HttpClient {
       /// 主要目的减少不必要的性能开销
       final bool isCompute = !Constant.isDriverTest && data.length > 10 * 1024;
       debugPrint('isCompute:$isCompute');
-      final Map<String, dynamic> map = isCompute ? await compute(parseData, data) : parseData(data);
+      final Map<String, dynamic> map = isCompute ? await compute(_parseData, data) : _parseData(data);
       return BaseResp.fromJson(map);
     } catch(e) {
       debugPrint(e.toString());
@@ -123,7 +123,7 @@ class HttpClient {
   }
 }
 
-Map<String, dynamic> parseData(String data) {
+Map<String, dynamic> _parseData(String data) {
   return json.decode(data) as Map<String, dynamic>;
 }
 
