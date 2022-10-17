@@ -126,11 +126,13 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
     );
   }
 
+  /// 构建pdf布局样式
   _buildPDFWidget(pw.Image logo) {
     PdfColor color = const PdfColor.fromInt(0xFF4342FF);
     PdfColor subColor = const PdfColor.fromInt(0xFF5273FE);
     return pw.Column(
       children: [
+        /// logo
         pw.Container(
           width: double.infinity,
           alignment: pw.Alignment.centerLeft,
@@ -140,6 +142,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
             child: logo
           ),
         ),
+        /// title
         pw.Padding(
           padding: const pw.EdgeInsets.symmetric(vertical: 20),
           child: pw.Text(S.current.registerSecretKeyPDFTitle, style: const pw.TextStyle(color: PdfColor.fromInt(0xFFFF0000), fontSize: 18)),
@@ -213,6 +216,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
             )
         ),
         pw.Spacer(),
+        /// zpass邮箱和官网
         pw.Container(
           alignment: pw.Alignment.center,
           child: pw.Text(AppConfig.zpassWebsite, style: pw.TextStyle(fontSize: 13, color: color)),
@@ -254,11 +258,8 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
   }
 
   Future<File?> _getTempFile() async {
-    if (Device.isAndroid) {
-      final output = await getTemporaryDirectory();
-      return Future.value(File("${output.path}/zpass-secret-key.pdf"));
-    }
-    return Future.value(null);
+    final output = await getTemporaryDirectory();
+    return Future.value(File("${output.path}/zpass-secret-key.pdf"));
   }
 
   @override
