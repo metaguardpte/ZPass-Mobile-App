@@ -5,4 +5,9 @@ class StringUtils {
         r"^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")
         .hasMatch(str);
   }
+
+  /// 密码
+  static bool isValidPassword(String str) {
+    return RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$").hasMatch(str);
+  }
 }

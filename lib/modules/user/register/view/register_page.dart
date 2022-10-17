@@ -33,7 +33,6 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   final PageController _controller = PageController();
   List<Widget> _contentWidgets = [];
   final List<String> _titles = [S.current.registerTitleCreate, S.current.registerTitlePassword, S.current.registerTitleSecret];
-  final List<String> _planTypes = [S.current.registerPlanTypePilot];
 
   @override
   void dispose() {
@@ -109,8 +108,8 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   List<Widget> _buildContentWidgets() {
     return [
       RegisterBasicInformation(provider: provider),
-      const RegisterSetupPassword(),
-      const RegisterSecretKey(),
+      RegisterSetupPassword(provider: provider),
+      RegisterSecretKey(provider: provider),
     ];
   }
 
@@ -159,7 +158,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
             width: double.infinity,
             borderRadius: 23,
             loading: tuple.item1,
-            onPress: _nextStep,
+            onPress: _doNext,
           ),
         );
       },
@@ -167,15 +166,17 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     );
   }
 
-  void _nextStep() async {
+  void _doNext() {
     if (provider.stepIndex == 0) {
-      final result = await _doCheckEmailVerifyCode();
-      if (!result) return;
+      _doCheckEmailVerifyCode();
     } else if (provider.stepIndex == 1) {
-
+      _doActivationAccount();
     } else if (provider.stepIndex == 2) {
-
+      NavigatorUtils.goBack(context);
     }
+  }
+
+  void _nextStep() async {
     provider.stepIndex++;
     _controller.nextPage(duration: const Duration(milliseconds: 350), curve: Curves.linear);
   }
@@ -186,27 +187,46 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   _onBackTap() {
-    if (provider.stepIndex == 0) {
+    if (provider.stepIndex == 0 || provider.stepIndex == _stepCount - 1) {
       NavigatorUtils.goBack(context);
       return;
     }
     _previousStep();
   }
 
-  Future<bool> _doCheckEmailVerifyCode() async {
+  _doCheckEmailVerifyCode() async {
     if (provider.emailVerifyCode.isEmpty || provider.emailVerifyCode.length < 6) {
       Toast.show(S.current.emailVerifyCodeHint);
-      return Future.value(false);
+      return;
     }
     if (!provider.protocolChecked) {
       Toast.show(S.current.registerProtocolNotCheck);
-      return Future.value(false);
+      return;
     }
     final error = (await provider.doCheckEmailVerifyCode()) ?? "";
     if (error.isNotEmpty) {
       Toast.show(error);
+      return;
     }
-    return Future.value(error.isEmpty);
+    _nextStep();
+  }
+
+  _doActivationAccount() {
+    if (provider.password.isEmpty) {
+      Toast.show(S.current.registerMasterPasswordHint);
+      return;
+    }
+
+    if (provider.confirmPassword.isEmpty) {
+      Toast.show(S.current.registerConfirmPasswordHint);
+      return;
+    }
+
+    if (provider.password != provider.confirmPassword) {
+      Toast.show(S.current.registerPasswordAreNotTheSame);
+      return;
+    }
+    _nextStep();
   }
 
   @override

@@ -23,6 +23,7 @@ class ZPassTextField extends StatefulWidget {
     this.type = TextFieldType.text,
     this.loading = false,
     this.onTextChange,
+    this.onEditingComplete,
     this.onSendCodeTap,
     this.onSelectionTap})
       : super(key: key);
@@ -36,6 +37,7 @@ class ZPassTextField extends StatefulWidget {
   final TextFieldType? type;
   final bool? loading;
   final FunctionCallback<String>? onTextChange;
+  final NullParamCallback? onEditingComplete;
   final NullParamCallback? onSendCodeTap;
   final NullParamCallback? onSelectionTap;
 
@@ -104,6 +106,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       style: const TextStyle(fontSize: 16, color: Color(0xFF16181A)),
       enabled: !widget.loading!,
       onChanged: _onChange,
+      onEditingComplete: _onEditingComplete,
       obscureText: widget.type == TextFieldType.password ? _isSecret : false,
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -214,6 +217,13 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       widget.onTextChange!.call(value);
     }
     setState(() {});
+  }
+
+  _onEditingComplete() {
+    print("abababbaccccc");
+    if (widget.onEditingComplete != null) {
+      widget.onEditingComplete!.call();
+    }
   }
 
   _onCleanTextTap() {
