@@ -10,6 +10,7 @@ import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/user/register/register_provider.dart';
 import 'package:zpass/res/gaps.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/load_image.dart';
@@ -31,15 +32,17 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
     return Container(
       padding: const EdgeInsets.all(24),
       color: Colors.white,
-      child: Column(
-        children: [
-          _buildMessage(),
-          _buildKey(),
-          Gaps.vGap10,
-          _buildActionItem(S.current.registerSecretKeyCopy, "ic_copy", _onCopySecretKeyTap),
-          Gaps.vGap15,
-          _buildActionItem(S.current.registerSecretKeySave, "ic_download", _onSaveSecretKeyTap),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildMessage(),
+            _buildKey(),
+            Gaps.vGap10,
+            _buildActionItem(S.current.registerSecretKeyCopy, ZPassIcons.icCopy, _onCopySecretKeyTap),
+            Gaps.vGap15,
+            _buildActionItem(S.current.registerSecretKeySave, ZPassIcons.icDownload, _onSaveSecretKeyTap),
+          ],
+        ),
       ),
     );
   }
@@ -90,7 +93,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
     );
   }
 
-  Widget _buildActionItem(String title, String icon, GestureTapCallback event) {
+  Widget _buildActionItem(String title, IconData icon, GestureTapCallback event) {
     return GestureDetector(
       onTap: event,
       child: Container(
@@ -103,7 +106,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.only(left: 10, right: 5),
                 child: Text(
                   title,
                   style: const TextStyle(
@@ -115,7 +118,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
             ),
             Container(
               padding: const EdgeInsets.all(10),
-              child: LoadAssetImage(icon, width: 16, height: 16,),
+              child: Icon(icon, size: 20, color: const Color(0xFF4954FF),),
             )
           ],
         ),

@@ -111,6 +111,9 @@ flutter:
     - family: ZPassFonts
       fonts:
         - asset: assets/fonts/ZPassFonts.ttf
+    - family: IconFont
+      fonts:
+        - asset: assets/fonts/iconfont.ttf
 
   #
   # For details regarding fonts from package dependencies,

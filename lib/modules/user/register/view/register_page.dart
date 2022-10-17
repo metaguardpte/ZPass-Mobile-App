@@ -9,6 +9,7 @@ import 'package:zpass/modules/user/register/widgets/register_protocol_checkbox.d
 import 'package:zpass/modules/user/register/widgets/register_secret_key.dart';
 import 'package:zpass/modules/user/register/widgets/register_setup_password.dart';
 import 'package:zpass/modules/user/register/widgets/register_stepper.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/custom_scroll_behavior.dart';
@@ -102,7 +103,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   Widget _buildBackBtn() {
-    return IconButton(onPressed: _onBackTap, icon: const LoadAssetImage("ic_back_black", width: 30, height: 16,));
+    return IconButton(onPressed: _onBackTap, icon: const Icon(ZPassIcons.icNavBack, size: 13, color: Color(0xFF16181A),));
   }
 
   List<Widget> _buildContentWidgets() {
@@ -177,6 +178,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   void _nextStep() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     provider.stepIndex++;
     _controller.nextPage(duration: const Duration(milliseconds: 350), curve: Curves.linear);
   }
