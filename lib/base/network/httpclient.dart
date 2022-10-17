@@ -44,7 +44,7 @@ class HttpClient {
         // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
         return true;
       },
-      baseUrl: AppConfig.baseUrl,
+      baseUrl: _baseUrl,
 //      contentType: Headers.formUrlEncodedContentType, // 适用于post form表单提交
     );
     _dio = Dio(options);
