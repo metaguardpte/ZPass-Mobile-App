@@ -10,6 +10,17 @@
   "tabCreditCards": "Credit Cards",
   "tabIdentities": "Identities",
 
+  "errorPageNotFound": "Page not found",
+
+  "email":"Email",
+  "password":"Password",
+  "seKey":"Secret Key",
+  "login":"Login",
+  "havntAccount":"Don`t hava an account",
+  "createAccount":"Create Account",
+  "zpassLink":"zpassapp.com",
+  "signinTip":"Plese input your ",
+
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",
   "registerTitleSecret": "Keep your secret key created",

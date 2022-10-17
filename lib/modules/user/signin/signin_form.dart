@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/signin/secretKey_input.dart';
+import 'package:zpass/util/toast_utils.dart';
 import '../../../widgets/load_image.dart';
+import 'package:zpass/generated/l10n.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key}) : super(key: key);
@@ -14,8 +16,22 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   void handelSignIn() {
     if (kDebugMode) {
-      print('123213');
+      print('SignIn');
     }
+    if(Email.isEmpty){
+      Toast.showMiddleToast(S.current.signinTip + S.current.email,type: ToastType.error);
+      return ;
+    }
+    else if(Psw.isEmpty){
+      Toast.showMiddleToast(S.current.signinTip + S.current.password,type: ToastType.error);
+      return ;
+    }
+    else if(SeKey.isEmpty){
+      Toast.showMiddleToast(S.current.signinTip + S.current.seKey,type: ToastType.error);
+      return ;
+    }
+
+    //submit
   }
   var SeKey = '';
   var Psw = '';
@@ -57,14 +73,14 @@ class _SignInFormState extends State<SignInForm> {
               borderRadius: BorderRadius.all(Radius.circular(7.5))),
           child: TextField(
             onChanged: getEmail,
-            decoration: const InputDecoration(
-                icon: LoadAssetImage(
+            decoration: InputDecoration(
+                icon:const LoadAssetImage(
                   'signin/email@2x',
                   width: 20,
                   height: 20,
                 ),
-                hintText: 'Email',
-                hintStyle: TextStyle(color: Color.fromRGBO(147, 151, 157, 1)),
+                hintText: S.current.email,
+                hintStyle:const TextStyle(color: Color.fromRGBO(147, 151, 157, 1)),
                 border: InputBorder.none),
           ),
         ),
@@ -86,7 +102,9 @@ class _SignInFormState extends State<SignInForm> {
             onChange: getSeKey,
           ),
         ),
-        Container(
+        GestureDetector(
+            onTap: handelSignIn,
+            child:Container(
             margin: const EdgeInsets.fromLTRB(0, 24, 0, 0),
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
             width: double.infinity,
@@ -106,11 +124,10 @@ class _SignInFormState extends State<SignInForm> {
                       Color.fromRGBO(67, 66, 255, 1)
                     ]),
                 borderRadius: BorderRadius.all(Radius.circular(23))),
-            child: GestureDetector(
-              onTap: handelSignIn,
-              child: const Text(
-                'Login',
-                style: TextStyle(fontSize: 16, color: Colors.white),
+
+              child: Text(
+                S.current.login,
+                style:const TextStyle(fontSize: 16, color: Colors.white),
               ),
             )),
       ],
