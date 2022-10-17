@@ -4,6 +4,7 @@ import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/widgets/load_image.dart';
+import 'package:zpass/res/zpass_icons.dart';
 
 enum TextFieldType {
   text,
@@ -23,6 +24,7 @@ class ZPassTextField extends StatefulWidget {
     this.type = TextFieldType.text,
     this.loading = false,
     this.onTextChange,
+    this.onEditingComplete,
     this.onSendCodeTap,
     this.onSelectionTap})
       : super(key: key);
@@ -36,6 +38,7 @@ class ZPassTextField extends StatefulWidget {
   final TextFieldType? type;
   final bool? loading;
   final FunctionCallback<String>? onTextChange;
+  final NullParamCallback? onEditingComplete;
   final NullParamCallback? onSendCodeTap;
   final NullParamCallback? onSelectionTap;
 
@@ -104,6 +107,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       style: const TextStyle(fontSize: 16, color: Color(0xFF16181A)),
       enabled: !widget.loading!,
       onChanged: _onChange,
+      onEditingComplete: _onEditingComplete,
       obscureText: widget.type == TextFieldType.password ? _isSecret : false,
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -120,7 +124,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       onTap: _onCleanTextTap,
       child: Container(
         padding: const EdgeInsets.all(5),
-        child: const LoadAssetImage("ic_clean", width: 17, height: 17,),
+        child: const Icon(ZPassIcons.icTextFieldClean, size: 17, color: Color(0xFF959BA7),),
       ),
     ) : Gaps.empty;
   }
@@ -172,7 +176,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
           width: 30,
           height: 30,
           padding: const EdgeInsets.all(10.5),
-          child: const LoadAssetImage("ic_selection_arrow"),
+          child: const Icon(ZPassIcons.icSelectionArrow, size: 10, color: Color(0xFF16181A),),
         ),
       );
     }
@@ -185,7 +189,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
           width: 36,
           height: 36,
           padding: const EdgeInsets.all(9),
-          child: LoadAssetImage(_isSecret ? "ic_secret_none" : "ic_secret"),
+          child: Icon(_isSecret ? ZPassIcons.icNoSecret : ZPassIcons.icSecret, color: const Color(0xFF959BA7), size: 17,),
         ),
       );
     }
@@ -214,6 +218,12 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       widget.onTextChange!.call(value);
     }
     setState(() {});
+  }
+
+  _onEditingComplete() {
+    if (widget.onEditingComplete != null) {
+      widget.onEditingComplete!.call();
+    }
   }
 
   _onCleanTextTap() {

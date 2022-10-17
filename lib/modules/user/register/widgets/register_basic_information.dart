@@ -9,8 +9,8 @@ import 'package:zpass/modules/user/register/view/register_page.dart';
 import 'package:zpass/modules/user/register/widgets/register_email_code.dart';
 import 'package:zpass/modules/user/register/widgets/register_selection_dialog.dart';
 import 'package:zpass/res/gaps.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/toast_utils.dart';
-import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/widgets/zpass_textfield.dart';
 import 'package:zpass/util/string_utils.dart';
 
@@ -142,11 +142,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
         children: [
           Container(
             margin: const EdgeInsets.only(top: 5),
-            child: const LoadAssetImage(
-              "ic_warn",
-              width: 16,
-              height: 16,
-            ),
+            child: const Icon(ZPassIcons.icWarnCircle, size: 16, color: Color(0xFF4954FF),),
           ),
           Gaps.hGap5,
           Expanded(

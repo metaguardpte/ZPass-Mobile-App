@@ -2,8 +2,8 @@ import 'package:zpass/base/network/base_resp.dart';
 import 'package:zpass/base/network/httpclient.dart';
 
 class RegisterServices {
-  static const String apiUserRegistration = "/Prod/api/Users/registration";
-  static const String apiActivation = "/Prod/api/Activation";
+  static const String apiUserRegistration = "/api/Users/registration";
+  static const String apiActivation = "/api/Activation";
 
   Future<dynamic> postEmailVerifyCode(String email, int planType) {
     return HttpClient().requestNetwork(
