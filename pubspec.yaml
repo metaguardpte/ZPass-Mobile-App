@@ -57,6 +57,10 @@ dependencies:
   zxing2: ^0.1.1
   image: ^3.2.0
   qr_code_scanner: ^1.0.1
+  pin_code_fields: ^7.4.0
+  tuple: ^2.0.1
+  easy_rich_text: ^1.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
