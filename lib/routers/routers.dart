@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:zpass/modules/user/register/router_register.dart';
 import 'package:zpass/modules/home/home_page_v2.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/user/router_user.dart';
@@ -30,6 +31,7 @@ class Routers {
     /// 各自路由由各自模块管理，统一在此添加初始化
     _listRouter.add(RouterScanner());
     _listRouter.add(RouterUser());
+    _listRouter.add(RouterRegister());
     /// 初始化路由
     void initRouter(IRouterProvider routerProvider) {
       routerProvider.initRouter(router);

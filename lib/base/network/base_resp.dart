@@ -19,7 +19,7 @@ class BaseResp {
 
   bool hasError() {
     Map<String, dynamic>? dataMap = data as Map<String, dynamic>?;
-    return dataMap!= null && dataMap.containsKey("error") && dataMap["error"] != null;
+    return dataMap!= null && dataMap.containsKey("error") && dataMap["error"] != null && (dataMap["error"] as Map<String,dynamic>).isNotEmpty;
   }
 
   dynamic getPayload() {
