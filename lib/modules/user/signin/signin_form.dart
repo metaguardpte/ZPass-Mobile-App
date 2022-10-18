@@ -2,11 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sp_util/sp_util.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
-import 'package:zpass/modules/user/signin/secretKey_input.dart';
+import 'package:zpass/modules/user/user_provider.dart';
+import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
+import 'package:zpass/res/constant.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/toast_utils.dart';
 import '../../../widgets/load_image.dart';
 import 'package:zpass/generated/l10n.dart';
@@ -37,7 +41,16 @@ class _SignInFormState extends State<SignInForm> {
           type: ToastType.error);
       return;
     }
-
+    CryptoManager.instance.login(Email, Psw,
+        Constant.inProduction
+            ? "https://ro8d3r7nxb.execute-api.ap-southeast-1.amazonaws.com/Prod"
+            : 'https://l8ee0j8yb8.execute-api.ap-southeast-1.amazonaws.com/Prod'
+        , SeKey).then((value){
+      UserProvider.instance.updateUser(value);
+      NavigatorUtils.push(context, Routers.home);
+    }).catchError((error) {
+        Toast.showMiddleToast("Login Failed: ${error.toString()}");
+    });
     //submit
   }
 
@@ -45,6 +58,7 @@ class _SignInFormState extends State<SignInForm> {
   var Psw = '';
   var Email = '';
   late TextEditingController SeKeyController = TextEditingController();
+  late TextEditingController emailController = TextEditingController();
 
   getEmail(value) {
     if (kDebugMode) {
@@ -76,9 +90,25 @@ class _SignInFormState extends State<SignInForm> {
     }
     // SeKeyController.text = '1235234';
 
-    NavigatorUtils.pushResult(context, RouterScanner.scanner, (p0){
-      print('p0');
-      print(p0);
+    NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data){
+      // const params = jsonDecode(data);
+
+      final params = jsonDecode(data['data']);
+      try{
+        if(params != null && params['secretKey'] != null) {
+          SeKeyController.text =params['secretKey'];
+          SeKey = params['secretKey'];
+          emailController.text = params['email'];
+          Email = params['email'];
+        }
+        else{
+          Toast.showMiddleToast('don`t get Secret Key');
+        }
+      }
+      catch(e){
+        print(e.toString());
+        Toast.showMiddleToast('don`t get Secret Key');
+      }
     });
   }
 
@@ -88,6 +118,7 @@ class _SignInFormState extends State<SignInForm> {
     Email = defaultValue["email"] ?? "";
     SeKey = defaultValue["secretKey"] ?? "";
     SeKeyController.text = SeKey;
+    emailController.text = Email;
   }
 
   @override
@@ -107,8 +138,8 @@ class _SignInFormState extends State<SignInForm> {
               color: Color.fromRGBO(246, 246, 246, 1),
               borderRadius: BorderRadius.all(Radius.circular(7.5))),
           child: TextField(
-            controller: TextEditingController(text: Email),
             onChanged: getEmail,
+            controller: emailController,
             decoration: InputDecoration(
                 icon: const LoadAssetImage(
                   'signin/email@2x',
