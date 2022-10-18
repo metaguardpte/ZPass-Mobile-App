@@ -13,6 +13,7 @@ class CryptoManager {
   final String _tag = "CryptoManager";
   static const String _kSecretKey = "kZPassSecretKey";
   static const String _kLoginResponseKeys = "kLoginResponseKeys";
+  late final Map<String, dynamic> _reqHeaders;
 
   factory CryptoManager() {
     return instance;
@@ -20,6 +21,11 @@ class CryptoManager {
 
   CryptoManager._internal() {
     _crypto = ZpassCrypto();
+    _reqHeaders = {
+      "version": "1.4.221",
+      "edition": "community",
+      "authorization": "Bearer"
+    };
   }
 
   Future<String> _newCryptoService() async {
@@ -70,8 +76,7 @@ class CryptoManager {
     String password,
     String host,
     String key,
-    Map<String, dynamic> header,
-    bool isPersonal,
+    {Map<String, dynamic>? header, bool isPersonal = true,}
   ) async {
     if ((_clientId ?? "").isEmpty) {
      final cid = await _newCryptoService();
@@ -86,7 +91,7 @@ class CryptoManager {
       masterPassword: password,
       secretKey: key,
       host: host,
-      headerJson: jsonEncode(header),
+      headerJson: jsonEncode(header ?? _reqHeaders),
       isPersonal: isPersonal,
     );
     if (resp == null) return Future.error("login fail, response is null");
