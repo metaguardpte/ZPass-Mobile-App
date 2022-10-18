@@ -4,7 +4,8 @@ import './bg.dart';
 import './content_footer.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  const SignInPage({Key? key, this.data}) : super(key: key);
+  final String? data;
 
   @override
   SignInPageState createState() => SignInPageState();
@@ -27,7 +28,7 @@ class SignInPageState extends State<SignInPage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(21))),
             child: Column(
-              children: const [SignInForm(), Spacer(), ContentFooter()],
+              children: [SignInForm(data: widget.data,), const Spacer(), const ContentFooter()],
             ),
           ),
         ],

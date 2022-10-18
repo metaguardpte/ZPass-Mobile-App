@@ -13,9 +13,7 @@ class LoginOrNewPage extends StatelessWidget {
   }
 
   toCreateAccountPage(context) {
-    NavigatorUtils.pushResult(context, RouterRegister.register, (value) {
-      print("user info is$value");
-    });
+    NavigatorUtils.push(context, RouterRegister.register,);
   }
 
   @override

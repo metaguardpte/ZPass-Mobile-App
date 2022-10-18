@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
@@ -10,7 +12,8 @@ import '../../../widgets/load_image.dart';
 import 'package:zpass/generated/l10n.dart';
 
 class SignInForm extends StatefulWidget {
-  const SignInForm({Key? key}) : super(key: key);
+  const SignInForm({Key? key, this.data}) : super(key: key);
+  final String? data;
 
   @override
   _SignInFormState createState() => _SignInFormState();
@@ -79,6 +82,20 @@ class _SignInFormState extends State<SignInForm> {
     });
   }
 
+  void _initDefaultValue() {
+    if ((widget.data ?? "").isEmpty) return;
+    final defaultValue = jsonDecode(widget.data!);
+    Email = defaultValue["email"] ?? "";
+    SeKey = defaultValue["secretKey"] ?? "";
+    SeKeyController.text = SeKey;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initDefaultValue();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -90,6 +107,7 @@ class _SignInFormState extends State<SignInForm> {
               color: Color.fromRGBO(246, 246, 246, 1),
               borderRadius: BorderRadius.all(Radius.circular(7.5))),
           child: TextField(
+            controller: TextEditingController(text: Email),
             onChanged: getEmail,
             decoration: InputDecoration(
                 icon: const LoadAssetImage(
