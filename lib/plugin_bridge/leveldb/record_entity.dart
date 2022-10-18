@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'record_entity.g.dart';
@@ -21,4 +23,12 @@ class RecordEntity {
       _$RecordEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$RecordEntityToJson(this);
+
+  String getEntityKey() {
+    return "";
+  }
+
+  String getEntityValue() {
+    return jsonEncode(this);
+  }
 }
