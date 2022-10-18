@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:zpass/modules/home/model/record_entity.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
-
+import 'package:zpass/plugin_bridge/leveldb/record_entity.dart';
 part 'vault_item_entity.g.dart';
 
 @JsonSerializable()

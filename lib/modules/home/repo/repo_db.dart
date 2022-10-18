@@ -1,7 +1,11 @@
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/repo/repo_base.dart';
+import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 
 class RepoDB extends RepoBase<VaultItemEntity> {
+
+  late ZPassDB _db;
+
   @override
   bool add(VaultItemEntity item) {
     // TODO: implement add
@@ -16,8 +20,8 @@ class RepoDB extends RepoBase<VaultItemEntity> {
 
   @override
   List<VaultItemEntity> filterBy(String condition) {
-    // TODO: implement filterBy
-    throw UnimplementedError();
+    print("get db list ...................");
+    return _db.list();
   }
 
   @override
@@ -28,8 +32,8 @@ class RepoDB extends RepoBase<VaultItemEntity> {
 
   @override
   Future init() {
-    // TODO: implement init
-    throw UnimplementedError();
+    _db = ZPassDB();
+    return _db.open();
   }
 
   @override
@@ -44,4 +48,8 @@ class RepoDB extends RepoBase<VaultItemEntity> {
     throw UnimplementedError();
   }
 
+  @override
+  void close() {
+    _db.close();
+  }
 }

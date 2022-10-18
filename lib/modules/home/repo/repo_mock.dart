@@ -92,4 +92,9 @@ class RepoMock extends RepoBase<VaultItemEntity> {
     rawData.removeWhere((element) => element.tags.contains(condition));
     return true;
   }
+
+  @override
+  void close() {
+
+  }
 }
