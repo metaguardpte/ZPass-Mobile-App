@@ -112,8 +112,8 @@ class _ScannerModeState extends State<ScannerMode> {
           ),
         ),
         Positioned(
-            right: 105.5,
-            top: 710,
+            right: 100,
+            bottom: 70,
             child: GestureDetector(
               onTap: _handelPickImage,
               child: Container(
@@ -125,8 +125,8 @@ class _ScannerModeState extends State<ScannerMode> {
               ),
             )),
         Positioned(
-            left: 105.5,
-            top: 710,
+            left: 100,
+            bottom: 70,
             child:SwitchFlash(
               switchFlash: (type){
                 controller?.toggleFlash();
