@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sp_util/sp_util.dart';
+import 'package:flutter/material.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
@@ -12,8 +12,8 @@ import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/toast_utils.dart';
-import '../../../widgets/load_image.dart';
-import 'package:zpass/generated/l10n.dart';
+import 'package:zpass/widgets/dialog/zpass_loading_dialog.dart';
+import 'package:zpass/widgets/load_image.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key, this.data}) : super(key: key);
@@ -24,6 +24,8 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
+  late final loadingDialog = ZPassLoadingDialog();
+
   void handelSignIn() {
     if (kDebugMode) {
       print('SignIn');
@@ -41,15 +43,18 @@ class _SignInFormState extends State<SignInForm> {
           type: ToastType.error);
       return;
     }
+    loadingDialog.show(context, barrierDismissible: false);
     CryptoManager.instance.login(Email, Psw,
         Constant.inProduction
             ? "https://ro8d3r7nxb.execute-api.ap-southeast-1.amazonaws.com/Prod"
             : 'https://l8ee0j8yb8.execute-api.ap-southeast-1.amazonaws.com/Prod'
         , SeKey).then((value){
+      loadingDialog.dismiss(context);
       UserProvider.instance.updateUser(value);
       NavigatorUtils.push(context, Routers.home);
     }).catchError((error) {
-        Toast.showMiddleToast("Login Failed: ${error.toString()}");
+      loadingDialog.dismiss(context);
+      Toast.showMiddleToast("Login Failed: ${error.toString()}");
     });
     //submit
   }
