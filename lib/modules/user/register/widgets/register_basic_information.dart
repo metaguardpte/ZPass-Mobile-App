@@ -12,7 +12,7 @@ import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/zpass_textfield.dart';
-import 'package:zpass/util/string_utils.dart';
+import 'package:zpass/extension/string_ext.dart';
 
 
 class RegisterBasicInformation extends StatefulWidget {
@@ -187,7 +187,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
       Toast.show(S.current.emailHint);
       return;
     }
-    if (!StringUtils.isEmail(provider.email)) {
+    if (!provider.email.isEmail()) {
       Toast.show(S.current.emailInvalid);
       return;
     }
