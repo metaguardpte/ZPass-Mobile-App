@@ -36,12 +36,14 @@ class _ListWidgetState extends State<ListWidget> {
               height: 51.5,
               alignment: Alignment.centerLeft,
               decoration: i < rows.length - 1?  const BoxDecoration(
+
                   border: Border(
                       bottom: BorderSide(
                           color: Color.fromRGBO(233, 234, 238, 1), width: 1))) : null,
               child: Row(
                 children: [
                   Expanded(
+                    flex:2,
                     child: Material(
                       child: Container(
                         child: rows[i].text is Widget
@@ -50,11 +52,13 @@ class _ListWidgetState extends State<ListWidget> {
                           rows[i].text,
                                 style: const TextStyle(
                                     color: Colors.black, fontSize: 16),
+                            maxLines: 1,
                               ),
                       ),
                     ),
                   ),
                   Expanded(
+                    flex: 1,
                       child: Container(
                     padding: const EdgeInsets.only(right: 16),
                     alignment: Alignment.centerRight,
