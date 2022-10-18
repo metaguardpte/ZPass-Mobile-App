@@ -22,7 +22,12 @@ class LoginOrNewPage extends StatelessWidget {
       color: Colors.white,
       child: Stack(
         children: [
-          const LoadAssetImage("entrance/entrance_bg2", width: double.infinity),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.bottomCenter,
+            child: LoadAssetImage("entrance/entrance_bg2", width:MediaQuery.of(context).size.width,fit: BoxFit.fill,),
+          ),
           Container(
             margin: const EdgeInsets.only(top: 187),
             child: Align(
@@ -97,7 +102,7 @@ class LoginOrNewPage extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.center,
                     width: 327,
-                    margin: const EdgeInsets.only(bottom: 74),
+                    margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.08),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
