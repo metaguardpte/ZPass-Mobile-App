@@ -67,9 +67,6 @@ dependencies:
     path: plugins/flkv
   zpass_crypto:
     path: plugins/zpass_crypto
-  grouped_list:
-    git:
-      url: git@github.com:LiuJQ/grouped_list.git
 
 dev_dependencies:
   flutter_test:

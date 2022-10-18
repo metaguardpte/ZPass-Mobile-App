@@ -54,7 +54,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 ## Repository synchronize
 
-`LinkFox`工程以`git submodules`方式依赖自研或第三方源代码`plugins`，因此每次重新`clone`或有源代码`plugins`更新时，须在工程根目录下运行以下`git submodules`同步命令：
+`ZPass`工程以`git submodules`方式依赖自研或第三方源代码`plugins`，因此每次重新`clone`或有源代码`plugins`更新时，须在工程根目录下运行以下`git submodules`同步命令：
 
 ```shell
 git submodule update --init --recursive

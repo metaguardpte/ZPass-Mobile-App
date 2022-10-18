@@ -441,15 +441,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  grouped_list:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: cd85ac937f86a939f5b880130c4c4cc675d3afb2
-      url: "git@github.com:LiuJQ/grouped_list.git"
-    source: git
-    version: "5.1.2"
   http:
     dependency: transitive
     description:
