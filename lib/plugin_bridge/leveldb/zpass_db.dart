@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flkv/flkv.dart';
 import 'package:path/path.dart';
-import 'package:collection/collection.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 
@@ -76,10 +75,13 @@ class ZPassDB {
     throw UnsupportedError("groupBy unsupported");
   }
 
-  Future<void> open() async {
-    final applicationDocDir = await getTemporaryDirectory();
-    var dbPath = join(applicationDocDir.path, "zpass");
-    print("open db ..................");
+  Future<void> open({String path=""}) async {
+    var dbPath = path;
+    if (dbPath.isEmpty) {
+      final applicationDocDir = await getTemporaryDirectory();
+      dbPath = join(applicationDocDir.path, "zpass");
+    }
+    print("open db .................. path: " + dbPath);
     _db = KvDB.open(dbPath);
   }
 
