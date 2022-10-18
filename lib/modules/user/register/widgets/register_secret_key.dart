@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -201,7 +202,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
                         pw.Container(
                           padding: const pw.EdgeInsets.all(10),
                           color: const PdfColor.fromInt(0xFFFFFFFF),
-                          child: pw.BarcodeWidget(data: {"email": provider.email, "secretKey": provider.secretKey}.toString(), width: 90.0, height: 90.0, barcode: pw.Barcode.qrCode()),
+                          child: pw.BarcodeWidget(data: jsonEncode({"email": provider.email, "secretKey": provider.secretKey}), width: 90.0, height: 90.0, barcode: pw.Barcode.qrCode()),
                         ),
                         pw.Expanded(
                           child: pw.Padding(
