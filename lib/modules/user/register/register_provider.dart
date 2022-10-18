@@ -73,6 +73,22 @@ class RegisterProvider extends BaseProvider {
     _protocolChecked = value;
   }
 
+  // password
+  String _password = "";
+  String get password => _password;
+  set password(String value) {
+    _password = value;
+    notifyListeners();
+  }
+
+  // confirm password
+  String _confirmPassword = "";
+  String get confirmPassword => _confirmPassword;
+  set confirmPassword(String value) {
+    _confirmPassword = value;
+    notifyListeners();
+  }
+
   /// api request
   Future<String?> doGetEmailVerifyCode() async {
     emailCodeLoading = true;
