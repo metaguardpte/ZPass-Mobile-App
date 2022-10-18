@@ -60,6 +60,8 @@ dependencies:
   pin_code_fields: ^7.4.0
   tuple: ^2.0.1
   easy_rich_text: ^1.1.0
+  flkv:
+    path: plugins/flkv
 
 dev_dependencies:
   flutter_test:

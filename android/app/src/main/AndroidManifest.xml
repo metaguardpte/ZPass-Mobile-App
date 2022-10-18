@@ -45,10 +45,10 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    // 写入文件权限
+    <!-- 写入文件权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    // 读取文件权限
+    <!-- 读取文件权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    // 相机权限
+    <!-- 相机权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
 </manifest>
