@@ -23,6 +23,16 @@
   "signinTip":"Plese input your ",
   "signinOrNewTip":"Log in or create a new account to access your secure vault on your device.",
 
+  "General":"GENERAL",
+  "Language":"Language",
+  "DataRoaming":"Data Roaming",
+  "Clipboard":"Clipboard",
+  "Security":"SECURITY",
+  "AutoLock":"Auto-Lock on Exit",
+  "UnlockWithFinger":"Unlock with Fingerprint",
+  "UnlockWithFace":"Unlock with Face ID",
+
+
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",
   "registerTitleSecret": "Keep your secret key created",

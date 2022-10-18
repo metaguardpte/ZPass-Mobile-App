@@ -1,4 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zpass/modules/setting/general.dart';
+import 'package:zpass/modules/setting/security.dart';
+import 'package:zpass/modules/setting/switch.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/widgets/list.dart';
 import 'package:zpass/widgets/load_image.dart';
 
@@ -23,23 +28,25 @@ class UserInfo {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  List<RowData> rowData = [
-    RowData(
-        text: 'textadsfa',
-        icon: const LoadAssetImage(
-          'signin/pass-on@2x',
-          width: 20,
-          height: 20,
-        ),
-        right: const LoadAssetImage(
-          'signin/pass-on@2x',
-          width: 20,
-          height: 20,
-        ))
-  ];
+  bool _fingerPrintType = false;
+
+  onFingerPrintChange(bool value) {
+    _fingerPrintType = value;
+  }
+
+  late Color _rightColor;
+  late TextStyle _rightTextStyle;
+
+  @override
+  void initState() {
+    super.initState();
+    _rightColor = const Color.fromRGBO(149, 155, 167, 1);
+    _rightTextStyle = TextStyle(color: _rightColor, fontSize: 15);
+  }
 
   @override
   Widget build(BuildContext context) {
+
     UserInfo userInfo = UserInfo(
         userName: "YearLiu",
         email: "13333@163.com",
@@ -62,7 +69,7 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(11.5, 19.5, 11.5, 19.5),
+            padding: const EdgeInsets.fromLTRB(11.5, 19.5, 13, 19.5),
             margin: const EdgeInsets.only(top: 20.5),
             decoration: const BoxDecoration(
                 color: Colors.white,
@@ -78,7 +85,7 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
                 Container(
-                  margin:const EdgeInsets.only(left: 12),
+                  margin: const EdgeInsets.only(left: 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -111,26 +118,30 @@ class _SettingPageState extends State<SettingPage> {
                                     color: Color.fromRGBO(73, 84, 255, 1)),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                       Material(
-                        child: Text(userInfo.email,style:const TextStyle(
-                          color: Color.fromRGBO(149, 155, 167, 1)
-                        ),),
-                      )
+                        child: Text(
+                          userInfo.email,
+                          style: const TextStyle(
+                              color: Color.fromRGBO(149, 155, 167, 1)),
+                        ),
+                      ),
                     ],
                   ),
+                ),
+                const Spacer(),
+                Icon(
+                  ZPassIcons.icArrowRight,
+                  color: _rightColor,
+                  size: 10,
                 )
               ],
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 20.5),
-            child: ListWidget(
-              rows: rowData,
-            ),
-          )
+          GeneralWidget(rightStyle: _rightTextStyle, rightColor: _rightColor),
+          SecurityWidget(rightStyle: _rightTextStyle, rightColor: _rightColor)
         ],
       ),
     );
