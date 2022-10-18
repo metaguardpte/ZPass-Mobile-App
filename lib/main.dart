@@ -8,7 +8,6 @@ import 'package:zpass/modules/home/splash_page.dart';
 import 'package:zpass/modules/setting/provider/connectivity_provider.dart';
 import 'package:zpass/modules/setting/provider/locale_provider.dart';
 import 'package:zpass/modules/setting/provider/theme_provider.dart';
-import 'package:zpass/modules/setting/setting_page.dart';
 import 'package:zpass/routers/not_found_page.dart';
 import 'package:zpass/routers/router_observer.dart';
 import 'package:zpass/routers/routers.dart';
@@ -89,7 +88,7 @@ class MyApp extends StatelessWidget {
       theme: theme ?? provider.getTheme(),
       darkTheme: provider.getTheme(isDarkMode: true),
       themeMode: provider.getThemeMode(),
-      home:home ?? const SplashPage(),
+      home: home ?? const SplashPage(),
       onGenerateRoute: Routers.router.generator,
       localizationsDelegates: const [
         S.delegate,
