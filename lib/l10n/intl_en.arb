@@ -22,6 +22,8 @@
   "zpassLink":"zpassapp.com",
   "signinTip":"Plese input your ",
   "signinOrNewTip":"Log in or create a new account to access your secure vault on your device.",
+   "siginScan":"Scan setup code",
+    "or":"OR",
 
   "General":"GENERAL",
   "Language":"Language",
