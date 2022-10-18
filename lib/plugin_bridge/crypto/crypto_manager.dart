@@ -37,10 +37,10 @@ class CryptoManager {
   }
 
   Future<String?> generateSecretKey() async {
-    final String key = SpUtil.getString(_kSecretKey) ?? "";
-    if (key.isNotEmpty) {
-      return Future.value(key);
-    }
+    // final String key = SpUtil.getString(_kSecretKey) ?? "";
+    // if (key.isNotEmpty) {
+    //   return Future.value(key);
+    // }
     final rep = await _crypto.generateSecretKey();
     if (rep == null) return null;
     final model = CryptoModel.fromJson(jsonDecode(rep));
@@ -48,12 +48,12 @@ class CryptoManager {
      Log.e("generate secret key fail:${model.msg}", tag: _tag);
      return null;
     }
-    SpUtil.putString(_kSecretKey, model.data);
+    // SpUtil.putString(_kSecretKey, model.data);
     return model.data;
   }
 
-  Future<String?> createUserKeyModel(String user, String password, ) async {
-    final String key = SpUtil.getString(_kSecretKey) ?? "";
+  Future<String?> createUserKeyModel(String user, String password, String key) async {
+    // final String key = SpUtil.getString(_kSecretKey) ?? "";
     if (key.isEmpty) return null;
     final rep = await _crypto.createUserKeyModel(identifierName: user, masterPassword: password, raw: key);
     if (rep == null) return null;

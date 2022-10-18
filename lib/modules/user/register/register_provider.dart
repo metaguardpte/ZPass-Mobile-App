@@ -133,7 +133,7 @@ class RegisterProvider extends BaseProvider {
   Future<String?> doActivationAccount() async {
     loading = true;
     secretKey = await CryptoManager.instance.generateSecretKey() ?? "";
-    final cryptoStr = await CryptoManager.instance.createUserKeyModel(email, confirmPassword);
+    final cryptoStr = await CryptoManager.instance.createUserKeyModel(email, confirmPassword, secretKey);
     if (cryptoStr == null) {
       loading = false;
       return "User key create fail";

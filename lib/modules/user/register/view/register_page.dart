@@ -11,6 +11,8 @@ import 'package:zpass/modules/user/register/widgets/register_protocol_checkbox.d
 import 'package:zpass/modules/user/register/widgets/register_secret_key.dart';
 import 'package:zpass/modules/user/register/widgets/register_setup_password.dart';
 import 'package:zpass/modules/user/register/widgets/register_stepper.dart';
+import 'package:zpass/modules/user/router_user.dart';
+import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/toast_utils.dart';
@@ -168,6 +170,10 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     );
   }
 
+  String _buildResponseParam() {
+    return jsonEncode({"email": provider.email, "secretKey": provider.secretKey});
+  }
+
   void _doNext() {
     if (widget.type != RegisterType.personal) return;
     if (provider.stepIndex == 0) {
@@ -175,8 +181,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     } else if (provider.stepIndex == 1) {
       _doActivationAccount();
     } else if (provider.stepIndex == 2) {
-      final result = jsonEncode({"email": provider.email, "secretKey": provider.secretKey});
-      NavigatorUtils.goBackWithParams(context, result);
+      NavigatorUtils.push(context, RouterUser.login, replace: true, arguments: { "data": _buildResponseParam()});
     }
   }
 
@@ -193,8 +198,11 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
 
   _onBackTap() {
     bool isLast = provider.stepIndex == _stepCount - 1;
-    if (provider.stepIndex == 0 || isLast) {
-      NavigatorUtils.goBackWithParams(context, isLast ? jsonEncode({"email": provider.email, "secretKey": provider.secretKey}) : "");
+    if (provider.stepIndex == 0) {
+      NavigatorUtils.goBack(context);
+      return;
+    } else if (isLast) {
+      NavigatorUtils.push(context, RouterUser.login, replace: true, arguments: { "data": _buildResponseParam()});
       return;
     }
     _previousStep();
