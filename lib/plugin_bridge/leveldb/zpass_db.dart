@@ -5,6 +5,7 @@ import 'package:flkv/flkv.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
+import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
 
 import 'record_entity.dart';
 
@@ -51,11 +52,15 @@ class ZPassDB {
     return _db.delete(uint8list);
   }
 
-  List<E> list<E extends RecordEntity>() {
+  List<E> list<E extends RecordEntity>(EntityType type) {
     List<Record> records = _db.list();
+    var typeName = type.name;
     var entities = <E>[];
     for (var record in records) {
       var key = record.key;
+      if (!key.contains(typeName)) {
+        continue;
+      }
       var jsonStr = record.value;
       var entity = _toEntity(key, jsonStr) as E?;
       if (entity == null) {

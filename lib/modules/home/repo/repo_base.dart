@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
 
 abstract class RepoBase<T> {
   @protected
@@ -12,7 +13,7 @@ abstract class RepoBase<T> {
   ///
   /// 条件过滤
   ///
-  List<T> filterBy(String condition);
+  List<T> filterBy(EntityType entityType);
 
   ///
   /// 删除数据项
