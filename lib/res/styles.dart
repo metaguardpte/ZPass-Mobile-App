@@ -8,6 +8,9 @@ class TextStyles {
   static const TextStyle textSize12 = TextStyle(
     fontSize: Dimens.font_sp12,
   );
+  static const TextStyle textSize14 = TextStyle(
+    fontSize: Dimens.font_sp14,
+  );
   static const TextStyle textSize16 = TextStyle(
     fontSize: Dimens.font_sp16,
   );

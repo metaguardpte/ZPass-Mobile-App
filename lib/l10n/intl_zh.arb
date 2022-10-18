@@ -11,6 +11,7 @@
   "tabIdentities": "Identities",
 
   "errorPageNotFound": "未知页面",
+  "tipsLoading": "加载中",
 
   "email":"邮箱",
   "password":"密码",
@@ -32,7 +33,6 @@
   "sendCode": "Send Code",
   "resendCode": "Resend Code",
   "emailVerifyCodeHint": "Please enter verify code",
-  "email": "Email",
   "emailHint": "Enter your Email",
   "emailInvalid": "Invalid email format",
   "registerEmailTips": "· Please enter a work email address only as we DO NOT \naccept web-mail addresses (gmail, yahoo, hotmail, etc.)",
@@ -64,5 +64,15 @@
   "registerSecretKeyTitle": "Important!",
   "registerSecretKeyCopy": "Copy Secret Key",
   "registerSecretKeySave": "Download and Save Your Secret Key",
-  "registerProtocolNotCheck": "Please check user service and privacy notice"
+  "registerProtocolNotCheck": "Please check user service and privacy notice",
+  "registerPasswordFormatError": "Password format error",
+  "registerPasswordAreNotTheSame": "Password and confirm password are not the same",
+  "registerSecretKeyPDFTitle": "Please Keep it safe!",
+  "registerSecretKeyPDFAccountDetail": "Account detail:",
+  "registerSecretKeyPDFKey": "Secret Key",
+  "registerSecretKeyPDFQuickLoginCode": "Quick Login Code",
+  "registerSecretKeyPDFScanCodeTips": "Scan this code from the \nZpass apps to set up \nyour account quickly and \neasily.",
+  "registerSecretKeyPDFContact": "Contact Our Support Team",
+  "registerSecretKeyCopyTips": "Copy success",
+  "registerSecretKeyPermission": "Please enable storage permission"
 }

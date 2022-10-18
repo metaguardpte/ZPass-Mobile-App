@@ -45,4 +45,15 @@ class Colours {
   static const Color gradient_blue = Color(0xFF5793FA);
   static const Color shadow_blue = Color(0x805793FA);
   static const Color orange = Color(0xFFFF8547);
+
+  static const Color background = Color(0xFFFFFFFF);
+  static const Color background_dark = Color(0xFF101010);
+
+  static const Color secondBackground = Color(0xFFF7F7F7);
+  static const Color secondBackground_dark = Color(0xFF151515);
+
+  static const Color tertiaryBackground = Color(0xFFFFFFFF);
+  static const Color tertiaryBackground_dark = Color(0xFF1E1E1E);
+
+  static const Color mask = Color(0x80000000);
 }

@@ -60,6 +60,10 @@ dependencies:
   pin_code_fields: ^7.4.0
   tuple: ^2.0.1
   easy_rich_text: ^1.1.0
+  pdf: ^3.8.3
+  path_provider: ^2.0.11
+  share_plus: ^4.5.3
+  grouped_list: ^5.1.2
 
 dev_dependencies:
   flutter_test:
@@ -108,6 +112,9 @@ flutter:
     - family: ZPassFonts
       fonts:
         - asset: assets/fonts/ZPassFonts.ttf
+    - family: IconFont
+      fonts:
+        - asset: assets/fonts/iconfont.ttf
 
   #
   # For details regarding fonts from package dependencies,

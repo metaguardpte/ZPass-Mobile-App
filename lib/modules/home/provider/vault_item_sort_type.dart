@@ -1,0 +1,4 @@
+enum VaultItemSortType {
+  lastUsed,
+  createTime,
+}
