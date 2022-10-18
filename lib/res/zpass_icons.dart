@@ -20,4 +20,5 @@ class ZPassIcons {
   static const IconData icLanguage = IconData(0xe6d7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icDataRoaming = IconData(0xe6d3, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icClipboard = IconData(0xe6dc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icQrScan = IconData(0xe6e7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
