@@ -56,4 +56,13 @@ class Colours {
   static const Color tertiaryBackground_dark = Color(0xFF1E1E1E);
 
   static const Color mask = Color(0x80000000);
+
+  static const Color text1 = Color(0xFF16181A);
+  static const Color dark_text1 = Color(0xE6FFFFFF);
+
+  static const Color text2 = Color(0xFF5F646C);
+  static const Color dark_text2 = Color(0xB4FFFFFF);
+
+  static const Color text3 = Color(0xFF9EA1A6);
+  static const Color dark_text3 = Color(0x64FFFFFF);
 }

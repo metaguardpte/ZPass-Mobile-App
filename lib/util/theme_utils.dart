@@ -71,4 +71,10 @@ extension ThemeExtension on BuildContext {
   Color get primaryColor => Theme.of(this).primaryColor;
   Color get backgroundColor => Theme.of(this).scaffoldBackgroundColor;
   Color get dialogBackgroundColor => Theme.of(this).canvasColor;
+  Color get groupBackground => ThemeUtils.isDark(this) ? Colours.secondBackground_dark : Colours.background;
+  Color get secondaryBackground => ThemeUtils.isDark(this) ? Colours.secondBackground_dark : Colours.secondBackground;
+  Color get tertiaryBackground => ThemeUtils.isDark(this) ? Colours.tertiaryBackground_dark : Colours.tertiaryBackground;
+  Color get textColor1 => ThemeUtils.isDark(this) ? Colours.dark_text1 : Colours.text1;
+  Color get textColor2 => ThemeUtils.isDark(this) ? Colours.dark_text2 : Colours.text2;
+  Color get textColor3 => ThemeUtils.isDark(this) ? Colours.dark_text3 : Colours.text3;
 }

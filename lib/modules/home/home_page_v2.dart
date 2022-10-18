@@ -95,7 +95,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
     return ConvexAppBar.builder(
       itemBuilder: HomeBottomBarBuilder(_items, context.backgroundColor),
       count: _items.length,
-      backgroundColor: context.backgroundColor,
+      backgroundColor: context.groupBackground,
       onTapNotify: (i) {
         var intercept = i == HomePageV2.dockedFake;
         if (intercept) {

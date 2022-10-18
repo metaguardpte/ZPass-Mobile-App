@@ -54,6 +54,23 @@ abstract class ProviderState<T extends StatefulWidget, P extends BaseProvider> e
   // }
 }
 
+abstract class AliveProviderState<T extends StatefulWidget,
+        P extends BaseProvider> extends ProviderState<T, P>
+    with AutomaticKeepAliveClientMixin {
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return ChangeNotifierProvider<P>.value(
+      value: provider,
+      child: buildContent(context),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
+
 mixin TabPageFocusable {
   void onFocusChanged(bool isFocus);
 }
