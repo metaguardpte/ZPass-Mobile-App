@@ -1,17 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/plugin_bridge/leveldb/record_entity.dart';
 part 'vault_item_entity.g.dart';
 
 @JsonSerializable()
 class VaultItemEntity extends RecordEntity {
   String name;
-  String description;
-  String detail;
-  VaultItemType type;
-  bool star;
-  List<String> tags;
-  int useTime;
+  String? description;
+  dynamic detail;
+  int type;
+  bool? star;
+  List<String>? tags;
+  int? useTime;
 
   VaultItemEntity(
       {required super.id,

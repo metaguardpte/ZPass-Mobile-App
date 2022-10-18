@@ -57,7 +57,7 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
         ],
       ),
       title: Text(element.name),
-      subtitle: Text(element.description),
+      subtitle: Text(element.description ?? ""),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
@@ -96,7 +96,8 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
   int comparator(VaultItemEntity e1, VaultItemEntity e2) {
     switch (provider.sortType) {
       case VaultItemSortType.lastUsed:
-        return e1.useTime.compareTo(e2.useTime);
+        if (e1.useTime == null || e2.useTime == null) return 1;
+        return e1.useTime!.compareTo(e2.useTime!);
       case VaultItemSortType.createTime:
         return e1.createTime.compareTo(e2.createTime);
     }
@@ -106,7 +107,7 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
   String listGroupBy(VaultItemEntity element) {
     switch (provider.sortType) {
       case VaultItemSortType.lastUsed:
-        return element.useTime.formatDateTime(format: dateFormat_Y_M_D);
+        return element.useTime?.formatDateTime(format: dateFormat_Y_M_D) ?? "UNKNOWN";
       case VaultItemSortType.createTime:
         return element.createTime.formatDateTime(format: dateFormat_Y_M_D);
     }

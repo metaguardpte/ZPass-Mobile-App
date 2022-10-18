@@ -13,12 +13,12 @@ VaultItemEntity _$VaultItemEntityFromJson(Map<String, dynamic> json) =>
       createTime: json['createTime'] as int,
       isDeleted: json['isDeleted'] as bool,
       name: json['name'] as String,
-      description: json['description'] as String,
-      detail: json['detail'] as String,
-      type: $enumDecode(_$VaultItemTypeEnumMap, json['type']),
-      star: json['star'] as bool,
-      tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
-      useTime: json['useTime'] as int,
+      description: json['description'] as String?,
+      detail: json['detail'],
+      type: json['type'] as int,
+      star: json['star'] as bool?,
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      useTime: json['useTime'] as int?,
     )..restoreTime = json['restoreTime'] as int?;
 
 Map<String, dynamic> _$VaultItemEntityToJson(VaultItemEntity instance) =>
@@ -31,19 +31,8 @@ Map<String, dynamic> _$VaultItemEntityToJson(VaultItemEntity instance) =>
       'name': instance.name,
       'description': instance.description,
       'detail': instance.detail,
-      'type': _$VaultItemTypeEnumMap[instance.type]!,
+      'type': instance.type,
       'star': instance.star,
       'tags': instance.tags,
       'useTime': instance.useTime,
     };
-
-const _$VaultItemTypeEnumMap = {
-  VaultItemType.login: 'login',
-  VaultItemType.note: 'note',
-  VaultItemType.credit: 'credit',
-  VaultItemType.identity: 'identity',
-  VaultItemType.metaMaskRawData: 'metaMaskRawData',
-  VaultItemType.metaMaskMnemonicPhrase: 'metaMaskMnemonicPhrase',
-  VaultItemType.addresses: 'addresses',
-  VaultItemType.tagAddress: 'tagAddress',
-};

@@ -19,11 +19,11 @@ class RepoMock extends RepoBase<VaultItemEntity> {
   @override
   List<VaultItemEntity> filterBy(EntityType entityType) {
     var name = entityType.name;
-    return rawData.where((element) => element.tags.contains(name)).toList();
+    return rawData.where((element) => element.tags?.contains(name) ?? false).toList();
   }
 
   List<VaultItemEntity> filterByType(VaultItemType type) {
-    return rawData.where((element) => element.type == type).toList();
+    return rawData.where((element) => element.type == type.index).toList();
   }
 
   @override
@@ -41,7 +41,7 @@ class RepoMock extends RepoBase<VaultItemEntity> {
         name: "test--$index",
         description: "test--$index desc",
         detail: "test--$index detail",
-        type: VaultItemType.login,
+        type: VaultItemType.login.index,
         star: false,
         tags: [],
         useTime: DateTime.now().millisecondsSinceEpoch - 1000 * 3600 * 24 * 6)));
@@ -53,7 +53,7 @@ class RepoMock extends RepoBase<VaultItemEntity> {
         name: "test--${count + index}",
         description: "test--${count + index} desc",
         detail: "test--${count + index} detail",
-        type: VaultItemType.login,
+        type: VaultItemType.login.index,
         star: false,
         tags: [],
         useTime: DateTime.now().millisecondsSinceEpoch - 1000 * 3600 * 24 * 3)));
@@ -65,7 +65,7 @@ class RepoMock extends RepoBase<VaultItemEntity> {
         name: "test--${count + index}",
         description: "test--${count + index} desc",
         detail: "test--${count + index} detail",
-        type: VaultItemType.login,
+        type: VaultItemType.login.index,
         star: false,
         tags: [],
         useTime: DateTime.now().millisecondsSinceEpoch - 1000 * 3600 * 24)));
@@ -77,7 +77,7 @@ class RepoMock extends RepoBase<VaultItemEntity> {
         name: "test--${count + index}",
         description: "test--${count + index} desc",
         detail: "test--${count + index} detail",
-        type: VaultItemType.login,
+        type: VaultItemType.login.index,
         star: false,
         tags: [],
         useTime: DateTime.now().millisecondsSinceEpoch)));
@@ -91,7 +91,7 @@ class RepoMock extends RepoBase<VaultItemEntity> {
 
   @override
   bool removeBy(String condition) {
-    rawData.removeWhere((element) => element.tags.contains(condition));
+    rawData.removeWhere((element) => element.tags?.contains(condition) ?? false);
     return true;
   }
 

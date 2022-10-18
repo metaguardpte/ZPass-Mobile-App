@@ -23,7 +23,7 @@ class _TabIdentitiesPageState extends TabBasePageState<TabIdentitiesPage,
 
   @override
   Widget buildListItem(BuildContext context, VaultItemEntity element) {
-    return ListTile(title: Text(element.name), subtitle: Text(element.description),);
+    return ListTile(title: Text(element.name), subtitle: Text(element.description ?? ""),);
   }
 
   @override
