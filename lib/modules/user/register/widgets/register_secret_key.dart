@@ -26,7 +26,6 @@ class RegisterSecretKey extends StatefulWidget {
 }
 
 class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterProvider> {
-  final String _secretKey = "V1-00A5-6BFF-D19A-DD46-956E-A1E5-2482-7E9E";
   @override
   Widget buildContent(BuildContext context) {
     return Container(
@@ -83,7 +82,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
         color: const Color(0xFFF6F6F6),
       ),
       child: Text(
-        _secretKey,
+        provider.secretKey,
         style: const TextStyle(
             color: Color(0xFFFF7019), fontSize: 16, fontWeight: FontWeight.w500,
           height: 1.6
@@ -176,7 +175,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
                 children: [
                   pw.Text("${S.current.registerSecretKeyPDFKey}:", style: pw.TextStyle(color: subColor, fontSize: 15)),
                   pw.SizedBox(width: 10),
-                  pw.Expanded(child: pw.Text(_secretKey, style: pw.TextStyle(color: color, fontSize: 15))),
+                  pw.Expanded(child: pw.Text(provider.secretKey, style: pw.TextStyle(color: color, fontSize: 15))),
                 ],
               ),
             ],
@@ -202,7 +201,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
                         pw.Container(
                           padding: const pw.EdgeInsets.all(10),
                           color: const PdfColor.fromInt(0xFFFFFFFF),
-                          child: pw.BarcodeWidget(data: {"email": provider.email, "secretKey": _secretKey}.toString(), width: 90.0, height: 90.0, barcode: pw.Barcode.qrCode()),
+                          child: pw.BarcodeWidget(data: {"email": provider.email, "secretKey": provider.secretKey}.toString(), width: 90.0, height: 90.0, barcode: pw.Barcode.qrCode()),
                         ),
                         pw.Expanded(
                           child: pw.Padding(
@@ -231,7 +230,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
   }
 
   _onCopySecretKeyTap() {
-    Clipboard.setData(ClipboardData(text: _secretKey));
+    Clipboard.setData(ClipboardData(text: provider.secretKey));
     Toast.show(S.current.registerSecretKeyCopyTips);
   }
 

@@ -213,7 +213,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     _nextStep();
   }
 
-  _doActivationAccount() {
+  _doActivationAccount() async {
     if (provider.password.isEmpty) {
       Toast.show(S.current.registerMasterPasswordHint);
       return;
@@ -226,6 +226,11 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
 
     if (provider.password != provider.confirmPassword) {
       Toast.show(S.current.registerPasswordAreNotTheSame);
+      return;
+    }
+    final error = (await provider.doActivationAccount()) ?? "";
+    if (error.isNotEmpty) {
+      Toast.show(error);
       return;
     }
     _nextStep();
