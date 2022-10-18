@@ -34,6 +34,8 @@ class ContentFooter extends StatelessWidget {
   }
 
   _navigatorToRegisterPage(BuildContext context) {
-    NavigatorUtils.push(context, RouterRegister.register);
+    NavigatorUtils.pushResult(context, RouterRegister.register, (value) {
+      print("user info is$value");
+    });
   }
 }

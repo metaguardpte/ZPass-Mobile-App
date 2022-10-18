@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -13,7 +15,6 @@ import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/custom_scroll_behavior.dart';
-import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/widgets/zpass_button_gradient.dart';
 
 enum RegisterType {
@@ -168,12 +169,14 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   void _doNext() {
+    if (widget.type != RegisterType.personal) return;
     if (provider.stepIndex == 0) {
       _doCheckEmailVerifyCode();
     } else if (provider.stepIndex == 1) {
       _doActivationAccount();
     } else if (provider.stepIndex == 2) {
-      NavigatorUtils.goBack(context);
+      final result = jsonEncode({"email": provider.email, "secretKey": provider.secretKey});
+      NavigatorUtils.goBackWithParams(context, result);
     }
   }
 
@@ -189,8 +192,9 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   _onBackTap() {
-    if (provider.stepIndex == 0 || provider.stepIndex == _stepCount - 1) {
-      NavigatorUtils.goBack(context);
+    bool isLast = provider.stepIndex == _stepCount - 1;
+    if (provider.stepIndex == 0 || isLast) {
+      NavigatorUtils.goBackWithParams(context, isLast ? jsonEncode({"email": provider.email, "secretKey": provider.secretKey}) : "");
       return;
     }
     _previousStep();
