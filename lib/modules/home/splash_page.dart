@@ -4,6 +4,7 @@ import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/widgets/load_image.dart';
+import 'package:zpass/generated/l10n.dart';
 
 class SplashPage extends StatefulWidget {
   // final FunctionCallback<BuildContext> authCallback;
@@ -29,7 +30,7 @@ class _SplashPageState extends State<SplashPage> {
     //   }
     // });
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () => NavigatorUtils.push(context, Routers.home, clearStack: true));
+    Future.delayed(const Duration(seconds: 2), () => NavigatorUtils.push(context, Routers.loginOrNew, clearStack: true));
   }
   @override
   Widget build(BuildContext context) {
@@ -37,13 +38,27 @@ class _SplashPageState extends State<SplashPage> {
       body: Container(
         color: Colors.white,
         child: Stack(
-          children: [
+          children:  [
+            const LoadAssetImage("entrance/entrance_bg", width: double.infinity, height: double.infinity),
             Container(
-                alignment: Alignment.bottomCenter,
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-                child: const LoadAssetImage("home/slogan", width: 160, height: 61, fit: BoxFit.contain,)
+              margin: const EdgeInsets.only(top: 230),
+              child: const Align(
+                alignment: Alignment.topCenter,
+                child: LoadAssetImage('entrance/logo',
+                  width: 265,),
+              ),
             ),
-            const Center(child: Text("Hello ZPass")),
+            Container(
+              margin: const EdgeInsets.only(bottom: 24.5),
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(S.current.zpassLink,
+                    style: const TextStyle(
+                      color: Color.fromRGBO(149, 155, 167, 0.66)
+                    ),
+                  )
+              ),
+            )
           ],
         ),
       ),

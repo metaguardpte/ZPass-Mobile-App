@@ -21,6 +21,7 @@
   "createAccount":"Create Account",
   "zpassLink":"zpassapp.com",
   "signinTip":"Plese input your ",
+  "signinOrNewTip":"Log in or create a new account to access your secure vault on your device.",
 
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",

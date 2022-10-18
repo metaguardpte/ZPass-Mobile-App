@@ -8,7 +8,6 @@ import 'package:zpass/modules/home/splash_page.dart';
 import 'package:zpass/modules/setting/provider/connectivity_provider.dart';
 import 'package:zpass/modules/setting/provider/locale_provider.dart';
 import 'package:zpass/modules/setting/provider/theme_provider.dart';
-import 'package:zpass/modules/setting/setting_page.dart';
 import 'package:zpass/routers/not_found_page.dart';
 import 'package:zpass/routers/router_observer.dart';
 import 'package:zpass/routers/routers.dart';
@@ -16,7 +15,6 @@ import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/handle_error_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'generated/l10n.dart';
-import 'modules/user/signin/signin_page.dart';
 
 Future<void> main() async {
 //  debugProfileBuildsEnabled = true;
@@ -90,7 +88,7 @@ class MyApp extends StatelessWidget {
       theme: theme ?? provider.getTheme(),
       darkTheme: provider.getTheme(isDarkMode: true),
       themeMode: provider.getThemeMode(),
-      home: home ?? const SettingPage(),
+      home: home ?? const SplashPage(),
       onGenerateRoute: Routers.router.generator,
       localizationsDelegates: const [
         S.delegate,
