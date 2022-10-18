@@ -57,6 +57,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.1"
+  build_cli_annotations:
+    dependency: transitive
+    description:
+      name: build_cli_annotations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   build_config:
     dependency: transitive
     description:
@@ -169,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  colorize:
+    dependency: transitive
+    description:
+      name: colorize
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   common_utils:
     dependency: "direct main"
     description:
@@ -389,6 +403,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.7"
+  flutter_rust_bridge:
+    dependency: transitive
+    description:
+      name: flutter_rust_bridge
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.49.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -735,6 +756,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+  puppeteer:
+    dependency: transitive
+    description:
+      name: puppeteer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.14.0"
   qr:
     dependency: transitive
     description:
@@ -868,6 +896,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
+  shelf_static:
+    dependency: transitive
+    description:
+      name: shelf_static
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   shelf_web_socket:
     dependency: transitive
     description:
@@ -1111,6 +1146,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.1"
+  zpass_crypto:
+    dependency: "direct main"
+    description:
+      path: "plugins/zpass_crypto"
+      relative: true
+    source: path
+    version: "0.0.1"
   zxing2:
     dependency: "direct main"
     description:

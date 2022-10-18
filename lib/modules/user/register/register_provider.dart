@@ -1,7 +1,9 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
+
 import 'package:zpass/base/api/register_services.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/base/network/base_resp.dart';
+import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 
 class RegisterProvider extends BaseProvider {
 
@@ -89,6 +91,14 @@ class RegisterProvider extends BaseProvider {
     notifyListeners();
   }
 
+  String _secretKey = "";
+  String get secretKey => _secretKey;
+  set secretKey(String value) {
+    _secretKey = value;
+  }
+
+  Map<String, dynamic> _activationPayload = {};
+
   /// api request
   Future<String?> doGetEmailVerifyCode() async {
     emailCodeLoading = true;
@@ -113,10 +123,36 @@ class RegisterProvider extends BaseProvider {
       if (resp.hasError()) {
         return Future.value(resp.getError()["id"]);
       }
+      _activationPayload = resp.getPayload() ?? {};
       return Future.value(null);
     } else {
       return Future.value(resp.data.toString());
     }
+  }
+
+  Future<String?> doActivationAccount() async {
+    loading = true;
+    secretKey = await CryptoManager.instance.generateSecretKey() ?? "";
+    final cryptoStr = await CryptoManager.instance.createUserKeyModel(email, confirmPassword);
+    if (cryptoStr == null) {
+      loading = false;
+      return "User key create fail";
+    }
+    Map<String, dynamic> userKeyModel = jsonDecode(cryptoStr);
+    userKeyModel["userId"] = 0;
+    Map<String, dynamic> param = {
+      ..._activationPayload,
+      "userKey": userKeyModel,
+    };
+    final BaseResp resp = await _remote.activationAccount(param);
+    loading = false;
+    if (!resp.isHttpOK()) {
+      return Future.value(resp.data.toString());
+    }
+    if (resp.hasError()) {
+      return Future.value(resp.getError()["id"]);
+    }
+    return Future.value(null);
   }
 
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/base/base_provider.dart';
+import 'package:zpass/extension/string_ext.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/user/register/register_provider.dart';
 import 'package:zpass/res/gaps.dart';
-import 'package:zpass/util/string_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/zpass_textfield.dart';
 
@@ -17,8 +17,6 @@ class RegisterSetupPassword extends StatefulWidget {
 }
 
 class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, RegisterProvider> {
-
-  String _password = "";
 
   @override
   Widget buildContent(BuildContext context) {
@@ -35,7 +33,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
                   title: S.current.registerMasterPassword,
                   hintText: S.current.registerMasterPasswordHint,
                   onTextChange: (value) => provider.password = value,
-                  onEditingComplete: () => _checkPasswordIsValid(_password),
+                  onEditingComplete: () => _checkPasswordIsValid(provider.password),
                 ),
                 Gaps.vGap16,
                 ZPassTextField(
@@ -62,7 +60,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
   }
 
   void _checkPasswordIsValid(String value) {
-    bool isValid = StringUtils.isValidPassword(value);
+    bool isValid = value.isValidPassword();
     if (!isValid) {
       Toast.show(S.current.registerPasswordFormatError);
     }
