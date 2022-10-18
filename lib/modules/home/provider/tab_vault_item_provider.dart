@@ -3,6 +3,7 @@ import 'package:zpass/modules/home/provider/tab_base_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/repo/repo_db.dart';
 import 'package:zpass/modules/home/repo/repo_mock.dart';
+import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
 
 class TabVaultItemProvider extends TabBaseProvider<VaultItemEntity> {
   final VaultItemType type;
@@ -21,7 +22,7 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemEntity> {
   void fetchData({bool reset = false}) {
     loading = true;
     Future.delayed(const Duration(seconds: 1), () {
-      dataSource = _repoDB.filterBy("");
+      dataSource = _repoDB.filterBy(EntityType.VaultItem);
       loading = false;
     });
   }

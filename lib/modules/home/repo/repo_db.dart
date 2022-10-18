@@ -1,5 +1,6 @@
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/repo/repo_base.dart';
+import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 
 class RepoDB extends RepoBase<VaultItemEntity> {
@@ -19,9 +20,9 @@ class RepoDB extends RepoBase<VaultItemEntity> {
   }
 
   @override
-  List<VaultItemEntity> filterBy(String condition) {
+  List<VaultItemEntity> filterBy(EntityType entityType) {
     print("get db list ...................");
-    return _db.list();
+    return _db.list(entityType);
   }
 
   @override
