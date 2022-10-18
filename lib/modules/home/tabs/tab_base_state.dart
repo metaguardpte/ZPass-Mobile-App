@@ -154,6 +154,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
       groupBy: listGroupBy,
       groupSeparatorBuilder: buildGroupSeparator,
       itemBuilder: buildListItem,
+      groupItemBuilder: buildListGroupItem,
       separator: buildListSeparator(),
       useStickyGroupSeparators: stickyGroupSeparators,
       floatingHeader: floatingHeader,
@@ -205,9 +206,20 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
   Widget buildListItem(BuildContext context, T element);
 
   @protected
+  Widget buildListGroupItem(BuildContext context, T element, bool groupStart, bool groupEnd) {
+    return buildListItem(context, element);
+  }
+
+  @protected
   Widget buildListSeparator() {
-    // return const Divider(indent: 73.5, endIndent: 16,);
-    return const SizedBox.shrink();
+    return Container(
+      color: context.tertiaryBackground,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: const Divider(
+        indent: 73,
+      ),
+    );
+    // return const SizedBox.shrink();
   }
 
   @protected

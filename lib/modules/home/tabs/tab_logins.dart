@@ -7,7 +7,6 @@ import 'package:zpass/modules/home/provider/tab_vault_item_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_sort_type.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/tabs/tab_base_state.dart';
-import 'package:zpass/res/colors.dart';
 import 'package:zpass/util/date_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 
@@ -37,42 +36,60 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
     return TabVaultItemProvider(type: VaultItemType.login);
   }
 
+  Widget _buildListItemContent(BuildContext context, VaultItemEntity element) {
+    return ListTile(
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                  color: context.primaryColor,
+                  borderRadius: BorderRadius.circular(9)),
+              child: Transform.rotate(
+                angle: 45 * math.pi / 180,
+                child: const Icon(
+                  Icons.key,
+                  color: Colors.white,
+                ),
+              )),
+        ],
+      ),
+      title: Text(element.name),
+      subtitle: Text(element.description),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(Icons.arrow_forward_ios, color: Color(0xFFC8CDD7), size: 15,)
+        ],
+      ),
+    );
+  }
+
   @override
   Widget buildListItem(BuildContext context, VaultItemEntity element) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-            color:
-                context.isDark ? Colours.dark_material_bg : Colours.material_bg,
-            borderRadius: BorderRadius.circular(11)),
-        child: ListTile(
-          leading: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                      color: context.primaryColor,
-                      borderRadius: BorderRadius.circular(9)),
-                  child: Transform.rotate(
-                    angle: 45 * math.pi / 180,
-                    child: const Icon(
-                      Icons.key,
-                      color: Colors.white,
-                    ),
-                  )),
-            ],
-          ),
-          title: Text(element.name),
-          subtitle: Text(element.description),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(Icons.arrow_forward_ios, color: Color(0xFFC8CDD7), size: 15,)
-            ],
-          ),
-        ));
+          color: context.tertiaryBackground,
+        ),
+        child: _buildListItemContent(context, element));
+  }
+
+  @override
+  Widget buildListGroupItem(BuildContext context, VaultItemEntity element, bool groupStart, bool groupEnd) {
+    BorderRadiusGeometry? radius;
+    if (groupStart) {
+      radius = const BorderRadius.only(topLeft: Radius.circular(11), topRight: Radius.circular(11));
+    } else if (groupEnd) {
+      radius = const BorderRadius.only(bottomLeft: Radius.circular(11), bottomRight: Radius.circular(11));
+    }
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        decoration:
+            BoxDecoration(color: context.tertiaryBackground, borderRadius: radius),
+        child: _buildListItemContent(context, element));
   }
 
   @override

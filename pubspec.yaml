@@ -63,11 +63,13 @@ dependencies:
   pdf: ^3.8.3
   path_provider: ^2.0.11
   share_plus: ^4.5.3
-  grouped_list: ^5.1.2
   flkv:
     path: plugins/flkv
   zpass_crypto:
     path: plugins/zpass_crypto
+  grouped_list:
+    git:
+      url: git@github.com:LiuJQ/grouped_list.git
 
 dev_dependencies:
   flutter_test:
