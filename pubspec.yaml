@@ -66,6 +66,8 @@ dependencies:
   grouped_list: ^5.1.2
   flkv:
     path: plugins/flkv
+  zpass_crypto:
+    path: plugins/zpass_crypto
 
 dev_dependencies:
   flutter_test:
