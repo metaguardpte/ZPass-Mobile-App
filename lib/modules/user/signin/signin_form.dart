@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
+import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
+import 'package:zpass/res/constant.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
+import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_loading_dialog.dart';
 import 'package:zpass/widgets/load_image.dart';
@@ -27,9 +30,6 @@ class _SignInFormState extends State<SignInForm> {
   late final loadingDialog = ZPassLoadingDialog();
 
   void handelSignIn() {
-    if (kDebugMode) {
-      print('SignIn');
-    }
     if (Email.isEmpty) {
       Toast.showMiddleToast(S.current.signinTip + S.current.email,
           type: ToastType.error);
@@ -44,12 +44,13 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
     loadingDialog.show(context, barrierDismissible: false);
-    CryptoManager.instance
-        .login(Email, Psw, AppConfig.serverUrl, SeKey)
-        .then((value) {
-      loadingDialog.dismiss(context);
-      UserProvider.instance.updateUser(value);
-      NavigatorUtils.push(context, Routers.home);
+    CryptoManager.instance.login(Email, Psw,
+        AppConfig.serverUrl, SeKey).then((value){
+      UserProvider().updateEmail(Email);
+          UserProvider().updateSecretKey(SeKey);
+          UserProvider().updateUserCryptoKey(UserCryptoKeyModel.fromJson(value));
+          loadingDialog.dismiss(context);
+          NavigatorUtils.push(context, Routers.home);
     }).catchError((error) {
       loadingDialog.dismiss(context);
       Toast.showMiddleToast("Login Failed: ${error.toString()}");
@@ -64,34 +65,18 @@ class _SignInFormState extends State<SignInForm> {
   late TextEditingController emailController = TextEditingController();
 
   getEmail(value) {
-    if (kDebugMode) {
-      print('get Email ');
-      print(value);
-    }
     Email = value;
   }
 
   getPsw(value) {
-    if (kDebugMode) {
-      print('get Password ');
-      print(value);
-    }
     Psw = value;
   }
 
   getSeKey(value) {
-    if (kDebugMode) {
-      print('get Secret Key ');
-      print(value);
-    }
     SeKey = value;
   }
 
   getQRcode() {
-    if (kDebugMode) {
-      print('get QrCode ');
-    }
-    // SeKeyController.text = '1235234';
 
     NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data){
       // const params = jsonDecode(data);
@@ -109,17 +94,19 @@ class _SignInFormState extends State<SignInForm> {
         }
       }
       catch(e){
-        print(e.toString());
+        Log.d(e.toString());
         Toast.showMiddleToast('don`t get Secret Key');
       }
     });
   }
 
   void _initDefaultValue() {
-    if ((widget.data ?? "").isEmpty) return;
-    final defaultValue = jsonDecode(widget.data!);
-    Email = defaultValue["email"] ?? "";
-    SeKey = defaultValue["secretKey"] ?? "";
+    final userinfo = UserProvider().getUserInfo();
+
+    if ((widget.data ?? userinfo.email ?? "").isEmpty) return;
+    final defaultValue = jsonDecode(widget.data ?? "{}");
+    Email = defaultValue["email"] ??  userinfo.email ?? "";
+    SeKey = defaultValue["secretKey"] ?? userinfo.secretKey ?? "";
     SeKeyController.text = SeKey;
     emailController.text = Email;
   }

@@ -3,6 +3,7 @@ import 'package:sp_util/sp_util.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/base/network/httpclient.dart';
 import 'package:zpass/base/network/intercept.dart';
+import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/constant.dart';
 import 'package:zpass/routers/routers.dart';
 import 'package:zpass/rpc/rpc_manager.dart';
@@ -53,6 +54,7 @@ class MainInitializer {
   /// 用户授权后初始化
   ///
   static void initAfterAuthorize() async {
-
+    // 初始化用户数据
+    UserProvider();
   }
 }
