@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:zpass/base/base_provider.dart';
+import 'package:zpass/extension/string_ext.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/user/register/register_provider.dart';
 import 'package:zpass/modules/user/register/widgets/register_basic_information.dart';
@@ -266,6 +267,12 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
       Toast.show(S.current.registerPasswordAreNotTheSame);
       return;
     }
+
+    if (!provider.password.isValidPassword()) {
+      Toast.show(S.current.registerPasswordFormatError);
+      return;
+    }
+
     final error = (await provider.doActivationAccount()) ?? "";
     if (error.isNotEmpty) {
       Toast.show(error);

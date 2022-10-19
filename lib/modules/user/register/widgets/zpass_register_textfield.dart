@@ -5,6 +5,7 @@ import 'package:zpass/res/gaps.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/res/zpass_icons.dart';
+import 'package:zpass/widgets/zpass_edittext.dart';
 
 enum TextFieldType {
   text,
@@ -23,9 +24,12 @@ class ZPassTextField extends StatefulWidget {
     this.textFieldHeight = 50.0,
     this.type = TextFieldType.text,
     this.loading = false,
+    this.autoFocus = false,
     this.onTextChange,
     this.onEditingComplete,
     this.onSendCodeTap,
+    this.onUnFocus,
+    this.textInputType = TextInputType.text,
     this.onSelectionTap})
       : super(key: key);
 
@@ -36,11 +40,14 @@ class ZPassTextField extends StatefulWidget {
   final String? selectionText;
   final String? suffixBtnTitle;
   final TextFieldType? type;
+  final TextInputType? textInputType;
   final bool? loading;
+  final bool? autoFocus;
   final FunctionCallback<String>? onTextChange;
   final NullParamCallback? onEditingComplete;
   final NullParamCallback? onSendCodeTap;
   final NullParamCallback? onSelectionTap;
+  final NullParamCallback? onUnFocus;
 
   @override
   _ZPassTextFieldState createState() => _ZPassTextFieldState();
@@ -49,10 +56,22 @@ class ZPassTextField extends StatefulWidget {
 class _ZPassTextFieldState extends State<ZPassTextField> {
   bool _isSecret = true;
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        widget.onUnFocus?.call();
+      }
+    });
+  }
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -104,10 +123,13 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
   Widget _buildTextField() {
     return TextField(
       controller: _controller,
+      focusNode: _focusNode,
+      autofocus: widget.autoFocus!,
       style: const TextStyle(fontSize: 16, color: Color(0xFF16181A)),
       enabled: !widget.loading!,
       onChanged: _onChange,
       onEditingComplete: _onEditingComplete,
+      keyboardType: widget.textInputType,
       obscureText: widget.type == TextFieldType.password ? _isSecret : false,
       decoration: InputDecoration(
         border: InputBorder.none,
