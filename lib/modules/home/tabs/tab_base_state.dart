@@ -19,6 +19,14 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
   Future get preloadFuture => Future.delayed(const Duration(milliseconds: 500));
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      provider.fetchData(reset: true);
+    });
+  }
+
+  @override
   Widget buildContent(BuildContext context) {
     return Selector<P, bool>(
       builder: (_, loading, __) {
@@ -160,7 +168,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
       separator: buildListSeparator(),
       useStickyGroupSeparators: stickyGroupSeparators,
       floatingHeader: floatingHeader,
-      itemComparator: comparator,
+      // itemComparator: comparator,
       shrinkWrap: true,
       // itemExtent: 67.5,
       cacheExtent: 500,

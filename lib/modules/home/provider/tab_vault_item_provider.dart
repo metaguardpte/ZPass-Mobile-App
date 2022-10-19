@@ -1,12 +1,11 @@
-import 'package:zpass/modules/home/model/vault_item_entity.dart';
+import 'package:zpass/modules/home/model/vault_item_wrapper.dart';
 import 'package:zpass/modules/home/provider/tab_base_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/repo/repo_db.dart';
-import 'package:zpass/modules/home/repo/repo_mock.dart';
 import 'package:zpass/plugin_bridge/leveldb/groups.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 
-class TabVaultItemProvider extends TabBaseProvider<VaultItemEntity> {
+class TabVaultItemProvider extends TabBaseProvider<VaultItemWrapper> {
   final VaultItemType type;
   late final RepoDB _repoDB;
 
@@ -21,12 +20,18 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemEntity> {
   void fetchData({bool reset = false}) {
     loading = true;
     Future.delayed(const Duration(seconds: 1), () {
-      var queryContext = QueryContext("", EntityType.vaultItem, VaultItemType.login, SortBy.createTime);
+      var queryContext = QueryContext("", EntityType.vaultItem, type, SortBy.values[sortType.index]);
+      // query from db
       var entities = _repoDB.query(queryContext);
-      dataSource = entities;
-
-      //TODO adapt the entity groups
+      // grouping
       var entityGroups = Groups.grouping(entities, queryContext.sortBy);
+      // adapt the entity groups
+      var wrappers = <VaultItemWrapper>[];
+      for (var group in entityGroups) {
+        wrappers.addAll(group.entities.map((e) => VaultItemWrapper(raw: e, groupName: group.name)));
+      }
+      // update data source
+      dataSource = wrappers;
       loading = false;
     });
   }
@@ -43,6 +48,7 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemEntity> {
 
   @override
   void dispose() {
+    super.dispose();
     _repoDB.close();
   }
 
