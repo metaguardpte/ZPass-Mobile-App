@@ -92,5 +92,10 @@
   "profile":"Profile",
   "photo":"Photo",
   "fullName":"Full Name",
-  "planType":"planType"
+  "planType":"planType",
+  "logout":"Logout",
+  "logoutTitle":"Confirm to logout ?",
+  "yes":"Yes",
+  "logoutSuccess":"Logout Success !"
+
 }

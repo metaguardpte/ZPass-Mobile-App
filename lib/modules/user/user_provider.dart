@@ -16,10 +16,8 @@ class UserProvider {
 
   UserProvider._internal() {
     final spData = SpUtil.getString(_kUserProviderKey);
-    print('object---------------${spData}');
     if (spData != null && spData != '') {
       _userInfo = UserInfoModel.fromJson(jsonDecode(spData));
-      print('_userInfo ---- ${_userInfo}');
     } else{
       _userInfo = UserInfoModel();
     }
@@ -33,7 +31,6 @@ class UserProvider {
     SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
   }
   void updateEmail(String email) {
-    print('123123123');
     _userInfo.email = email;
     SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
   }
