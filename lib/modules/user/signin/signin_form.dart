@@ -45,10 +45,7 @@ class _SignInFormState extends State<SignInForm> {
     }
     loadingDialog.show(context, barrierDismissible: false);
     CryptoManager.instance.login(Email, Psw,
-        Constant.inProduction
-            ? "https://ro8d3r7nxb.execute-api.ap-southeast-1.amazonaws.com/Prod"
-            : 'https://l8ee0j8yb8.execute-api.ap-southeast-1.amazonaws.com/Prod'
-        , SeKey).then((value){
+        AppConfig.serverUrl, SeKey).then((value){
       UserProvider().updateEmail(Email);
           UserProvider().updateSecretKey(SeKey);
           UserProvider().updateUserCryptoKey(UserCryptoKeyModel.fromJson(value));
