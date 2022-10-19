@@ -14,6 +14,7 @@ import 'package:zpass/modules/home/widgets/home_drawer_builder.dart';
 import 'package:zpass/modules/setting/router_settting.dart';
 import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
 import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
+import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -71,7 +72,11 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   void didChangeAppLifecycleState(AppLifecycleState state) {
     Log.d("APP State: ${state.toString()}", tag: "AppLifecycleState");
     if (state == AppLifecycleState.resumed) {
-    } else {}
+    } else if (state == AppLifecycleState.detached) {
+      ZPassDB().close();
+    } else {
+
+    }
     super.didChangeAppLifecycleState(state);
   }
 

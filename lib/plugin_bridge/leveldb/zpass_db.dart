@@ -27,7 +27,7 @@ class ZPassDB {
     return _instance;
   }
 
-  bool opened = false;
+  bool _opened = false;
   late KvDB _db;
 
   bool put<E extends RecordEntity> (E entity) {
@@ -122,17 +122,17 @@ class ZPassDB {
   /// 需要保证线程安全
   ///
   Future<void> open({String path=""}) async {
-    if (!opened) {
+    if (!_opened) {
       var dbPath = path;
       if (dbPath.isEmpty) {
         final applicationDocDir = await getTemporaryDirectory();
         dbPath = join(applicationDocDir.path, "zpass");
       }
       lock.synchronized(() {
-        if (!opened) {
+        if (!_opened) {
           Log.d("open db with path: ${dbPath}");
           _db = KvDB.open(dbPath);
-          opened = true;
+          _opened = true;
         }
       });
     }
@@ -142,7 +142,7 @@ class ZPassDB {
   /// 需要保证线程安全
   ///
   void close() {
-    if (opened) {
+    if (_opened) {
       lock.synchronized(() {
         Log.d("Close db");
         _db.close();
