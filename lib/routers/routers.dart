@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:zpass/modules/home/loginOrNew.dart';
+import 'package:zpass/modules/home/login_or_new.dart';
 import 'package:zpass/modules/user/register/router_register.dart';
 import 'package:zpass/modules/home/home_page_v2.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
