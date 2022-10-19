@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
+import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 
 abstract class RepoBase<T> {
   @protected

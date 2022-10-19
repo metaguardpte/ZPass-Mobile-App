@@ -67,6 +67,7 @@ dependencies:
     path: plugins/flkv
   zpass_crypto:
     path: plugins/zpass_crypto
+  synchronized: ^3.0.0+3
 
 dev_dependencies:
   flutter_test:

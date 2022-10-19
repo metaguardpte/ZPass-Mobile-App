@@ -1,7 +1,7 @@
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/repo/repo_base.dart';
-import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
+import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 
 class RepoMock extends RepoBase<VaultItemEntity> {
   @override
