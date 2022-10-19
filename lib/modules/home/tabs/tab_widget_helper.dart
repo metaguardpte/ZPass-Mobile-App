@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/home/model/vault_item_wrapper.dart';
+import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/res/resources.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/theme_utils.dart';
@@ -30,8 +31,9 @@ Widget renderListItem(BuildContext context, VaultItemWrapper element) {
 }
 
 Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
+  final noSubTitle = element.raw.type == VaultItemType.note.index;
   return ListTile(
-    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: noSubTitle ? 2 : 0),
     horizontalTitleGap: 6,
     minVerticalPadding: 0,
     leading: Column(
@@ -50,7 +52,7 @@ Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
       ],
     ),
     title: Text(element.title, style: TextStyle(color: context.textColor1, fontSize: 15, fontWeight: FontWeight.w500),),
-    subtitle: Text(element.subtitle, style: TextStyles.textSize12.copyWith(color: const Color(0xFF959BA7),)),
+    subtitle: noSubTitle ? null :Text(element.subtitle, style: TextStyles.textSize12.copyWith(color: const Color(0xFF959BA7),)),
     trailing: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: const [
