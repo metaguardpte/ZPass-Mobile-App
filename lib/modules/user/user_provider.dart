@@ -5,14 +5,11 @@ import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
 import 'package:zpass/modules/user/model/user_info_model.dart';
 
 class UserProvider {
-  static UserProvider get _instance => UserProvider._internal();
+  factory UserProvider() => _instance;
+  static final UserProvider _instance = UserProvider._internal();
   static const String _kUserProviderKey = 'kUserProvider';
 
   late UserInfoModel _userInfo;
-
-  factory UserProvider() {
-    return _instance;
-  }
 
   UserProvider._internal() {
     final spData = SpUtil.getString(_kUserProviderKey);

@@ -7,17 +7,14 @@ import 'package:sp_util/sp_util.dart';
 import 'crypto_model.dart';
 
 class CryptoManager {
+  factory CryptoManager() => _instance;
+  static final CryptoManager _instance = CryptoManager._internal();
   late final ZpassCrypto _crypto;
-  static CryptoManager get instance => CryptoManager._internal();
   String? _clientId;
   final String _tag = "CryptoManager";
   static const String _kSecretKey = "kZPassSecretKey";
   static const String _kLoginResponseKeys = "kLoginResponseKeys";
   late final Map<String, dynamic> _reqHeaders;
-
-  factory CryptoManager() {
-    return instance;
-  }
 
   CryptoManager._internal() {
     _crypto = ZpassCrypto();
@@ -89,7 +86,7 @@ class CryptoManager {
       clientId: _clientId!,
       identifierName: user,
       masterPassword: password,
-      secretKey: key,
+      secretKey: key.toUpperCase(),
       host: host,
       headerJson: jsonEncode(header ?? _reqHeaders),
       isPersonal: isPersonal,
@@ -124,7 +121,7 @@ class CryptoManager {
       clientId: _clientId!,
       identifierName: user,
       masterPassword: password,
-      secretKey: key,
+      secretKey: key.toUpperCase(),
       isPersonal: isPersonal,
       masterKeyHash: data["masterKeyHash"] ?? "",
       personalDataKey: data["personalDataKey"] ?? "",

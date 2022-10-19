@@ -6,6 +6,6 @@ extension StringExt on String {
 
   /// 密码
   bool isValidPassword() {
-    return RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$").hasMatch(this);
+    return RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?).{8,}$").hasMatch(this);
   }
 }
