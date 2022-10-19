@@ -42,7 +42,7 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
     loadingDialog.show(context, barrierDismissible: false);
-    CryptoManager.instance
+    CryptoManager()
         .login(Email, Psw, AppConfig.serverUrl, SeKey)
         .then((value) {
       UserProvider().updateEmail(Email);
