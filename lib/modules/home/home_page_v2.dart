@@ -99,7 +99,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       onTapNotify: (i) {
         var intercept = i == HomePageV2.dockedFake;
         if (intercept) {
-          NavigatorUtils.push(context, RouterUser.login);
+          // NavigatorUtils.push(context, RouterUser.login);
         }
         return !intercept;
       },
