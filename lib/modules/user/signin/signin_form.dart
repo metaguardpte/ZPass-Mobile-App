@@ -175,7 +175,7 @@ class _SignInFormState extends State<SignInForm> {
         GestureDetector(
             onTap: handelSignIn,
             child: Container(
-              margin: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+              margin: const EdgeInsets.fromLTRB(0, 12, 0, 0),
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
               width: double.infinity,
               alignment: Alignment.center,
@@ -200,7 +200,7 @@ class _SignInFormState extends State<SignInForm> {
               ),
             )),
         Container(
-          margin: const EdgeInsets.only(top: 57),
+          margin: const EdgeInsets.only(top: 80),
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -216,30 +216,50 @@ class _SignInFormState extends State<SignInForm> {
             ],
           ),
         ),
-        Container(
-          margin: const EdgeInsets.only(top: 25),
-          child: GestureDetector(
-            onTap: getQRcode,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                    width: 30,
-                    child: Icon(
-                      ZPassIcons.icQrScan,
-                      size: 16,
-                      color: Color.fromRGBO(73, 84, 255, 1),
-                    )),
-                Text(
-                  S.current.siginScan,
-                  style: const TextStyle(
-                    color: Color.fromRGBO(73, 84, 255, 1),
-                  ),
-                )
-              ],
+        GestureDetector(
+          onTap: getQRcode,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+            alignment: Alignment.center,
+            width: 327,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                    width: 1,
+                    color: const Color.fromRGBO(73, 84, 255, 1)),
+                borderRadius:
+                const BorderRadius.all(Radius.circular(23))),
+            // color: ,
+            child: Material(
+              color: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                        width: 30,
+                        child: Icon(
+                          ZPassIcons.icQrScan,
+                          size: 16,
+                          color: Color.fromRGBO(73, 84, 255, 1),
+                        )),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        S.current.siginScan,
+                        style: const TextStyle(
+                          color: Color.fromRGBO(73, 84, 255, 1),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
-        )
+        ),
 
       ],
     );
