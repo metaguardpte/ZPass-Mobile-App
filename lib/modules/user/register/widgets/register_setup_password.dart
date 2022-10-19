@@ -5,7 +5,7 @@ import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/user/register/register_provider.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/util/toast_utils.dart';
-import 'package:zpass/widgets/zpass_textfield.dart';
+import 'package:zpass/modules/user/register/widgets/zpass_register_textfield.dart';
 
 class RegisterSetupPassword extends StatefulWidget {
   const RegisterSetupPassword({Key? key, required this.provider}) : super(key: key);
@@ -29,11 +29,12 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
             child: Column(
               children: [
                 ZPassTextField(
+                  autoFocus: true,
                   type: TextFieldType.password,
                   title: S.current.registerMasterPassword,
                   hintText: S.current.registerMasterPasswordHint,
                   onTextChange: (value) => provider.password = value,
-                  onEditingComplete: () => _checkPasswordIsValid(provider.password),
+                  onUnFocus: () => _checkPasswordIsValid(provider.password),
                 ),
                 Gaps.vGap16,
                 ZPassTextField(
@@ -41,7 +42,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
                   title: S.current.registerConfirmPassword,
                   hintText: S.current.registerConfirmPasswordHint,
                   onTextChange: (value) => provider.confirmPassword = value,
-                  onEditingComplete: () => _checkPasswordIsValid(provider.confirmPassword),
+                  onUnFocus: () => _checkPasswordIsValid(provider.confirmPassword),
                 ),
               ],
             ),
@@ -60,6 +61,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
   }
 
   void _checkPasswordIsValid(String value) {
+    if (value.isEmpty) return;
     bool isValid = value.isValidPassword();
     if (!isValid) {
       Toast.show(S.current.registerPasswordFormatError);

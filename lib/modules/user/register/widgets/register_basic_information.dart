@@ -11,7 +11,7 @@ import 'package:zpass/modules/user/register/widgets/register_selection_dialog.da
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/toast_utils.dart';
-import 'package:zpass/widgets/zpass_textfield.dart';
+import 'package:zpass/modules/user/register/widgets/zpass_register_textfield.dart';
 import 'package:zpass/extension/string_ext.dart';
 
 
@@ -67,6 +67,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                         hintText:widget.type == RegisterType.business ? S.current.businessEmailHint : S.current.emailHint,
                         suffixBtnTitle: visibleCodeField ? S.current.resendCode : null,
                         type: TextFieldType.email,
+                        textInputType: TextInputType.emailAddress,
                         loading: loading,
                         onSendCodeTap: _onSendCodeTap,
                         onTextChange: (value) => provider.email = value,
