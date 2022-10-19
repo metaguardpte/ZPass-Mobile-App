@@ -11,11 +11,13 @@ import 'package:zpass/modules/home/tabs/tab_identities.dart';
 import 'package:zpass/modules/home/tabs/tab_logins.dart';
 import 'package:zpass/modules/home/tabs/tab_notes.dart';
 import 'package:zpass/modules/home/widgets/home_drawer_builder.dart';
+import 'package:zpass/modules/setting/router_settting.dart';
 import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
 import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
 import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/double_tap_back_exit_app.dart';
@@ -131,7 +133,8 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   void _onActionPerform(HomePageAction action) {
     switch (action) {
       case HomePageAction.setting:
-        _scaffoldKey.currentState?.openEndDrawer();
+        // _scaffoldKey.currentState?.openEndDrawer();
+      NavigatorUtils.push(context, RouterSetting.setting);
         break;
       case HomePageAction.locale:
         _scaffoldKey.currentState?.closeEndDrawer();
