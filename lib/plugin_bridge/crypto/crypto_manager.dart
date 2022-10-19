@@ -22,8 +22,8 @@ class CryptoManager {
   CryptoManager._internal() {
     _crypto = ZpassCrypto();
     _reqHeaders = {
-      "version": "1.4.221",
-      "edition": "community",
+      "version": "1.0.0",
+      "edition": "community-mobile",
       "authorization": "Bearer"
     };
   }
