@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:zpass/res/colors.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/styles.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/load_image.dart';
 
@@ -66,7 +67,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
 
   @override
   Widget build(BuildContext context) {
-    final prefixIcon = widget.prefix ?? const Icon(Icons.search);
+    final prefixIcon = widget.prefix ?? const Icon(ZPassIcons.icSearch);
     final suffixIcon = GestureDetector(
       child: const LoadAssetImage("ic_clean", width: 17, height: 17,),
       onTap: () {

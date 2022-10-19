@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:zpass/base/app_config.dart';
 import 'package:zpass/base/network/base_resp.dart';
 import 'package:zpass/base/network/error_handle.dart';
 import 'package:zpass/res/constant.dart';

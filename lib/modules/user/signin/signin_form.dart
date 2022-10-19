@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
-import 'package:zpass/res/constant.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
@@ -44,11 +44,9 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
     loadingDialog.show(context, barrierDismissible: false);
-    CryptoManager.instance.login(Email, Psw,
-        Constant.inProduction
-            ? "https://ro8d3r7nxb.execute-api.ap-southeast-1.amazonaws.com/Prod"
-            : 'https://l8ee0j8yb8.execute-api.ap-southeast-1.amazonaws.com/Prod'
-        , SeKey).then((value){
+    CryptoManager.instance
+        .login(Email, Psw, AppConfig.serverUrl, SeKey)
+        .then((value) {
       loadingDialog.dismiss(context);
       UserProvider.instance.updateUser(value);
       NavigatorUtils.push(context, Routers.home);

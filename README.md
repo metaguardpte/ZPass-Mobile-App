@@ -41,6 +41,7 @@ For null-safety please update Android Studio plugin: Flutter Intl.
 flutter gen-l10n
 
 # For CI/CD
+flutter pub global activate intl_utils
 flutter pub global run intl_utils:generate
 ```
 

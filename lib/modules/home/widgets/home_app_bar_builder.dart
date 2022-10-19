@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zpass/modules/home/home_page_v2.dart';
 import 'package:zpass/modules/home/widgets/home_widget_builder.dart';
-import 'package:zpass/res/zpass_fonts_icons.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
@@ -34,17 +34,17 @@ class HomeAppBarBuilder extends HomeWidgetBuilder {
         IconButton(
           tooltip: HomePageAction.scan.name,
           onPressed: () => _navigate(context, HomePageAction.scan),
-          icon: Icon(ZPassFonts.scan, color: iconColor,),
+          icon: Icon(ZPassIcons.icScan, color: iconColor,),
         ),
         IconButton(
           tooltip: HomePageAction.message.name,
           onPressed: () => _navigate(context, HomePageAction.message),
-          icon: Icon(ZPassFonts.information, color: iconColor,),
+          icon: Icon(ZPassIcons.icInformation, color: iconColor,),
         ),
         IconButton(
           tooltip: HomePageAction.setting.name,
           onPressed: () => _navigate(context, HomePageAction.setting),
-          icon: Icon(ZPassFonts.more, color: iconColor,),
+          icon: Icon(ZPassIcons.icMore, color: iconColor,),
         ),
       ]
     );
