@@ -87,5 +87,10 @@
   "registerSecretKeyPDFScanCodeTips": "Scan this code from the \nZpass apps to set up \nyour account quickly and \neasily.",
   "registerSecretKeyPDFContact": "Contact Our Support Team",
   "registerSecretKeyCopyTips": "Copy success",
-  "registerSecretKeyPermission": "Please enable storage permission"
+  "registerSecretKeyPermission": "Please enable storage permission",
+
+  "profile":"Profile",
+  "photo":"Photo",
+  "fullName":"Full Name",
+  "planType":"planType"
 }

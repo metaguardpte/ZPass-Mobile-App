@@ -16,6 +16,7 @@ UserInfoModel _$UserInfoModelFromJson(Map<String, dynamic> json) =>
           ? null
           : UserCryptoKeyModel.fromJson(
               json['userCryptoKey'] as Map<String, dynamic>),
+      type: json['type'] as String?,
     );
 
 Map<String, dynamic> _$UserInfoModelToJson(UserInfoModel instance) =>
@@ -24,5 +25,6 @@ Map<String, dynamic> _$UserInfoModelToJson(UserInfoModel instance) =>
       'secretKey': instance.secretKey,
       'icon': instance.icon,
       'name': instance.name,
+      'type': instance.type,
       'userCryptoKey': instance.userCryptoKey,
     };

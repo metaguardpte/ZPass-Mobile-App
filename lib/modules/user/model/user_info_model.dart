@@ -9,9 +9,10 @@ class UserInfoModel {
   String? secretKey;
   String? icon;
   String? name;
+  String? type;
   UserCryptoKeyModel? userCryptoKey;
 
-  UserInfoModel({this.email, this.icon, this.name, this.secretKey,this.userCryptoKey});
+  UserInfoModel({this.email, this.icon, this.name, this.secretKey,this.userCryptoKey,this.type});
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) =>
       _$UserInfoModelFromJson(json);
