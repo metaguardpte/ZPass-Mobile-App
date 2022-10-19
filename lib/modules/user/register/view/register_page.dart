@@ -52,39 +52,45 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
 
   @override
   Widget buildContent(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: _buildAppbarTitle(),
-        centerTitle: true,
-        leading: _buildBackBtn(),
-      ),
-      body: Container(
-        color: const Color(0xFFF7F7F7),
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Selector<RegisterProvider, int>(
-              builder: (_, index, __) {
-                return RegisterStepper(count: _stepCount, index: index,);
-              },
-              selector: (_, provider) => provider.stepIndex,
-            ),
-            Expanded(
-              child: ScrollConfiguration(
-                behavior: CustomScrollBehavior(),
-                child: PageView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _controller,
-                  itemCount: _stepCount,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _contentWidgets[index];
-                  },
+    return WillPopScope(
+      onWillPop: () async {
+        _onBackTap();
+        return false;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: _buildAppbarTitle(),
+          centerTitle: true,
+          leading: _buildBackBtn(),
+        ),
+        body: Container(
+          color: const Color(0xFFF7F7F7),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Selector<RegisterProvider, int>(
+                builder: (_, index, __) {
+                  return RegisterStepper(count: _stepCount, index: index,);
+                },
+                selector: (_, provider) => provider.stepIndex,
+              ),
+              Expanded(
+                child: ScrollConfiguration(
+                  behavior: CustomScrollBehavior(),
+                  child: PageView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: _controller,
+                    itemCount: _stepCount,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _contentWidgets[index];
+                    },
+                  ),
                 ),
               ),
-            ),
-            _buildBottomView(),
-          ],
+              _buildBottomView(),
+            ],
+          ),
         ),
       ),
     );
@@ -107,7 +113,23 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   Widget _buildBackBtn() {
-    return IconButton(onPressed: _onBackTap, icon: const Icon(ZPassIcons.icNavBack, size: 13, color: Color(0xFF16181A),));
+    return Selector<RegisterProvider, int>(
+      builder: (_, index, __) {
+        bool visible = index != _stepCount - 1;
+        return Visibility(
+          visible: visible,
+          child: IconButton(
+            onPressed: _onBackTap,
+            icon: const Icon(
+              ZPassIcons.icNavBack,
+              size: 13,
+              color: Color(0xFF16181A),
+            ),
+          ),
+        );
+      },
+      selector: (_, provider) => provider.stepIndex,
+    );
   }
 
   List<Widget> _buildContentWidgets() {
@@ -197,13 +219,16 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     _controller.previousPage(duration: const Duration(milliseconds: 350), curve: Curves.linear);
   }
 
+  bool _isLastStep() {
+    return provider.stepIndex == _stepCount - 1;
+  }
+
   _onBackTap() {
-    bool isLast = provider.stepIndex == _stepCount - 1;
     if (provider.stepIndex == 0) {
       NavigatorUtils.goBack(context);
       return;
-    } else if (isLast) {
-      NavigatorUtils.push(context, RouterUser.login, replace: true, arguments: { "data": _buildResponseParam()});
+    } else if (_isLastStep()) {
+      // NavigatorUtils.push(context, RouterUser.login, replace: true, arguments: { "data": _buildResponseParam()});
       return;
     }
     _previousStep();
