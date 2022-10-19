@@ -62,8 +62,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
 
   void _checkPasswordIsValid(String value) {
     if (value.isEmpty) return;
-    bool isValid = value.isValidPassword();
-    if (!isValid) {
+    if (!value.isValidPassword) {
       Toast.show(S.current.registerPasswordFormatError);
     }
   }

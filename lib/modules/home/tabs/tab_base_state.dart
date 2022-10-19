@@ -226,7 +226,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
       color: context.tertiaryBackground,
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: const Divider(
-        indent: 73,
+        indent: 57.5,
       ),
     );
     // return const SizedBox.shrink();

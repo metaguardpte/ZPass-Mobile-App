@@ -188,7 +188,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
       Toast.show(S.current.emailHint);
       return;
     }
-    if (!provider.email.isEmail()) {
+    if (!provider.email.isEmail) {
       Toast.show(S.current.emailInvalid);
       return;
     }

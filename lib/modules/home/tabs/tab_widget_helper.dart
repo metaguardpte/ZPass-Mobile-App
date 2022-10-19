@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/home/model/vault_item_wrapper.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/res/resources.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/theme_utils.dart';
+import 'package:zpass/widgets/load_image.dart';
 
 Widget renderListGroupItem(BuildContext context, VaultItemWrapper element, bool groupStart, bool groupEnd) {
   BorderRadiusGeometry? radius;
@@ -31,6 +34,27 @@ Widget renderListItem(BuildContext context, VaultItemWrapper element) {
 }
 
 Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
+  final randomColors =
+      faviconColors[math.Random().nextInt(100) % faviconColors.length] ??
+          [Colours.app_main, Colours.app_main.withAlpha(100)];
+  final fallbackIcon = Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: randomColors),
+          borderRadius: BorderRadius.circular(9)),
+      child: const Icon(
+        ZPassIcons.icKey,
+        color: Colors.white,
+      ));
+  final favIcon = element.icon != null
+      ? ClipRRect(
+          borderRadius: BorderRadius.circular(9),
+          child: LoadImage(
+            element.icon!,
+            holderError: fallbackIcon,
+          ))
+      : fallbackIcon;
   final noSubTitle = element.raw.type == VaultItemType.note.index;
   return ListTile(
     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: noSubTitle ? 2 : 0),
@@ -43,12 +67,13 @@ Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-                color: context.primaryColor,
+                color: context.tertiaryBackground,
+                // border: Border.all(
+                //   width: 0.5,
+                //   color: context.textColor2,
+                // ),
                 borderRadius: BorderRadius.circular(9)),
-            child: const Icon(
-              ZPassIcons.icKey,
-              color: Colors.white,
-            )),
+            child: favIcon),
       ],
     ),
     title: Text(element.title, style: TextStyle(color: context.textColor1, fontSize: 15, fontWeight: FontWeight.w500),),

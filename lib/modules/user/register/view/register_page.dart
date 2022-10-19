@@ -268,7 +268,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
       return;
     }
 
-    if (!provider.password.isValidPassword()) {
+    if (!provider.password.isValidPassword) {
       Toast.show(S.current.registerPasswordFormatError);
       return;
     }
