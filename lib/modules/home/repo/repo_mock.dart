@@ -1,7 +1,7 @@
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/repo/repo_base.dart';
-import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
+import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 
 class RepoMock extends RepoBase<VaultItemEntity> {
   @override
@@ -20,6 +20,11 @@ class RepoMock extends RepoBase<VaultItemEntity> {
   List<VaultItemEntity> filterBy(EntityType entityType) {
     var name = entityType.name;
     return rawData.where((element) => element.tags?.contains(name) ?? false).toList();
+  }
+
+  @override
+  List<VaultItemEntity> query(QueryContext queryContext) {
+    return <VaultItemEntity>[];
   }
 
   List<VaultItemEntity> filterByType(VaultItemType type) {

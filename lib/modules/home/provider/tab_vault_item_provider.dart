@@ -3,15 +3,14 @@ import 'package:zpass/modules/home/provider/tab_base_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/repo/repo_db.dart';
 import 'package:zpass/modules/home/repo/repo_mock.dart';
-import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
+import 'package:zpass/plugin_bridge/leveldb/groups.dart';
+import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 
 class TabVaultItemProvider extends TabBaseProvider<VaultItemEntity> {
   final VaultItemType type;
-  late final RepoMock _repo;
   late final RepoDB _repoDB;
 
   TabVaultItemProvider({required this.type}) {
-    _repo = RepoMock()..init();
     _repoDB = RepoDB()..init();
   }
 
@@ -22,7 +21,12 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemEntity> {
   void fetchData({bool reset = false}) {
     loading = true;
     Future.delayed(const Duration(seconds: 1), () {
-      dataSource = _repoDB.filterBy(EntityType.VaultItem);
+      var queryContext = QueryContext("", EntityType.vaultItem, VaultItemType.login, SortBy.createTime);
+      var entities = _repoDB.query(queryContext);
+      dataSource = entities;
+
+      //TODO adapt the entity groups
+      var entityGroups = Groups.grouping(entities, queryContext.sortBy);
       loading = false;
     });
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:zpass/plugin_bridge/leveldb/entity_type.dart';
+import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 
 abstract class RepoBase<T> {
   @protected
@@ -14,6 +14,11 @@ abstract class RepoBase<T> {
   /// 条件过滤
   ///
   List<T> filterBy(EntityType entityType);
+
+  ///
+  /// 条件查询
+  ///
+  List<T> query(QueryContext queryContext);
 
   ///
   /// 删除数据项
