@@ -27,7 +27,8 @@ class ZPassDB {
     return _instance;
   }
 
-  KvDB? _db;
+  bool opened = false;
+  late KvDB _db;
 
   bool put<E extends RecordEntity> (E entity) {
     String key = entity.getEntityKey();
@@ -42,7 +43,7 @@ class ZPassDB {
 
     Uint8List keyUint8List = _toUint8List(key);
     Uint8List valueUint8List = _toUint8List(value);
-    return _db!.put(keyUint8List, valueUint8List);
+    return _db.put(keyUint8List, valueUint8List);
   }
 
   E? get<E extends RecordEntity>(String? key) {
@@ -51,7 +52,7 @@ class ZPassDB {
     }
 
     var keyUint8List = _toUint8List(key);
-    var valueUintList = _db!.get(keyUint8List);
+    var valueUintList = _db.get(keyUint8List);
     if (valueUintList == null) {
       return null;
     }
@@ -66,11 +67,11 @@ class ZPassDB {
     }
 
     var uint8list = _toUint8List(key);
-    return _db!.delete(uint8list);
+    return _db.delete(uint8list);
   }
 
   List<E> list<E extends RecordEntity>(EntityType type) {
-    List<Record> records = _db!.list();
+    List<Record> records = _db.list();
     var typeName = type.name;
     var entities = <E>[];
     for (var record in records) {
@@ -121,16 +122,17 @@ class ZPassDB {
   /// 需要保证线程安全
   ///
   Future<void> open({String path=""}) async {
-    if (_db == null) {
+    if (!opened) {
       var dbPath = path;
       if (dbPath.isEmpty) {
         final applicationDocDir = await getTemporaryDirectory();
         dbPath = join(applicationDocDir.path, "zpass");
       }
       lock.synchronized(() {
-        if (_db == null) {
+        if (!opened) {
           Log.d("open db with path: ${dbPath}");
           _db = KvDB.open(dbPath);
+          opened = true;
         }
       });
     }
@@ -140,10 +142,10 @@ class ZPassDB {
   /// 需要保证线程安全
   ///
   void close() {
-    if (_db != null) {
+    if (opened) {
       lock.synchronized(() {
         Log.d("Close db");
-        _db!.close();
+        _db.close();
       });
     }
   }

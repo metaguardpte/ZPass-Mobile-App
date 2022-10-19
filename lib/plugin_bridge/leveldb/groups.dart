@@ -2,6 +2,7 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
+import 'package:zpass/plugin_bridge/leveldb/dates.dart';
 
 class EntityGroup {
   late String name;
@@ -31,12 +32,12 @@ class TodayGroupFunc implements GroupFunc {
     if (timeMs < 0) {
       return false;
     }
-    return DateUtil.isToday(timeMs);
+    return DateUtil.isToday(timeMs, isUtc: true);
   }
 
   @override
   int getGroupOrder(int timeMs) {
-    return -2;
+    return 102400;
   }
 }
 
@@ -58,7 +59,7 @@ class YesterdayGroupFunc implements GroupFunc {
 
   @override
   int getGroupOrder(int timeMs) {
-    return -1;
+    return 102300;
   }
 }
 
@@ -66,7 +67,7 @@ class WeekGroupFunc implements GroupFunc {
 
   @override
   String getKey(int timeMs) {
-    return "WEEK";
+    return "THIS WEEK";
   }
 
   @override
@@ -74,12 +75,12 @@ class WeekGroupFunc implements GroupFunc {
     if (timeMs < 0) {
       return false;
     }
-    return DateUtil.isWeek(timeMs);
+    return DateUtil.isWeek(timeMs, isUtc: true);
   }
 
   @override
   int getGroupOrder(int timeMs) {
-    return 0;
+    return 102200;
   }
 }
 
@@ -87,8 +88,11 @@ class MonthGroupFunc implements GroupFunc {
 
   @override
   String getKey(int timeMs) {
-    var time = DateTime.fromMillisecondsSinceEpoch(timeMs);
-    return "MONTH_${time.month}";
+    var dateTime = DateTime.fromMillisecondsSinceEpoch(timeMs);
+    var year = dateTime.year;
+    var month = dateTime.month;
+    var monthName = Dates.mapIntToEngName(month);
+    return  "$monthName $year";
   }
 
   @override
@@ -99,7 +103,9 @@ class MonthGroupFunc implements GroupFunc {
   @override
   int getGroupOrder(int timeMs) {
     var dateTime = DateTime.fromMillisecondsSinceEpoch(timeMs);
-    return dateTime.month;
+    var year = dateTime.year;
+    var month = dateTime.month;
+    return (year*12 + month);
   }
 }
 
@@ -107,7 +113,7 @@ class NullGroupFunc implements GroupFunc {
 
   @override
   String getKey(int timeMs) {
-    return "NULL";
+    return "OTHERS";
   }
 
   @override
@@ -117,14 +123,14 @@ class NullGroupFunc implements GroupFunc {
 
   @override
   int getGroupOrder(int timeMs) {
-    return 13;
+    return -1;
   }
 }
 
 class Groups {
   static List<EntityGroup> grouping(List<VaultItemEntity> entities, SortBy sortBy) {
     var groupFuncs = <GroupFunc>[TodayGroupFunc(), YesterdayGroupFunc(), WeekGroupFunc(), MonthGroupFunc()];
-    var keyToGroup = new Map<String, EntityGroup>();
+    var keyToGroup = <String, EntityGroup>{};
     for (var entity in entities) {
       int timeMs = _getTimeMs(entity, sortBy);
       for (var groupFunc in groupFuncs) {
@@ -138,11 +144,12 @@ class Groups {
             keyToGroup[key] = group;
           }
           group.addEntity(entity);
+          break;
         }
       }
     }
     var groups = keyToGroup.values.toList();
-    groups.sort((a, b) => a.order.compareTo(b.order));
+    groups.sort((a, b) => b.order.compareTo(a.order));
     return groups;
   }
 
