@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
@@ -9,7 +8,6 @@ import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
-import 'package:zpass/res/constant.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
@@ -44,13 +42,14 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
     loadingDialog.show(context, barrierDismissible: false);
-    CryptoManager.instance.login(Email, Psw,
-        AppConfig.serverUrl, SeKey).then((value){
+    CryptoManager.instance
+        .login(Email, Psw, AppConfig.serverUrl, SeKey)
+        .then((value) {
       UserProvider().updateEmail(Email);
-          UserProvider().updateSecretKey(SeKey);
-          UserProvider().updateUserCryptoKey(UserCryptoKeyModel.fromJson(value));
-          loadingDialog.dismiss(context);
-          NavigatorUtils.push(context, Routers.home);
+      UserProvider().updateSecretKey(SeKey);
+      UserProvider().updateUserCryptoKey(UserCryptoKeyModel.fromJson(value));
+      loadingDialog.dismiss(context);
+      NavigatorUtils.push(context, Routers.home);
     }).catchError((error) {
       loadingDialog.dismiss(context);
       Toast.showMiddleToast("Login Failed: ${error.toString()}");
