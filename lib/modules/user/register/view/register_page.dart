@@ -53,13 +53,14 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   @override
   Widget buildContent(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: _buildAppbarTitle(),
         centerTitle: true,
         leading: _buildBackBtn(),
       ),
       body: Container(
-        color: const Color(0xFFF3F5F8),
+        color: const Color(0xFFF7F7F7),
         alignment: Alignment.center,
         child: Column(
           children: [

@@ -29,7 +29,7 @@ class RegisterEmailCodeState extends State<RegisterEmailCode> {
     return PinCodeTextField(
       controller: _controller,
       length: 6,
-      // autoFocus: true,
+      autoFocus: true,
       focusNode: _focusNode,
       keyboardType: TextInputType.number,
       animationType: AnimationType.fade,
