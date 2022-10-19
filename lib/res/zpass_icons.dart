@@ -6,6 +6,23 @@ class ZPassIcons {
   static const _kFontFam = 'iconfont';
   static const String? _kFontPkg = null;
 
+  /// home bottom navigation bar tab icon
+  static const IconData logins = IconData(0xe6f0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData loginsActive = IconData(0xe6ed, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData secureNotes = IconData(0xe6f2, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData secureNotesActive = IconData(0xe6f3, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData creditCards = IconData(0xe6ee, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData creditCardsActive = IconData(0xe6ec, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData identities = IconData(0xe6f1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData identitiesActive = IconData(0xe6ef, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+  static const IconData icMore = IconData(0xe6f4, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icScan = IconData(0xe6e7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icInformation = IconData(0xe6f5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icSearch = IconData(0xe6e6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icSort = IconData(0xe6eb, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icKey = IconData(0xe6f9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
   static const IconData icNavBack = IconData(0xe6d6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icTextFieldClean = IconData(0xe6d8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSecret = IconData(0xe6e1, fontFamily: _kFontFam, fontPackage: _kFontPkg);

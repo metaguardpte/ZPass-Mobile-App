@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:zpass/extension/int_ext.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
@@ -7,6 +5,7 @@ import 'package:zpass/modules/home/provider/tab_vault_item_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_sort_type.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/tabs/tab_base_state.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/date_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 
@@ -47,12 +46,9 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
               decoration: BoxDecoration(
                   color: context.primaryColor,
                   borderRadius: BorderRadius.circular(9)),
-              child: Transform.rotate(
-                angle: 45 * math.pi / 180,
-                child: const Icon(
-                  Icons.key,
-                  color: Colors.white,
-                ),
+              child: const Icon(
+                ZPassIcons.icKey,
+                color: Colors.white,
               )),
         ],
       ),

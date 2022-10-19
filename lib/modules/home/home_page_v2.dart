@@ -14,7 +14,7 @@ import 'package:zpass/modules/home/widgets/home_drawer_builder.dart';
 import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
 import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
 import 'package:zpass/modules/user/router_user.dart';
-import 'package:zpass/res/zpass_fonts_icons.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
@@ -51,11 +51,11 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
     });
     WidgetsBinding.instance.addObserver(this);
     _items = <TabItem>[
-      TabItem(icon: ZPassFonts.logins, activeIcon: ZPassFonts.loginsActive, title: S.current.tabLogins),
-      TabItem(icon: ZPassFonts.secureNotes, activeIcon: ZPassFonts.secureNotesActive, title: S.current.tabSecureNotes),
+      TabItem(icon: ZPassIcons.logins, activeIcon: ZPassIcons.loginsActive, title: S.current.tabLogins),
+      TabItem(icon: ZPassIcons.secureNotes, activeIcon: ZPassIcons.secureNotesActive, title: S.current.tabSecureNotes),
       const TabItem(icon: Icons.add_rounded, title: "Fake"),
-      TabItem(icon: ZPassFonts.creditCards, activeIcon: ZPassFonts.creditCardsActive, title: S.current.tabCreditCards),
-      TabItem(icon: ZPassFonts.identities, activeIcon: ZPassFonts.identitiesActive, title: S.current.tabIdentities),
+      TabItem(icon: ZPassIcons.creditCards, activeIcon: ZPassIcons.creditCardsActive, title: S.current.tabCreditCards),
+      TabItem(icon: ZPassIcons.identities, activeIcon: ZPassIcons.identitiesActive, title: S.current.tabIdentities),
     ];
     _pageList = [
       const TabLoginsPage(),

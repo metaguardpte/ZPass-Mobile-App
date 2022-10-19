@@ -4,7 +4,7 @@ import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/modules/home/provider/tab_base_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_sort_type.dart';
 import 'package:zpass/res/resources.dart';
-import 'package:zpass/res/zpass_fonts_icons.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/common_widgets.dart';
 import 'package:zpass/widgets/grouped_list/grouped_list.dart';
@@ -76,6 +76,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
         borderRadius: 17.25,
         bgColor: const Color(0xFFEAEBED),
         focusBgColor: Colors.white,
+        textSize: 14,
       ),
     );
   }
@@ -92,9 +93,10 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
           },
           selector: (_, provider) => provider.sortType,
         ),
+        Gaps.hGap4,
         const Icon(
-          Icons.sort,
-          size: 15,
+          ZPassIcons.icSort,
+          size: 18,
           color: Color(0xFFC8CDD7),
         ),
       ],
@@ -171,7 +173,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(ZPassFonts.logins, size: 100, color: Colours.unselected_item_color,),
+          const Icon(ZPassIcons.logins, size: 100, color: Colours.unselected_item_color,),
           Gaps.vGap15,
           Text(
             emptyTips,
