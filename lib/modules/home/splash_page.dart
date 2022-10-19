@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
+import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/generated/l10n.dart';
 
 class SplashPage extends StatefulWidget {
-  // final FunctionCallback<BuildContext> authCallback;
+  final NullParamCallback authCallback;
 
-  const SplashPage({Key? key}) : super(key: key);
+  const SplashPage({Key? key, required this.authCallback}) : super(key: key);
 
   @override
   _SplashPageState createState() => _SplashPageState();
@@ -30,6 +31,8 @@ class _SplashPageState extends State<SplashPage> {
     // });
     super.initState();
     Future.delayed(const Duration(seconds: 2), () {
+      // fake auth
+      widget.authCallback.call();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         /// 显示状态栏和导航栏
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
