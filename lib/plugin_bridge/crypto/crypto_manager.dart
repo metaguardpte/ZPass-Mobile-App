@@ -147,4 +147,36 @@ class CryptoManager {
     return model.isSuccess();
   }
 
+  Future<String> encryptText({required String text, bool isPersonal = true,}) async {
+    if ((_clientId ?? "").isEmpty) {
+      final cid = await _newCryptoService();
+      if (cid.isEmpty) return Future.error("failed to generate clientId");
+      _clientId = cid;
+    }
+    final resp = await _crypto.encryptText(clientId: _clientId!, plaintext: text, isPersonal: isPersonal);
+    if (resp == null) return Future.error("encrypt text fail, response is null");
+    final model = CryptoModel.fromJson(jsonDecode(resp));
+    if (!model.isSuccess()) {
+      Log.e("encrypt text fail:${model.msg}", tag: _tag);
+      return Future.error("encrypt text fail:${model.msg}");
+    }
+    return model.data;
+  }
+
+  Future<String> decryptText({required String text, bool isPersonal = true,}) async {
+    if ((_clientId ?? "").isEmpty) {
+      final cid = await _newCryptoService();
+      if (cid.isEmpty) return Future.error("failed to generate clientId");
+      _clientId = cid;
+    }
+    final resp = await _crypto.decryptText(clientId: _clientId!, cipherText: text, isPersonal: isPersonal);
+    if (resp == null) return Future.error("decrypt text fail, response is null");
+    final model = CryptoModel.fromJson(jsonDecode(resp));
+    if (!model.isSuccess()) {
+      Log.e("decrypt text fail:${model.msg}", tag: _tag);
+      return Future.error("decrypt text fail:${model.msg}");
+    }
+    return model.data;
+  }
+
 }

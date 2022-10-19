@@ -67,7 +67,6 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                         hintText:widget.type == RegisterType.business ? S.current.businessEmailHint : S.current.emailHint,
                         suffixBtnTitle: visibleCodeField ? S.current.resendCode : null,
                         type: TextFieldType.email,
-                        textFieldTips: S.current.registerEmailTips,
                         loading: loading,
                         onSendCodeTap: _onSendCodeTap,
                         onTextChange: (value) => provider.email = value,
@@ -183,6 +182,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
   }
 
   _onSendCodeTap() async {
+    provider.email = provider.email.trim();
     if (provider.email.isEmpty) {
       Toast.show(S.current.emailHint);
       return;
