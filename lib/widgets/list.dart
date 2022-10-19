@@ -47,7 +47,7 @@ class _ListWidgetState extends State<ListWidget> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: widget.withIcon ? 2 : 1,
                     child: Material(
                       child: Container(
                         margin: EdgeInsets.only(left: widget.withIcon ? 0 : 12),
@@ -63,7 +63,7 @@ class _ListWidgetState extends State<ListWidget> {
                     ),
                   ),
                   Expanded(
-                      flex: 1,
+                      flex: widget.withIcon ? 1: 2,
                       child: Container(
                         padding: const EdgeInsets.only(right: 12),
                         alignment: Alignment.centerRight,

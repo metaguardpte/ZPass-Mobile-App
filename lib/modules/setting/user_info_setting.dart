@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/setting/widgets/logout_dialog.dart';
+import 'package:zpass/modules/user/model/user_info_model.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/list.dart';
+import 'package:zpass/widgets/load_image.dart';
 
 class UserInfoSettingPage extends StatefulWidget {
   const UserInfoSettingPage({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class UserInfoSettingPage extends StatefulWidget {
 class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
   late Color rightColor;
   late TextStyle rightStyle;
-
+  UserInfoModel userInfo = UserProvider().getUserInfo();
   @override
   void initState() {
     // TODO: implement initState
@@ -54,11 +56,14 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
               const Spacer(),
               Padding(
                   padding: const EdgeInsets.only(right: 10),
-                  child: Material(
-                      child: Text(
-                    'English',
-                    style: rightStyle,
-                  ))),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                    child: LoadImage(
+                      userInfo.icon ?? '',
+                      width: 34,
+                      height: 34,
+                    ),
+                  )),
               Icon(
                 ZPassIcons.icArrowRight,
                 color: rightColor,
@@ -70,21 +75,21 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
           text: S.current.email,
           right: Material(
               child: Text(
-            'English',
+            userInfo.email ?? 'Email',
             style: rightStyle,
           ))),
       RowData(
           text: S.current.fullName,
           right: Material(
               child: Text(
-            'English',
+            userInfo.name ?? 'UserName',
             style: rightStyle,
           ))),
       RowData(
           text: S.current.planType,
           right: Material(
               child: Text(
-            'Never',
+            userInfo.type ?? 'PlanType',
             style: rightStyle,
           ))),
     ];
