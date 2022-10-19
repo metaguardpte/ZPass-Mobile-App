@@ -88,7 +88,7 @@ class MonthGroupFunc implements GroupFunc {
   @override
   String getKey(int timeMs) {
     var time = DateTime.fromMillisecondsSinceEpoch(timeMs);
-    return time.month.toString();
+    return "MONTH_${time.month}";
   }
 
   @override

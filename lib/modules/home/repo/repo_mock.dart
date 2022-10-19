@@ -22,6 +22,11 @@ class RepoMock extends RepoBase<VaultItemEntity> {
     return rawData.where((element) => element.tags?.contains(name) ?? false).toList();
   }
 
+  @override
+  List<VaultItemEntity> query(QueryContext queryContext) {
+    return <VaultItemEntity>[];
+  }
+
   List<VaultItemEntity> filterByType(VaultItemType type) {
     return rawData.where((element) => element.type == type.index).toList();
   }

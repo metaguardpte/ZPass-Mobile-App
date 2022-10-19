@@ -27,7 +27,7 @@ class ZPassDB {
     return _instance;
   }
 
-  late KvDB? _db;
+  KvDB? _db;
 
   bool put<E extends RecordEntity> (E entity) {
     String key = entity.getEntityKey();
@@ -95,21 +95,26 @@ class ZPassDB {
   /// 按下面四个维度分组
   ///   group by: today, yesterday, week, month, null
   ///
-  List<EntityGroup> grouping(QueryContext queryContext) {
+  List<VaultItemEntity> listVaultItemEntity(QueryContext queryContext) {
     var entityType = queryContext.entityType;
     if (entityType != EntityType.vaultItem) {
-      return <EntityGroup>[];
+      return <VaultItemEntity>[];
     }
 
     var keyword = queryContext.keyword;
-    var entities = list(entityType) as List<VaultItemEntity>;
+    var records = list(entityType);
+    var entities = <VaultItemEntity>[];
+    for (var rec in records) {
+      var entity = rec as VaultItemEntity;
+      entities.add(entity);
+    }
 
     var itemType = queryContext.itemType;
     entities = entities.where((element) => _filter(element, keyword, itemType)).toList();
 
     var sortBy = queryContext.sortBy;
     entities.sort((a, b) => _sort(a, b, sortBy));
-    return Groups.grouping(entities, sortBy);
+    return entities;
   }
 
   ///

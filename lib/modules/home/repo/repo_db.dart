@@ -22,8 +22,12 @@ class RepoDB extends RepoBase<VaultItemEntity> {
 
   @override
   List<VaultItemEntity> filterBy(EntityType entityType) {
-    print("get db list ...................");
     return _db.list(entityType);
+  }
+
+  @override
+  List<VaultItemEntity> query(QueryContext queryContext) {
+    return _db.listVaultItemEntity(queryContext);
   }
 
   @override

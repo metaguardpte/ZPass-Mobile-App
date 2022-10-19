@@ -16,6 +16,11 @@ abstract class RepoBase<T> {
   List<T> filterBy(EntityType entityType);
 
   ///
+  /// 条件查询
+  ///
+  List<T> query(QueryContext queryContext);
+
+  ///
   /// 删除数据项
   ///
   bool remove(T item);
