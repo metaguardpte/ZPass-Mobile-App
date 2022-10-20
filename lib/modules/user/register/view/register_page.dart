@@ -210,7 +210,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   void _nextStep() async {
-    FocusManager.instance.primaryFocus?.unfocus();
+    // FocusManager.instance.primaryFocus?.unfocus();
     provider.stepIndex++;
     _controller.nextPage(duration: const Duration(milliseconds: 350), curve: Curves.linear);
   }

@@ -29,6 +29,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
             child: Column(
               children: [
                 ZPassTextField(
+                  text: provider.password,
                   autoFocus: true,
                   type: TextFieldType.password,
                   title: S.current.registerMasterPassword,
@@ -38,6 +39,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
                 ),
                 Gaps.vGap16,
                 ZPassTextField(
+                  text: provider.confirmPassword,
                   type: TextFieldType.password,
                   title: S.current.registerConfirmPassword,
                   hintText: S.current.registerConfirmPasswordHint,
