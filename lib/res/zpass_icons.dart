@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class ZPassIcons {
   ZPassIcons._();
 
-  static const _kFontFam = 'iconfont';
+  static const _kFontFam = 'IconFont';
   static const String? _kFontPkg = null;
 
   /// home bottom navigation bar tab icon
