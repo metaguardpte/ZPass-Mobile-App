@@ -58,19 +58,22 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+  _onListenFocus() {
+    if (!_focusNode.hasFocus) {
+      widget.onUnFocus?.call();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        widget.onUnFocus?.call();
-      }
-    });
+    _focusNode.addListener(_onListenFocus);
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.removeListener(_onListenFocus);
     _focusNode.dispose();
     super.dispose();
   }

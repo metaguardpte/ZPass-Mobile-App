@@ -59,7 +59,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
         return false;
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: _buildAppbarTitle(),
           centerTitle: true,

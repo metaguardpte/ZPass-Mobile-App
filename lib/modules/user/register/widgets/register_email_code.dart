@@ -6,7 +6,8 @@ import 'package:zpass/util/callback_funcation.dart';
 class RegisterEmailCode extends StatefulWidget {
 
   FunctionCallback<String>? onResult;
-  RegisterEmailCode({this.onResult, Key? key}) : super(key: key);
+  FunctionCallback<bool>? onListenFocus;
+  RegisterEmailCode({this.onResult, this.onListenFocus, Key? key}) : super(key: key);
   @override
   RegisterEmailCodeState createState() => RegisterEmailCodeState();
 }
@@ -15,6 +16,24 @@ class RegisterEmailCodeState extends State<RegisterEmailCode> {
 
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+
+  _onListenFocus() {
+    if (widget.onListenFocus != null) {
+      widget.onListenFocus!.call(_focusNode.hasFocus);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onListenFocus);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onListenFocus);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

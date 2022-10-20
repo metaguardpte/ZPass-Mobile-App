@@ -31,9 +31,18 @@ class RegisterBasicInformation extends StatefulWidget {
 
 class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformation, RegisterProvider> {
   final List<String> _planTypes = [S.current.registerPlanTypePilot];
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget buildContent(BuildContext context) {
     return SingleChildScrollView(
+      controller: _controller,
       child: Column(
         children: [
           ColoredBox(
@@ -128,10 +137,23 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                   color: Color(0xFF16181A), fontSize: 14, fontWeight: FontWeight.w500),
             ),
           ),
-          RegisterEmailCode(onResult: (value) => provider.emailVerifyCode = value),
+          RegisterEmailCode(
+            onResult: (value) => provider.emailVerifyCode = value,
+            onListenFocus: (hasFocus) {
+              if (hasFocus) {
+                _scrollToBottom();
+              }
+            },
+          ),
         ],
       ),
     );
+  }
+
+  _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), (){
+      _controller.animateTo(_controller.position.maxScrollExtent, duration: const Duration(milliseconds: 100), curve: Curves.linear);
+    });
   }
 
   Widget _buildEmailCodeTips() {
