@@ -31,7 +31,8 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemWrapper> {
     // adapt the entity groups
     var wrappers = <VaultItemWrapper>[];
     for (var group in entityGroups) {
-      wrappers.addAll(group.entities.map((e) => VaultItemWrapper(raw: e, groupName: group.name)));
+      wrappers.addAll(group.entities.map(
+          (e) => VaultItemWrapper(raw: e, groupName: group.name)..decrypt()));
     }
     // update data source
     dataSource = wrappers;
