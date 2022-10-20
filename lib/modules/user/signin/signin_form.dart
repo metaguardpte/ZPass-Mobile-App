@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
@@ -75,24 +77,27 @@ class _SignInFormState extends State<SignInForm> {
     SeKey = value;
   }
 
-  getQRcode() {
-
-    NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data){
-      // const params = jsonDecode(data);
-
+  getQRcode() async {
+    var status = await Permission.camera.request();
+    if (!status.isGranted) {
+      Toast.showMiddleToast(
+          'No Camera Permission , Please go to the system settings to open the permission',
+          height: 180,
+          type: ToastType.error);
+      return;
+    }
+    NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {
       final params = jsonDecode(data['data']);
-      try{
-        if(params != null && params['secretKey'] != null) {
-          SeKeyController.text =params['secretKey'];
+      try {
+        if (params != null && params['secretKey'] != null) {
+          SeKeyController.text = params['secretKey'];
           SeKey = params['secretKey'];
           emailController.text = params['email'];
           Email = params['email'];
-        }
-        else{
+        } else {
           Toast.showMiddleToast('don`t get Secret Key');
         }
-      }
-      catch(e){
+      } catch (e) {
         Log.d(e.toString());
         Toast.showMiddleToast('don`t get Secret Key');
       }
@@ -104,7 +109,7 @@ class _SignInFormState extends State<SignInForm> {
 
     if ((widget.data ?? userinfo.email ?? "").isEmpty) return;
     final defaultValue = jsonDecode(widget.data ?? "{}");
-    Email = defaultValue["email"] ??  userinfo.email ?? "";
+    Email = defaultValue["email"] ?? userinfo.email ?? "";
     SeKey = defaultValue["secretKey"] ?? userinfo.secretKey ?? "";
     SeKeyController.text = SeKey;
     emailController.text = Email;
@@ -205,12 +210,16 @@ class _SignInFormState extends State<SignInForm> {
             children: [
               Container(
                 height: 1,
-                color:const Color.fromRGBO(149, 155, 167, 0.42),
+                color: const Color.fromRGBO(149, 155, 167, 0.42),
               ),
               Container(
                 color: Colors.white,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Text(S.current.or,style: const TextStyle(color: Color.fromRGBO(149, 155, 167, 1)),),
+                child: Text(
+                  S.current.or,
+                  style:
+                      const TextStyle(color: Color.fromRGBO(149, 155, 167, 1)),
+                ),
               )
             ],
           ),
@@ -225,10 +234,8 @@ class _SignInFormState extends State<SignInForm> {
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(
-                    width: 1,
-                    color: const Color.fromRGBO(73, 84, 255, 1)),
-                borderRadius:
-                const BorderRadius.all(Radius.circular(23))),
+                    width: 1, color: const Color.fromRGBO(73, 84, 255, 1)),
+                borderRadius: const BorderRadius.all(Radius.circular(23))),
             // color: ,
             child: Material(
               color: Colors.transparent,
@@ -259,7 +266,6 @@ class _SignInFormState extends State<SignInForm> {
             ),
           ),
         ),
-
       ],
     );
   }

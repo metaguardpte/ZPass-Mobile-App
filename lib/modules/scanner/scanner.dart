@@ -21,9 +21,11 @@ class _ScannerModeState extends State<ScannerMode> {
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     print('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
+      NavigatorUtils.goBack(context);
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('no Permission')),
+      // );
     }
   }
 
