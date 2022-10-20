@@ -82,7 +82,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
         borderRadius: BorderRadius.circular(6),
         color: const Color(0xFFF6F6F6),
       ),
-      child: Text(
+      child: SelectableText(
         provider.secretKey,
         style: const TextStyle(
             color: Color(0xFFFF7019), fontSize: 16, fontWeight: FontWeight.w500,
