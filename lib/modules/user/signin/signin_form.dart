@@ -18,7 +18,7 @@ import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_loading_dialog.dart';
 import 'package:zpass/widgets/load_image.dart';
 
-class SignInForm extends StatefulWidget {
+class  SignInForm extends StatefulWidget {
   const SignInForm({Key? key, this.data}) : super(key: key);
   final String? data;
 
@@ -28,6 +28,7 @@ class SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<SignInForm> {
   late final loadingDialog = ZPassLoadingDialog();
+  FocusNode focusNode = FocusNode();
 
   void handelSignIn() {
     if (Email.isEmpty) {
@@ -50,6 +51,10 @@ class _SignInFormState extends State<SignInForm> {
       UserProvider().updateEmail(Email);
       UserProvider().updateSecretKey(SeKey);
       UserProvider().updateUserCryptoKey(UserCryptoKeyModel.fromJson(value));
+      UserProvider().updateSignInList({
+        "email":Email,
+        "key":SeKey
+      });
       loadingDialog.dismiss(context);
       NavigatorUtils.push(context, Routers.home);
     }).catchError((error) {
@@ -119,6 +124,20 @@ class _SignInFormState extends State<SignInForm> {
   void initState() {
     super.initState();
     _initDefaultValue();
+    //添加listener监听
+    //对应的TextField失去或者获取焦点都会回调此监听
+    focusNode.addListener((){
+      if (focusNode.hasFocus) {
+        print('得到焦点');
+
+      }else{
+        var key = UserProvider().getUserKeyByEmail(Email);
+        if(key != null){
+          SeKeyController.text = key;
+          SeKey = key;
+        }
+      }
+    });
   }
 
   @override
@@ -133,6 +152,7 @@ class _SignInFormState extends State<SignInForm> {
               borderRadius: BorderRadius.all(Radius.circular(7.5))),
           child: TextField(
             onChanged: getEmail,
+            focusNode: focusNode,
             controller: emailController,
             decoration: InputDecoration(
                 icon: const LoadAssetImage(
