@@ -11,7 +11,7 @@ class LoadImage extends StatelessWidget {
     this.height,
     this.fit = BoxFit.cover, 
     this.format = ImageFormat.png,
-    this.holderImg = 'none',
+    this.holderImg = 'ic_placeholder',
     this.cacheWidth,
     this.cacheHeight,
     this.holderError,

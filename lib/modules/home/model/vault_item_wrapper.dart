@@ -35,10 +35,12 @@ class VaultItemWrapper {
         final hostWithoutWWW = uri.host.replaceAll("www.", "");
         if (favicons.keys.contains(hostWithoutWWW)) {
           return favicons[hostWithoutWWW];
-        } else if ((detail.loginUri ?? "").isUrlWithHttp) {
-          return "${uri.origin}/favicon.ico";
-        } else if ((detail.loginUri ?? "").isUrlWithoutHttp) {
-          return "http://${uri.origin}/favicon.ico";
+        } else if ((detail.loginUri ?? "").isUrl) {
+          if (detail.loginUri!.startsWith("http")) {
+            return "${uri.origin}/favicon.ico";
+          } else {
+            return "http://${uri.origin}/favicon.ico";
+          }
         } else {
           return null;
         }

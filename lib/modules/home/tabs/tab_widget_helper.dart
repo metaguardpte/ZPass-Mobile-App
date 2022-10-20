@@ -47,11 +47,12 @@ Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
         ZPassIcons.icKey,
         color: Colors.white,
       ));
-  final favIcon = element.icon != null
+  final iconUrl = element.icon;
+  final favIcon = iconUrl != null
       ? ClipRRect(
           borderRadius: BorderRadius.circular(9),
           child: LoadImage(
-            element.icon!,
+            iconUrl,
             holderError: fallbackIcon,
           ))
       : fallbackIcon;
