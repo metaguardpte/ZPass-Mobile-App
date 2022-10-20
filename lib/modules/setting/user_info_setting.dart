@@ -20,10 +20,9 @@ class UserInfoSettingPage extends StatefulWidget {
 class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
   late Color rightColor;
   late TextStyle rightStyle;
-  UserInfoModel userInfo = UserProvider().getUserInfo();
+  UserInfoModel userInfo = UserProvider().userInfo;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     rightColor = const Color.fromRGBO(149, 155, 167, 1);
     rightStyle = TextStyle(color: rightColor, fontSize: 15);

@@ -47,7 +47,7 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserInfoModel userInfo = UserProvider().getUserInfo();
+    UserInfoModel userInfo = UserProvider().userInfo;
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 20.5, 16, 20.5),
       color: const Color.fromRGBO(247, 247, 247, 1),

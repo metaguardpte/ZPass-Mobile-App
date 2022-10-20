@@ -2,12 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
-import 'package:zpass/modules/user/register/widgets/zpass_register_textfield.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
@@ -54,12 +52,12 @@ class _SignInFormState extends State<SignInForm> {
     }
     loadingDialog.show(context, barrierDismissible: false);
     CryptoManager().login(Email, Psw, AppConfig.serverUrl, SeKey).then((value) {
-      UserProvider().updateEmail(Email);
-      UserProvider().updateSecretKey(SeKey);
-      UserProvider().updateUserCryptoKey(UserCryptoKeyModel.fromJson(value));
+      UserProvider().userEmail = Email;
+      UserProvider().userSecretKey = SeKey;
+      UserProvider().userCryptoKey = UserCryptoKeyModel.fromJson(value);
       UserProvider().updateSignInList({"email": Email, "key": SeKey});
       loadingDialog.dismiss(context);
-      NavigatorUtils.push(context, Routers.home);
+      NavigatorUtils.push(context, Routers.home, clearStack: true);
     }).catchError((error) {
       loadingDialog.dismiss(context);
       Toast.showMiddleToast("Login Failed: ${error.toString()}");
@@ -85,39 +83,36 @@ class _SignInFormState extends State<SignInForm> {
     SeKey = value;
   }
 
-  getQRcode() async {
-    var status = await Permission.camera.request();
-    if (!status.isGranted) {
-      Toast.showMiddleToast(
-          'No Camera Permission , Please go to the system settings to open the permission',
-          height: 180,
-          type: ToastType.error);
-      return;
-    }
-    NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {
-      try{
-        var params = Uri.parse(data['data']).queryParameters;
-        print(params);
-        print('params');
-        if (params != null && params['secretKey'] != null) {
-          SeKeyController.text = recode(params['secretKey']!);
-          SeKey = params['secretKey']!;
-          emailController.text = params['email']!;
-          Email = params['email']!;
-        } else {
+  getQRCode() {
+    Permission.camera.request().then((status) {
+      if (!status.isGranted) {
+        Toast.showMiddleToast(
+            'No Camera Permission , Please go to the system settings to open the permission',
+            height: 180,
+            type: ToastType.error);
+        return;
+      }
+      NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {
+        try {
+          final params = Uri.parse(data['data']).queryParameters;
+          if (params['secretKey'] != null) {
+            SeKeyController.text = recode(params['secretKey']!);
+            SeKey = params['secretKey']!;
+            emailController.text = params['email'] ?? "";
+            Email = params['email'] ?? "";
+          } else {
+            Toast.showMiddleToast('don`t get Secret Key');
+          }
+        } catch (e) {
+          Log.d(e.toString());
           Toast.showMiddleToast('don`t get Secret Key');
         }
-      }
-      catch(error){
-        Log.d(error.toString());
-        Toast.showMiddleToast('don`t get Secret Key');
-      }
+      });
     });
   }
 
   void _initDefaultValue() {
-    final userinfo = UserProvider().getUserInfo();
-
+    final userinfo = UserProvider().userInfo;
     if ((widget.data ?? userinfo.email ?? "").isEmpty) return;
     final defaultValue = jsonDecode(widget.data ?? "{}");
     Email = defaultValue["email"] ?? userinfo.email ?? "";
@@ -243,7 +238,7 @@ class _SignInFormState extends State<SignInForm> {
           ),
         ),
         GestureDetector(
-          onTap: getQRcode,
+          onTap: getQRCode,
           child: Container(
             margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),

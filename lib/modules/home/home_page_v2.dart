@@ -46,10 +46,6 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      /// 显示状态栏和导航栏
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-    });
     WidgetsBinding.instance.addObserver(this);
     _items = <TabItem>[
       TabItem(icon: ZPassIcons.logins, activeIcon: ZPassIcons.loginsActive, title: S.current.tabLogins),

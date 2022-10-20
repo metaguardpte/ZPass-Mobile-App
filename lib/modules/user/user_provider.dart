@@ -12,6 +12,7 @@ class UserProvider {
 
   late UserInfoModel _userInfo;
   late Map<String , dynamic> _loginUserList;
+
   UserProvider._internal() {
     final signInList = SpUtil.getString(_signInListKey);
     final spData = SpUtil.getString(_kUserProviderKey);
@@ -26,36 +27,36 @@ class UserProvider {
       _userInfo = UserInfoModel();
     }
   }
-  void clear(){
-    _userInfo.userCryptoKey = UserCryptoKeyModel();
-    SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
+
+  UserInfoModel get userInfo => _userInfo;
+
+  set userCryptoKey(UserCryptoKeyModel model) {
+    _userInfo.userCryptoKey = model;
+    _flush();
   }
-  void updateUserCryptoKey(UserCryptoKeyModel raw) {
-    _userInfo.userCryptoKey = raw;
-    SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
-  }
-  void updateEmail(String email) {
+
+  set userEmail(String email) {
     _userInfo.email = email;
-    SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
+    _flush();
   }
 
-  void updateName(String name) {
+  set userName(String name) {
     _userInfo.name = name;
-    SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
+    _flush();
   }
 
-  void updateSecretKey(String secretKey) {
+  set userSecretKey(String secretKey) {
     _userInfo.secretKey = secretKey;
-    SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
+    _flush();
   }
 
-  void updateIcon(String icon) {
+  set userAvatar(String icon) {
     _userInfo.icon = icon;
-    SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
+    _flush();
   }
 
-  UserInfoModel getUserInfo(){
-    return _userInfo;
+  void _flush() {
+    SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
   }
 
   void updateSignInList(Map map) {
@@ -63,10 +64,10 @@ class UserProvider {
     SpUtil.putString(_signInListKey, jsonEncode(_loginUserList));
   }
 
-  String? getUserKeyByEmail(String email){
-    print(_loginUserList);
-    print('_loginUserList');
-    var key = _loginUserList[email];
-    return key ?? null;
+  String? getUserKeyByEmail(String email) => _loginUserList[email];
+
+  void clear(){
+    _userInfo.userCryptoKey = UserCryptoKeyModel();
+    _flush();
   }
 }

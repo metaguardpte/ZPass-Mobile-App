@@ -47,6 +47,7 @@ class Toast {
             color: Color.fromRGBO(0, 0, 0, 0.8000),
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             LoadAssetImage(
               SwitchIcon(type),
