@@ -73,6 +73,8 @@ class _SignInFormState extends State<SignInForm> {
 
   getEmail(value) {
     Email = value;
+    SeKey = '';
+    SeKeyController.text = '';
   }
 
   getPsw(value) {
@@ -96,7 +98,7 @@ class _SignInFormState extends State<SignInForm> {
         try {
           final params = Uri.parse(data['data']).queryParameters;
           if (params['secretKey'] != null) {
-            SeKeyController.text = recode(params['secretKey']!);
+            SeKeyController.text = params['secretKey'] ?? "";
             SeKey = params['secretKey']!;
             emailController.text = params['email'] ?? "";
             Email = params['email'] ?? "";
