@@ -165,13 +165,18 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
             style: const TextStyle(color: Colors.black),
           ),
           leading: GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
               NavigatorUtils.goBack(context);
             },
-            child: const Icon(
-              ZPassIcons.icNavBack,
-              color: Color.fromRGBO(94, 99, 103, 1),
-              size: 16,
+            child: Container(
+              width: 40,
+              height: 40,
+              child: const Icon(
+                ZPassIcons.icNavBack,
+                color: Color.fromRGBO(94, 99, 103, 1),
+                size: 16,
+              ),
             ),
           ),
         ),
