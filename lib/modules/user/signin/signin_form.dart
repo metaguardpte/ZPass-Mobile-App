@@ -95,18 +95,21 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
     NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {
-      final params = jsonDecode(data['data']);
-      try {
+      try{
+        var params = Uri.parse(data['data']).queryParameters;
+        print(params);
+        print('params');
         if (params != null && params['secretKey'] != null) {
-          SeKeyController.text = recode(params['secretKey']);
-          SeKey = params['secretKey'];
-          emailController.text = params['email'];
-          Email = params['email'];
+          SeKeyController.text = recode(params['secretKey']!);
+          SeKey = params['secretKey']!;
+          emailController.text = params['email']!;
+          Email = params['email']!;
         } else {
           Toast.showMiddleToast('don`t get Secret Key');
         }
-      } catch (e) {
-        Log.d(e.toString());
+      }
+      catch(error){
+        Log.d(error.toString());
         Toast.showMiddleToast('don`t get Secret Key');
       }
     });
@@ -159,6 +162,7 @@ class _SignInFormState extends State<SignInForm> {
                 height: 20,
               ),
               onChanged: getEmail,
+              hintText: S.current.email,
               controller: emailController,
               focusNode: focusNode,
             )),
