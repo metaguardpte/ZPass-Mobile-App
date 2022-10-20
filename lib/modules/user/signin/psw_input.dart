@@ -16,6 +16,7 @@ class PswInput extends StatefulWidget {
 }
 
 class _PswInputState extends State<PswInput> {
+  late TextEditingController pswController = TextEditingController();
   switchPassword() {
     setState(() {
       _showPasword = !_showPasword;
@@ -31,9 +32,16 @@ class _PswInputState extends State<PswInput> {
   @override
   Widget build(BuildContext context) {
     return ZPassTextFieldWidget(
+
       onChanged: (value) {
-        widget.onChange?.call(value);
+        if(widget.onChange != null){
+          widget.onChange!(value);
+        }
+        if(value == ''){
+          pswController.text = value;
+        }
       },
+      controller: pswController,
       obscureText: !_showPasword,
       hintText: S.current.password,
       icon: const LoadAssetImage(
