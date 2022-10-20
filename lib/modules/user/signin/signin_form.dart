@@ -31,7 +31,7 @@ class _SignInFormState extends State<SignInForm> {
   FocusNode focusNode = FocusNode();
 
   String recode(String code) {
-    if(code.length < 9) return code;
+    if (code.length < 9) return code;
     var str = code.substring(0, 8);
     return '$str **** **** ****';
   }
