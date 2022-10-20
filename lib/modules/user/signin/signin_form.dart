@@ -18,7 +18,7 @@ import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_loading_dialog.dart';
 import 'package:zpass/widgets/load_image.dart';
 
-class  SignInForm extends StatefulWidget {
+class SignInForm extends StatefulWidget {
   const SignInForm({Key? key, this.data}) : super(key: key);
   final String? data;
 
@@ -29,6 +29,11 @@ class  SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   late final loadingDialog = ZPassLoadingDialog();
   FocusNode focusNode = FocusNode();
+
+  String recode(String code) {
+    var str = code.substring(0, 8);
+    return '$str **** **** ****';
+  }
 
   void handelSignIn() {
     if (Email.isEmpty) {
@@ -45,16 +50,11 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
     loadingDialog.show(context, barrierDismissible: false);
-    CryptoManager()
-        .login(Email, Psw, AppConfig.serverUrl, SeKey)
-        .then((value) {
+    CryptoManager().login(Email, Psw, AppConfig.serverUrl, SeKey).then((value) {
       UserProvider().updateEmail(Email);
       UserProvider().updateSecretKey(SeKey);
       UserProvider().updateUserCryptoKey(UserCryptoKeyModel.fromJson(value));
-      UserProvider().updateSignInList({
-        "email":Email,
-        "key":SeKey
-      });
+      UserProvider().updateSignInList({"email": Email, "key": SeKey});
       loadingDialog.dismiss(context);
       NavigatorUtils.push(context, Routers.home);
     }).catchError((error) {
@@ -95,7 +95,7 @@ class _SignInFormState extends State<SignInForm> {
       final params = jsonDecode(data['data']);
       try {
         if (params != null && params['secretKey'] != null) {
-          SeKeyController.text = params['secretKey'];
+          SeKeyController.text = recode(params['secretKey']);
           SeKey = params['secretKey'];
           emailController.text = params['email'];
           Email = params['email'];
@@ -116,7 +116,7 @@ class _SignInFormState extends State<SignInForm> {
     final defaultValue = jsonDecode(widget.data ?? "{}");
     Email = defaultValue["email"] ?? userinfo.email ?? "";
     SeKey = defaultValue["secretKey"] ?? userinfo.secretKey ?? "";
-    SeKeyController.text = SeKey;
+    SeKeyController.text = recode(SeKey);
     emailController.text = Email;
   }
 
@@ -126,14 +126,13 @@ class _SignInFormState extends State<SignInForm> {
     _initDefaultValue();
     //添加listener监听
     //对应的TextField失去或者获取焦点都会回调此监听
-    focusNode.addListener((){
+    focusNode.addListener(() {
       if (focusNode.hasFocus) {
         print('得到焦点');
-
-      }else{
+      } else {
         var key = UserProvider().getUserKeyByEmail(Email);
-        if(key != null){
-          SeKeyController.text = key;
+        if (key != null) {
+          SeKeyController.text = recode(key);
           SeKey = key;
         }
       }

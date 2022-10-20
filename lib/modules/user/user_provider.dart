@@ -11,7 +11,7 @@ class UserProvider {
   static const String _signInListKey = 'signInList';
 
   late UserInfoModel _userInfo;
-  late Map<String , String> _loginUserList;
+  late Map<String , dynamic> _loginUserList;
   UserProvider._internal() {
     final signInList = SpUtil.getString(_signInListKey);
     final spData = SpUtil.getString(_kUserProviderKey);
