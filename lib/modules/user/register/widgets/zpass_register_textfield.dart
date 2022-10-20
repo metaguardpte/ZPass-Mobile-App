@@ -17,6 +17,7 @@ enum TextFieldType {
 class ZPassTextField extends StatefulWidget {
   const ZPassTextField({Key? key,
     this.title,
+    this.text,
     this.hintText,
     this.textFieldTips,
     this.selectionText,
@@ -34,6 +35,7 @@ class ZPassTextField extends StatefulWidget {
       : super(key: key);
 
   final String? title;
+  final String? text;
   final double? textFieldHeight;
   final String? hintText;
   final String? textFieldTips;
@@ -68,6 +70,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
   void initState() {
     super.initState();
     _focusNode.addListener(_onListenFocus);
+    _controller.text = widget.text ?? "";
   }
 
   @override

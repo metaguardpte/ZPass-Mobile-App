@@ -12,7 +12,7 @@ class RegisterEmailCode extends StatefulWidget {
   RegisterEmailCodeState createState() => RegisterEmailCodeState();
 }
 
-class RegisterEmailCodeState extends State<RegisterEmailCode> {
+class RegisterEmailCodeState extends State<RegisterEmailCode> with AutomaticKeepAliveClientMixin {
 
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -37,6 +37,7 @@ class RegisterEmailCodeState extends State<RegisterEmailCode> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       // padding: const EdgeInsets.all(20),
       // margin: const EdgeInsets.only(top: 25, bottom: 5),
@@ -97,5 +98,8 @@ class RegisterEmailCodeState extends State<RegisterEmailCode> {
     });
     _focusNode.unfocus();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
 }

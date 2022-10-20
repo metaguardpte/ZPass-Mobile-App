@@ -72,6 +72,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                       final loading = tuple.item1;
                       final visibleCodeField = tuple.item2;
                       return ZPassTextField(
+                        text: provider.email,
                         title: widget.type == RegisterType.business ? S.current.businessEmail : S.current.email,
                         hintText:widget.type == RegisterType.business ? S.current.businessEmailHint : S.current.emailHint,
                         suffixBtnTitle: visibleCodeField ? S.current.resendCode : null,
