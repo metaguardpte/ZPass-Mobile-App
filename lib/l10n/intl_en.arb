@@ -97,6 +97,8 @@
   "logoutTitle":"Do your want to sign out of this account?",
   "signOut":"Sign Out",
   "yes":"Yes",
-  "logoutSuccess":"Logout Success !"
+  "logoutSuccess":"Logout Success !",
+
+   "loginFail":"Login Fail"
 
 }

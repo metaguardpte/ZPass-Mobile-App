@@ -60,7 +60,7 @@ class _SignInFormState extends State<SignInForm> {
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     }).catchError((error) {
       loadingDialog.dismiss(context);
-      Toast.showMiddleToast("Login Failed: ${error.toString()}");
+      Toast.showMiddleToast(S.current.loginFail);
     });
     //submit
   }

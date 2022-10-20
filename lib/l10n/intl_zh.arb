@@ -95,6 +95,8 @@
   "logout":"Logout",
   "logoutTitle":"Confirm to log out ?",
   "yes":"Yes",
-   "logoutSuccess":"Logout Success !"
+   "logoutSuccess":"Logout Success !",
+
+   "loginFail":"Login Fail"
 
 }
