@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:zpass/modules/home/model/vault_item_wrapper.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/res/resources.dart';
-import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/load_image.dart';
 
@@ -34,17 +33,18 @@ Widget renderListItem(BuildContext context, VaultItemWrapper element) {
 }
 
 Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
-  final randomColors =
-      faviconColors[math.Random().nextInt(100) % faviconColors.length] ??
-          [Colours.app_main, Colours.app_main.withAlpha(100)];
+  final randomColors = faviconColors[
+          math.Random().nextInt(100) % faviconColorsGradient.length] ??
+      Colours.app_main;
   final fallbackIcon = Container(
       width: 32,
       height: 32,
       decoration: BoxDecoration(
-          gradient: LinearGradient(colors: randomColors),
+          // gradient: LinearGradient(colors: randomColors),
+          color: randomColors,
           borderRadius: BorderRadius.circular(9)),
-      child: const Icon(
-        ZPassIcons.icKey,
+      child: Icon(
+        VaultItemType.values[element.raw.type].defaultFav,
         color: Colors.white,
       ));
   final iconUrl = element.icon;
