@@ -8,6 +8,7 @@ import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/common_widgets.dart';
 import 'package:zpass/widgets/grouped_list/grouped_list.dart';
+import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/widgets/zpass_edittext.dart';
 
 abstract class TabBasePageState<V extends StatefulWidget, T,
@@ -181,12 +182,12 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(ZPassIcons.logins, size: 100, color: Colours.unselected_item_color,),
-          Gaps.vGap15,
+          LoadAssetImage(emptyImage, width: 120, height: 120,),
+          Gaps.vGap5,
           Text(
             emptyTips,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: Dimens.font_sp14),
+            style: TextStyles.textSize14.copyWith(color: context.textColor3),
           )
         ],
       ),

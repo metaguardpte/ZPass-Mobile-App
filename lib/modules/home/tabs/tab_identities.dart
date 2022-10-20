@@ -18,6 +18,9 @@ class _TabIdentitiesPageState extends TabBasePageState<TabIdentitiesPage,
   String get emptyTips => "No Identities";
 
   @override
+  String get emptyImage => "home/empty_infos";
+
+  @override
   TabVaultItemProvider prepareProvider() {
     return TabVaultItemProvider(type: VaultItemType.identity);
   }

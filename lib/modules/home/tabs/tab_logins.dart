@@ -20,6 +20,9 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
   String get emptyTips => "No Logins";
 
   @override
+  String get emptyImage => "home/empty_logins";
+
+  @override
   TabVaultItemProvider prepareProvider() {
     return TabVaultItemProvider(type: VaultItemType.login);
   }

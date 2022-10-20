@@ -18,6 +18,9 @@ class _TabNotesPageState extends TabBasePageState<TabNotesPage,
   String get emptyTips => "No Notes";
 
   @override
+  String get emptyImage => "home/empty_notes";
+
+  @override
   TabVaultItemProvider prepareProvider() {
     return TabVaultItemProvider(type: VaultItemType.note);
   }

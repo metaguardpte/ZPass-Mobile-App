@@ -18,6 +18,9 @@ class _TabCardsPageState extends TabBasePageState<TabCardsPage,
   String get emptyTips => "No Cards";
 
   @override
+  String get emptyImage => "home/empty_cards";
+
+  @override
   TabVaultItemProvider prepareProvider() {
     return TabVaultItemProvider(type: VaultItemType.credit);
   }
