@@ -7,6 +7,7 @@ import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
+import 'package:zpass/modules/user/register/widgets/zpass_register_textfield.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
@@ -17,6 +18,7 @@ import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_loading_dialog.dart';
 import 'package:zpass/widgets/load_image.dart';
+import 'package:zpass/modules/user/signin/zpass_input.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key, this.data}) : super(key: key);
@@ -31,6 +33,7 @@ class _SignInFormState extends State<SignInForm> {
   FocusNode focusNode = FocusNode();
 
   String recode(String code) {
+    if(code.length < 9) return code;
     var str = code.substring(0, 8);
     return '$str **** **** ****';
   }
@@ -92,18 +95,21 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
     NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {
-      final params = jsonDecode(data['data']);
-      try {
+      try{
+        var params = Uri.parse(data['data']).queryParameters;
+        print(params);
+        print('params');
         if (params != null && params['secretKey'] != null) {
-          SeKeyController.text = recode(params['secretKey']);
-          SeKey = params['secretKey'];
-          emailController.text = params['email'];
-          Email = params['email'];
+          SeKeyController.text = recode(params['secretKey']!);
+          SeKey = params['secretKey']!;
+          emailController.text = params['email']!;
+          Email = params['email']!;
         } else {
           Toast.showMiddleToast('don`t get Secret Key');
         }
-      } catch (e) {
-        Log.d(e.toString());
+      }
+      catch(error){
+        Log.d(error.toString());
         Toast.showMiddleToast('don`t get Secret Key');
       }
     });
@@ -124,11 +130,11 @@ class _SignInFormState extends State<SignInForm> {
   void initState() {
     super.initState();
     _initDefaultValue();
-    //添加listener监听
-    //对应的TextField失去或者获取焦点都会回调此监听
+    // 添加listener监听
+    // 对应的TextField失去或者获取焦点都会回调此监听
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
-        print('得到焦点');
+        // print('得到焦点');
       } else {
         var key = UserProvider().getUserKeyByEmail(Email);
         if (key != null) {
@@ -144,27 +150,22 @@ class _SignInFormState extends State<SignInForm> {
     return Column(
       children: [
         Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-          decoration: const BoxDecoration(
-              color: Color.fromRGBO(246, 246, 246, 1),
-              borderRadius: BorderRadius.all(Radius.circular(7.5))),
-          child: TextField(
-            onChanged: getEmail,
-            focusNode: focusNode,
-            controller: emailController,
-            decoration: InputDecoration(
-                icon: const LoadAssetImage(
-                  'signin/email@2x',
-                  width: 20,
-                  height: 20,
-                ),
-                hintText: S.current.email,
-                hintStyle:
-                    const TextStyle(color: Color.fromRGBO(147, 151, 157, 1)),
-                border: InputBorder.none),
-          ),
-        ),
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+            decoration: const BoxDecoration(
+                color: Color.fromRGBO(246, 246, 246, 1),
+                borderRadius: BorderRadius.all(Radius.circular(7.5))),
+            child: ZPassTextFieldWidget(
+              icon: const LoadAssetImage(
+                'signin/email@2x',
+                width: 20,
+                height: 20,
+              ),
+              onChanged: getEmail,
+              hintText: S.current.email,
+              controller: emailController,
+              focusNode: focusNode,
+            )),
         Container(
             margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
@@ -180,19 +181,17 @@ class _SignInFormState extends State<SignInForm> {
           decoration: const BoxDecoration(
               color: Color.fromRGBO(246, 246, 246, 1),
               borderRadius: BorderRadius.all(Radius.circular(7.5))),
-          child: TextField(
-            controller: SeKeyController,
-            onChanged: getSeKey,
-            decoration: InputDecoration(
-                icon: const LoadAssetImage(
-                  'signin/safe@2x',
-                  width: 20,
-                  height: 20,
-                ),
-                hintText: S.current.seKey,
-                hintStyle:
-                    const TextStyle(color: Color.fromRGBO(147, 151, 157, 1)),
-                border: InputBorder.none),
+          child: Container(
+            child: ZPassTextFieldWidget(
+              icon: const LoadAssetImage(
+                'signin/safe@2x',
+                width: 20,
+                height: 20,
+              ),
+              controller: SeKeyController,
+              hintText: S.current.seKey,
+              onChanged: getSeKey,
+            ),
           ),
         ),
         GestureDetector(

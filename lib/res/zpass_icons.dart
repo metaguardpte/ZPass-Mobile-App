@@ -30,6 +30,7 @@ class ZPassIcons {
   static const IconData icTextFieldClean = IconData(0xe6d8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSecret = IconData(0xe6e1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icNoSecret = IconData(0xe6e0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icXCircle = IconData(0xe6ea, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icCopy = IconData(0xe6dc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icDownload = IconData(0xe6db, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSelectionArrow = IconData(0xe6de, fontFamily: _kFontFam, fontPackage: _kFontPkg);
