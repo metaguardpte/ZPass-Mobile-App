@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
@@ -26,6 +28,12 @@ class SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<SignInForm> {
   late final loadingDialog = ZPassLoadingDialog();
+  FocusNode focusNode = FocusNode();
+
+  String recode(String code) {
+    var str = code.substring(0, 8);
+    return '$str **** **** ****';
+  }
 
   void handelSignIn() {
     if (Email.isEmpty) {
@@ -42,12 +50,11 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
     loadingDialog.show(context, barrierDismissible: false);
-    CryptoManager()
-        .login(Email, Psw, AppConfig.serverUrl, SeKey)
-        .then((value) {
+    CryptoManager().login(Email, Psw, AppConfig.serverUrl, SeKey).then((value) {
       UserProvider().updateEmail(Email);
       UserProvider().updateSecretKey(SeKey);
       UserProvider().updateUserCryptoKey(UserCryptoKeyModel.fromJson(value));
+      UserProvider().updateSignInList({"email": Email, "key": SeKey});
       loadingDialog.dismiss(context);
       NavigatorUtils.push(context, Routers.home);
     }).catchError((error) {
@@ -75,24 +82,27 @@ class _SignInFormState extends State<SignInForm> {
     SeKey = value;
   }
 
-  getQRcode() {
-
-    NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data){
-      // const params = jsonDecode(data);
-
+  getQRcode() async {
+    var status = await Permission.camera.request();
+    if (!status.isGranted) {
+      Toast.showMiddleToast(
+          'No Camera Permission , Please go to the system settings to open the permission',
+          height: 180,
+          type: ToastType.error);
+      return;
+    }
+    NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {
       final params = jsonDecode(data['data']);
-      try{
-        if(params != null && params['secretKey'] != null) {
-          SeKeyController.text =params['secretKey'];
+      try {
+        if (params != null && params['secretKey'] != null) {
+          SeKeyController.text = recode(params['secretKey']);
           SeKey = params['secretKey'];
           emailController.text = params['email'];
           Email = params['email'];
-        }
-        else{
+        } else {
           Toast.showMiddleToast('don`t get Secret Key');
         }
-      }
-      catch(e){
+      } catch (e) {
         Log.d(e.toString());
         Toast.showMiddleToast('don`t get Secret Key');
       }
@@ -104,9 +114,9 @@ class _SignInFormState extends State<SignInForm> {
 
     if ((widget.data ?? userinfo.email ?? "").isEmpty) return;
     final defaultValue = jsonDecode(widget.data ?? "{}");
-    Email = defaultValue["email"] ??  userinfo.email ?? "";
+    Email = defaultValue["email"] ?? userinfo.email ?? "";
     SeKey = defaultValue["secretKey"] ?? userinfo.secretKey ?? "";
-    SeKeyController.text = SeKey;
+    SeKeyController.text = recode(SeKey);
     emailController.text = Email;
   }
 
@@ -114,6 +124,19 @@ class _SignInFormState extends State<SignInForm> {
   void initState() {
     super.initState();
     _initDefaultValue();
+    //添加listener监听
+    //对应的TextField失去或者获取焦点都会回调此监听
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        print('得到焦点');
+      } else {
+        var key = UserProvider().getUserKeyByEmail(Email);
+        if (key != null) {
+          SeKeyController.text = recode(key);
+          SeKey = key;
+        }
+      }
+    });
   }
 
   @override
@@ -128,6 +151,7 @@ class _SignInFormState extends State<SignInForm> {
               borderRadius: BorderRadius.all(Radius.circular(7.5))),
           child: TextField(
             onChanged: getEmail,
+            focusNode: focusNode,
             controller: emailController,
             decoration: InputDecoration(
                 icon: const LoadAssetImage(
@@ -205,12 +229,16 @@ class _SignInFormState extends State<SignInForm> {
             children: [
               Container(
                 height: 1,
-                color:const Color.fromRGBO(149, 155, 167, 0.42),
+                color: const Color.fromRGBO(149, 155, 167, 0.42),
               ),
               Container(
                 color: Colors.white,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Text(S.current.or,style: const TextStyle(color: Color.fromRGBO(149, 155, 167, 1)),),
+                child: Text(
+                  S.current.or,
+                  style:
+                      const TextStyle(color: Color.fromRGBO(149, 155, 167, 1)),
+                ),
               )
             ],
           ),
@@ -225,10 +253,8 @@ class _SignInFormState extends State<SignInForm> {
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(
-                    width: 1,
-                    color: const Color.fromRGBO(73, 84, 255, 1)),
-                borderRadius:
-                const BorderRadius.all(Radius.circular(23))),
+                    width: 1, color: const Color.fromRGBO(73, 84, 255, 1)),
+                borderRadius: const BorderRadius.all(Radius.circular(23))),
             // color: ,
             child: Material(
               color: Colors.transparent,
@@ -259,7 +285,6 @@ class _SignInFormState extends State<SignInForm> {
             ),
           ),
         ),
-
       ],
     );
   }

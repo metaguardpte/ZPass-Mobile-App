@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/scanner/switch_flash.dart';
+import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/widgets/load_image.dart';
 import 'package:zxing2/qrcode.dart';
@@ -21,9 +22,11 @@ class _ScannerModeState extends State<ScannerMode> {
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     print('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
+      NavigatorUtils.goBack(context);
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('no Permission')),
+      // );
     }
   }
 
@@ -87,7 +90,7 @@ class _ScannerModeState extends State<ScannerMode> {
         body: Stack(
       children: [
         Container(
-          color: Colors.cyan,
+          color: Colors.black,
           child: QRView(
             key: qrKey,
             onQRViewCreated: _onQRViewCreated,
@@ -104,11 +107,12 @@ class _ScannerModeState extends State<ScannerMode> {
         GestureDetector(
           onTap: _handelClose,
           child: Container(
-            margin: const EdgeInsets.fromLTRB(25.5, 11.5, 0, 0),
-            width: 30,
-            height: 30,
+            // color: Colors.red,
+            margin: const EdgeInsets.fromLTRB(25.5, 25, 0, 0),
+            width: 40,
+            height: 40,
             child:
-                const LoadAssetImage('signin/close@2x', width: 26, height: 26),
+                const Icon(ZPassIcons.icClose,color: Colors.white,size: 24,),
           ),
         ),
         Positioned(

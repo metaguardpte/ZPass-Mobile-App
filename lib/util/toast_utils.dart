@@ -35,14 +35,14 @@ class Toast {
   }
 
   static void showMiddleToast(String? msg,
-      {int duration = 2000, ToastType type = ToastType.info}) {
+      {int duration = 2000, ToastType type = ToastType.info,double height = 120}) {
     showToastWidget(
       duration:Duration(milliseconds: duration),
       Container(
         constraints:const BoxConstraints(maxWidth: 270, minWidth: 200),
         padding: const EdgeInsets.fromLTRB(21, 24, 21, 0),
 
-        height: 120,
+        height: height,
         decoration: const BoxDecoration(
             color: Color.fromRGBO(0, 0, 0, 0.8000),
             borderRadius: BorderRadius.all(Radius.circular(5))),
@@ -58,6 +58,7 @@ class Toast {
                 child: Text(
                   msg ?? '',
                   style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
                 ))
           ],
         ),

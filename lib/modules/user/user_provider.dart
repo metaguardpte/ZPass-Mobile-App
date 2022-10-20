@@ -8,11 +8,18 @@ class UserProvider {
   factory UserProvider() => _instance;
   static final UserProvider _instance = UserProvider._internal();
   static const String _kUserProviderKey = 'kUserProvider';
+  static const String _signInListKey = 'signInList';
 
   late UserInfoModel _userInfo;
-
+  late Map<String , dynamic> _loginUserList;
   UserProvider._internal() {
+    final signInList = SpUtil.getString(_signInListKey);
     final spData = SpUtil.getString(_kUserProviderKey);
+    if (signInList != null && signInList != '') {
+      _loginUserList = jsonDecode(signInList);
+    } else{
+      _loginUserList = {};
+    }
     if (spData != null && spData != '') {
       _userInfo = UserInfoModel.fromJson(jsonDecode(spData));
     } else{
@@ -20,7 +27,7 @@ class UserProvider {
     }
   }
   void clear(){
-    _userInfo = UserInfoModel();
+    _userInfo.userCryptoKey = UserCryptoKeyModel();
     SpUtil.putString(_kUserProviderKey, jsonEncode(_userInfo));
   }
   void updateUserCryptoKey(UserCryptoKeyModel raw) {
@@ -49,5 +56,17 @@ class UserProvider {
 
   UserInfoModel getUserInfo(){
     return _userInfo;
+  }
+
+  void updateSignInList(Map map) {
+    _loginUserList[map['email']] = map['key'];
+    SpUtil.putString(_signInListKey, jsonEncode(_loginUserList));
+  }
+
+  String? getUserKeyByEmail(String email){
+    print(_loginUserList);
+    print('_loginUserList');
+    var key = _loginUserList[email];
+    return key ?? null;
   }
 }
