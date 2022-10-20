@@ -214,7 +214,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
           width: 36,
           height: 36,
           padding: const EdgeInsets.all(9),
-          child: Icon(_isSecret ? ZPassIcons.icNoSecret : ZPassIcons.icSecret, color: const Color(0xFF959BA7), size: 17,),
+          child: Icon(_isSecret ? ZPassIcons.icSecret : ZPassIcons.icNoSecret, color: const Color(0xFF959BA7), size: 17,),
         ),
       );
     }
