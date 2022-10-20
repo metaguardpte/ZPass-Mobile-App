@@ -17,8 +17,11 @@ abstract class TabBaseProvider<T> extends BaseProvider {
   VaultItemSortType _sortType = VaultItemSortType.lastUsed;
   VaultItemSortType get sortType => _sortType;
   set sortType(VaultItemSortType type) {
-    _sortType = type;
-    notifyListeners();
+    if (_sortType != type) {
+      fetchData(reset: true);
+      _sortType = type;
+      notifyListeners();
+    }
   }
 
   List<T> _dataSource = [];
@@ -34,9 +37,11 @@ abstract class TabBaseProvider<T> extends BaseProvider {
     notifyListeners();
   }
 
-  void fetchData({bool reset = false});
+  Future<void> init();
 
-  void loadMoreData({int count = 100});
+  Future<void> fetchData({bool reset = false});
 
-  void filterData({required String keyword});
+  Future<void> loadMoreData({int count = 100});
+
+  Future<void> filterData({required String keyword});
 }

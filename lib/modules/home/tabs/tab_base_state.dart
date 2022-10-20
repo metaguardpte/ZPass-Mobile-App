@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/modules/home/provider/tab_base_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_sort_type.dart';
 import 'package:zpass/res/resources.dart';
 import 'package:zpass/res/zpass_icons.dart';
+import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/common_widgets.dart';
 import 'package:zpass/widgets/grouped_list/grouped_list.dart';
@@ -22,46 +24,40 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      provider.fetchData(reset: true);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await provider.init().catchError(
+          (e) => Log.e("provider init error: $e", tag: "TabBasePageState"));
+      provider.fetchData(reset: true).catchError((e) {
+        Log.e("fetchData error: $e", tag: "TabBasePageState");
+        provider.loading = false;
+      });
     });
   }
 
   @override
   Widget buildContent(BuildContext context) {
-    return Selector<P, bool>(
-      builder: (_, loading, __) {
-        if (loading) {
-          return commonLoading(context);
-        } else {
-          return buildContentView();
-        }
-      },
-      selector: (_, provider) => provider.loading,
+    return Selector<P, Tuple2<List<T>, bool>>(
+      builder: (_, tuple, __) => buildContentView(tuple.item1, tuple.item2),
+      selector: (_, provider) => Tuple2(provider.dataSource, provider.loading)
     );
   }
 
   @protected
-  Widget buildContentView() {
-    return Selector<P, List<T>>(
-        builder: (_, data, __) {
-          if (data.isEmpty) {
-            return buildEmptyView();
-          } else {
-            return buildDataView(data);
-          }
-        },
-        selector: (_, provider) => provider.dataSource);
-  }
-
-  @protected
-  Widget buildDataView(List<T> data) {
+  Widget buildContentView(List<T> data, bool loading) {
     return Container(
       color: context.backgroundColor,
-      child: Column(children: [
-        buildSearch(),
-        Expanded(child: buildCollections(data))
-      ],),
+      child: Column(
+        children: [
+          buildSearch(),
+          Expanded(child: Stack(
+            children: [
+              Visibility(visible: data.isEmpty, child: buildEmptyView(),),
+              Visibility(visible: data.isNotEmpty, child: buildCollections(data)),
+              Visibility(visible: loading, child: commonLoading(context),)
+            ],
+          ))
+        ],
+      ),
     );
   }
 
@@ -82,6 +78,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
         height: 35,
         action: TextInputAction.search,
         onSubmitted: onSearchValueChanged,
+        onChanged: onSearchValueChanged,
         borderRadius: 17.25,
         bgColor: const Color(0xFFEAEBED),
         focusBgColor: Colors.white,

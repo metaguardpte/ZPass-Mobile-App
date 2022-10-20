@@ -3,6 +3,7 @@ import 'package:zpass/modules/home/repo/repo_base.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:zpass/util/log_utils.dart';
 
 class RepoDB extends RepoBase<VaultItemEntity> {
 
@@ -39,7 +40,7 @@ class RepoDB extends RepoBase<VaultItemEntity> {
   @override
   Future init() async {
     final dir = await getApplicationSupportDirectory();
-    print("dir: $dir");
+    Log.d("leveldb dir: $dir", tag: "RepoDB");
     _db = ZPassDB();
     return _db.open(path: "${dir.path}/leveldb");
   }
