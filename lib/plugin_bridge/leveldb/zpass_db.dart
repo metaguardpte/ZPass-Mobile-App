@@ -7,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
-import 'package:zpass/plugin_bridge/leveldb/groups.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/util/log_utils.dart';
 
@@ -111,7 +110,8 @@ class ZPassDB {
     }
 
     var itemType = queryContext.itemType;
-    entities = entities.where((element) => _filter(element, keyword, itemType)).toList();
+    var includeDeleted = queryContext.includeDeleted;
+    entities = entities.where((element) => _filter(element, keyword, itemType, includeDeleted)).toList();
 
     var sortBy = queryContext.sortBy;
     entities.sort((a, b) => _sort(a, b, sortBy));
@@ -130,7 +130,7 @@ class ZPassDB {
       }
       lock.synchronized(() {
         if (!opened) {
-          Log.d("open db with path: ${dbPath}");
+          Log.d("open db with path: $dbPath");
           _db = KvDB.open(dbPath);
           opened = true;
         }
@@ -150,10 +150,15 @@ class ZPassDB {
     }
   }
 
-  bool _filter(VaultItemEntity entity, String keyword, VaultItemType itemType) {
+  bool _filter(VaultItemEntity entity, String keyword, VaultItemType itemType, bool includeDeleted) {
     var type = entity.type;
     bool typeMatched = (type==itemType.index);
     if (!typeMatched) {
+      return false;
+    }
+
+    bool isDeleted = entity.isDeleted;
+    if (isDeleted && !includeDeleted) {
       return false;
     }
 

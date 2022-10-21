@@ -6,8 +6,10 @@ class QueryContext {
   EntityType entityType;
   VaultItemType itemType;
   SortBy sortBy;
+  bool includeDeleted = false;
 
   QueryContext(this.keyword, this.entityType, this.itemType, this.sortBy);
+  QueryContext.includeDeleted(this.keyword, this.entityType, this.itemType, this.sortBy, this.includeDeleted);
 }
 
 enum EntityType {
