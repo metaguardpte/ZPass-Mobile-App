@@ -7,7 +7,6 @@ import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_confirm_dialog.dart';
-import 'package:zpass/widgets/dialog/zpass_middle_dialog.dart';
 import 'package:zpass/widgets/list.dart';
 import 'package:zpass/widgets/load_image.dart';
 
