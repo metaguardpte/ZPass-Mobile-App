@@ -10,6 +10,7 @@ import 'package:zpass/modules/user/register/widgets/register_email_code.dart';
 import 'package:zpass/modules/user/register/widgets/register_selection_dialog.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
+import 'package:zpass/util/locales_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/modules/user/register/widgets/zpass_register_textfield.dart';
 import 'package:zpass/extension/string_ext.dart';
@@ -217,7 +218,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
     }
     final errorId = await provider.doGetEmailVerifyCode();
     if ((errorId ?? "").isNotEmpty) {
-      Toast.show(errorId);
+      Toast.show(LocalesUtils.message(errorId!));
     }
   }
 

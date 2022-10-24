@@ -16,6 +16,7 @@ import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/util/locales_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/custom_scroll_behavior.dart';
 import 'package:zpass/widgets/zpass_button_gradient.dart';
@@ -246,7 +247,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     }
     final error = (await provider.doCheckEmailVerifyCode()) ?? "";
     if (error.isNotEmpty) {
-      Toast.show(error);
+      Toast.show(LocalesUtils.message(error));
       return;
     }
     _nextStep();
@@ -275,7 +276,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
 
     final error = (await provider.doActivationAccount()) ?? "";
     if (error.isNotEmpty) {
-      Toast.show(error);
+      Toast.show(LocalesUtils.message(error));
       return;
     }
     _nextStep();
