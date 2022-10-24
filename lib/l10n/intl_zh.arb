@@ -87,6 +87,9 @@
   "registerSecretKeyPDFContact": "Contact Our Support Team",
   "registerSecretKeyCopyTips": "Copy success",
   "registerSecretKeyPermission": "Please enable storage permission",
+  "registerSaveSecretKeyDialogMessage": "Make sure your have keep secret key",
+  "registerNotYet": "Not yet",
+  "registerConfirm": "Confirm",
 
   "profile":"Profile",
   "photo":"Photo",
@@ -95,9 +98,12 @@
   "logout":"Logout",
   "logoutTitle":"Confirm to log out ?",
   "yes":"Yes",
-   "logoutSuccess":"Logout Success !",
+  "logoutSuccess":"Logout Success !",
 
-   "loginFail":"Login Fail",
+  "loginFail":"Login Fail",
+
+  "actionConfirm": "Confirm",
+  "actionCancel": "Cancel",
 
   "err.page.401.personal.title1": "您没有登录您的个人空间。",
   "err.page.401.personal.title2": "如果您想访问个人空间，请使用您的个人密钥登录。",

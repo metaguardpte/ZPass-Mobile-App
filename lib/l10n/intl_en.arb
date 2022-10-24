@@ -88,6 +88,9 @@
   "registerSecretKeyPDFContact": "Contact Our Support Team",
   "registerSecretKeyCopyTips": "Copy success",
   "registerSecretKeyPermission": "Please enable storage permission",
+  "registerSaveSecretKeyDialogMessage": "Make sure your have keep secret key",
+  "registerNotYet": "Not yet",
+  "registerConfirm": "Confirm",
 
   "profile":"Profile",
   "photo":"Photo",
@@ -99,7 +102,10 @@
   "yes":"Yes",
   "logoutSuccess":"Logout Success !",
 
-   "loginFail":"Login Fail",
+  "loginFail":"Login Fail",
+
+  "actionConfirm": "Confirm",
+  "actionCancel": "Cancel",
 
   "err.page.401.personal.title1": "You do not login your Personal space.",
   "err.page.401.personal.title2": "If you want to access Personal space, please login with your personal secret key.",
