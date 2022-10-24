@@ -50,7 +50,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
           ColoredBox(
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+              padding: const EdgeInsets.fromLTRB(24, 10, 24, 0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -67,7 +67,6 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                       },
                       selector: (_, provider) => provider.planTypeIndex,
                   ),
-                  Gaps.vGap16,
                   /// email
                   Selector<RegisterProvider, Tuple2<bool, bool>>(
                     builder: (_, tuple, __) {
@@ -75,6 +74,8 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                       final visibleCodeField = tuple.item2;
                       return ZPassTextField(
                         text: provider.email,
+                        regExp: emailRegExpStr,
+                        errorMessage: S.current.emailInvalid,
                         title: widget.type == RegisterType.business ? S.current.businessEmail : S.current.email,
                         hintText:widget.type == RegisterType.business ? S.current.businessEmailHint : S.current.emailHint,
                         suffixBtnTitle: visibleCodeField ? S.current.resendCode : null,
@@ -87,7 +88,6 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                     },
                     selector: (_, provider) => Tuple2(provider.emailCodeLoading, provider.visibleEmailVerifyCode),
                   ),
-                  Gaps.vGap10,
                   /// domain name
                   Visibility(
                     visible: widget.type == RegisterType.business,
@@ -127,29 +127,26 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
   }
 
   Widget _buildEmailCode() {
-    return Container(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Text(
-              S.current.enterCode,
-              style: const TextStyle(
-                  color: Color(0xFF16181A), fontSize: 14, fontWeight: FontWeight.w500),
-            ),
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Text(
+            S.current.enterCode,
+            style: const TextStyle(
+                color: Color(0xFF16181A), fontSize: 14, fontWeight: FontWeight.w500),
           ),
-          RegisterEmailCode(
-            onResult: (value) => provider.emailVerifyCode = value,
-            onListenFocus: (hasFocus) {
-              if (hasFocus) {
-                _scrollToBottom();
-              }
-            },
-          ),
-        ],
-      ),
+        ),
+        RegisterEmailCode(
+          onResult: (value) => provider.emailVerifyCode = value,
+          onListenFocus: (hasFocus) {
+            if (hasFocus) {
+              _scrollToBottom();
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -208,7 +205,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
   }
 
   _onSendCodeTap() async {
-    provider.email = provider.email.trim();
+    // provider.email = provider.email.trim();
     if (provider.email.isEmpty) {
       Toast.show(S.current.emailHint);
       return;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -14,7 +15,6 @@ import 'package:zpass/modules/user/register/widgets/register_setup_password.dart
 import 'package:zpass/modules/user/register/widgets/register_stepper.dart';
 import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/user_provider.dart';
-import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/locales_utils.dart';
@@ -167,7 +167,8 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
         return Visibility(
           visible: visible,
           child: RegisterProtocolCheckbox(
-              onChange: (value) => provider.protocolChecked = value,
+            check: provider.protocolChecked,
+            onChange: (value) => provider.protocolChecked = value,
           ),
         );
       },
@@ -197,6 +198,20 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     );
   }
 
+  Widget _buildSecretDialogMessage() {
+    return EasyRichText(
+      "${S.current.registerSaveSecretKeyDialogMessage}${S.current.registerSecretKeyPDFKey}",
+      textAlign: TextAlign.center,
+      defaultStyle: const TextStyle(fontSize: 18, color: Color(0xFF16181A), height: 1.6),
+        patternList: [
+          EasyRichTextPattern(
+            targetString: S.current.registerSecretKeyPDFKey,
+            style: const TextStyle(fontSize: 18, color: Color(0xFF16181A), fontWeight: FontWeight.w600),
+          ),
+        ]
+    );
+  }
+
   String _buildResponseParam() {
     return jsonEncode({"email": provider.email, "secretKey": provider.secretKey});
   }
@@ -209,7 +224,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
       _doActivationAccount();
     } else if (_isLastStep()) {
       ZPassConfirmDialog(
-        message: S.current.registerSaveSecretKeyDialogMessage,
+        slotMessage: _buildSecretDialogMessage(),
         reverse: true,
         cancelText: S.current.registerNotYet,
         onConfirmTap: _onFinish,
