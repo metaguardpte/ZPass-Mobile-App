@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/util/callback_funcation.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_dialog.dart';
 
 import '../../generated/l10n.dart';
@@ -67,11 +68,11 @@ class ZPassConfirmDialog extends ZPassDialog {
         height: 44,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isPrimary ? const Color(0xFF4954FF) : const Color(0x144954FF),
+          color: isPrimary ? context.primaryColor : const Color(0x144954FF),
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: const Color(0xFF4954FF)),
+          border: Border.all(color: context.primaryColor),
         ),
-        child: Text(title, style: TextStyle(fontSize: 16, color: isPrimary ? Colors.white : const Color(0xFF4954FF))),
+        child: Text(title, style: TextStyle(fontSize: 16, color: isPrimary ? Colors.white : context.primaryColor)),
       ),
     );
   }
