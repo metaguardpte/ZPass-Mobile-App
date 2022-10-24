@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/util/callback_funcation.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/widgets/zpass_edittext.dart';
@@ -26,6 +27,7 @@ class ZPassTextField extends StatefulWidget {
     this.type = TextFieldType.text,
     this.loading = false,
     this.autoFocus = false,
+    this.regExp,
     this.onTextChange,
     this.onEditingComplete,
     this.onSendCodeTap,
@@ -45,6 +47,7 @@ class ZPassTextField extends StatefulWidget {
   final TextInputType? textInputType;
   final bool? loading;
   final bool? autoFocus;
+  final String? regExp;
   final FunctionCallback<String>? onTextChange;
   final NullParamCallback? onEditingComplete;
   final NullParamCallback? onSendCodeTap;
@@ -187,9 +190,9 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
           padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: Text(
             widget.suffixBtnTitle ?? S.current.sendCode,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 15,
-                color: Color(0xFF4954FF),
+                color: context.primaryColor,
                 fontWeight: FontWeight.w500,
             ),
           ),

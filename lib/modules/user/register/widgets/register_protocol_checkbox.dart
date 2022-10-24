@@ -5,6 +5,7 @@ import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zpass/util/theme_utils.dart';
 
 class RegisterProtocolCheckbox extends StatefulWidget {
   const RegisterProtocolCheckbox({Key? key, this.onChange}) : super(key: key);
@@ -41,7 +42,7 @@ class _RegisterProtocolCheckboxState extends State<RegisterProtocolCheckbox> {
       child: Checkbox(
           value: _isChecked,
           visualDensity: const VisualDensity(horizontal: -2, vertical: -4),
-          activeColor: const Color(0xFF4954FF),
+          activeColor: context.primaryColor,
           side: const BorderSide(color: Color(0xFF4E5E75), width: 0.5),
           onChanged: (bool? value) {
             setState(() {
@@ -62,14 +63,14 @@ class _RegisterProtocolCheckboxState extends State<RegisterProtocolCheckbox> {
       patternList: [
         EasyRichTextPattern(
           targetString: S.current.userServiceAgreement,
-          style: const TextStyle(color: Color(0xFF4954FF), fontSize: 14),
+          style: TextStyle(color: context.primaryColor, fontSize: 14),
           recognizer: TapGestureRecognizer()..onTap = () async {
             _openUrl(AppConfig.userAgreementUrl);
           },
         ),
         EasyRichTextPattern(
           targetString: S.current.privacyNotice,
-          style: const TextStyle(color: Color(0xFF4954FF), fontSize: 14),
+          style: TextStyle(color: context.primaryColor, fontSize: 14),
           recognizer: TapGestureRecognizer()..onTap = () async {
             _openUrl(AppConfig.privacyNoticeUrl);
           },

@@ -10,6 +10,8 @@ import 'package:zpass/modules/user/register/widgets/register_email_code.dart';
 import 'package:zpass/modules/user/register/widgets/register_selection_dialog.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
+import 'package:zpass/util/locales_utils.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/modules/user/register/widgets/zpass_register_textfield.dart';
 import 'package:zpass/extension/string_ext.dart';
@@ -114,7 +116,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
             builder: (_, visible, __) {
               return Visibility(
                 visible: visible,
-                child: _buildEmailCodeTips(),
+                child: _buildEmailCodeTips(context),
               );
             },
             selector: (_, provider) => provider.visibleEmailVerifyCode,
@@ -157,7 +159,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
     });
   }
 
-  Widget _buildEmailCodeTips() {
+  Widget _buildEmailCodeTips(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13.5),
       child: Row(
@@ -165,7 +167,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
         children: [
           Container(
             margin: const EdgeInsets.only(top: 5),
-            child: const Icon(ZPassIcons.icWarnCircle, size: 16, color: Color(0xFF4954FF),),
+            child: Icon(ZPassIcons.icWarnCircle, size: 16, color: context.primaryColor,),
           ),
           Gaps.hGap5,
           Expanded(
@@ -217,7 +219,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
     }
     final errorId = await provider.doGetEmailVerifyCode();
     if ((errorId ?? "").isNotEmpty) {
-      Toast.show(errorId);
+      Toast.show(LocalesUtils.message(errorId!));
     }
   }
 
