@@ -6,6 +6,7 @@ import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/toast_utils.dart';
+import 'package:zpass/widgets/dialog/zpass_confirm_dialog.dart';
 import 'package:zpass/widgets/dialog/zpass_middle_dialog.dart';
 import 'package:zpass/widgets/list.dart';
 import 'package:zpass/widgets/load_image.dart';
@@ -22,80 +23,6 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
   late TextStyle rightStyle;
   UserInfoModel userInfo = UserProvider().userInfo;
 
-  late final dialog = ZPassMiddleDialog(
-      child: Padding(
-        padding:const EdgeInsets.only(bottom: 10),
-        child: Column(
-          children: [
-            Text(S.current.logoutTitle,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18, height: 1.3)),
-          ],
-        ),
-      ),
-      footer: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Expanded(
-            flex: 1,
-            child: GestureDetector(
-              onTap: () {
-                UserProvider().clear();
-                Toast.showMiddleToast(S.current.logoutSuccess,
-                    type: ToastType.info);
-                Future.delayed(const Duration(seconds: 2), () {
-                  NavigatorUtils.push(context, Routers.loginOrNew,
-                      clearStack: true);
-                });
-                dialog.dismiss(context);
-              },
-              child: Container(
-                margin:const EdgeInsets.only(right: 6),
-                alignment: Alignment.center,
-                height: 44,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                    color: Color.fromRGBO(73, 84, 255, 1),
-                    borderRadius: BorderRadius.all(Radius.circular(22))),
-                child: Text(
-                  S.current.signOut,
-                  textAlign: TextAlign.center,
-                  style:const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-              flex: 1,
-              child: GestureDetector(
-                onTap: () {
-                  dialog.dismiss(context);
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(left: 6),
-                  alignment: Alignment.center,
-                  height: 44,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: const Color.fromRGBO(3, 84, 255, 0.0800),
-                      borderRadius: const BorderRadius.all(Radius.circular(22)),
-                      border: Border.all(
-                          width: 1,
-                          color: const Color.fromRGBO(73, 84, 255, 1))),
-                  child: Text(
-                    S.current.cancel,
-                    textAlign: TextAlign.center,
-                    style:const TextStyle(
-                      color:Color.fromRGBO(73, 84, 255, 1),
-                    ),
-                  ),
-                ),
-              )),
-        ],
-      ));
-
   @override
   void initState() {
     super.initState();
@@ -103,11 +30,19 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
     rightStyle = TextStyle(color: rightColor, fontSize: 15);
   }
 
-  handelLogout() {
-    dialog.show(
-      context,
-    );
-    return;
+  _onSignOutTap() {
+    ZPassConfirmDialog(
+        message: S.current.logoutTitle,
+        confirmText: S.current.signOut,
+        onConfirmTap: _doSignOut,
+    ).show(context);
+  }
+
+  _doSignOut() {
+    UserProvider().clear();
+    Toast.showMiddleToast(S.current.logoutSuccess,
+        type: ToastType.info);
+    NavigatorUtils.push(context, Routers.loginOrNew, clearStack: true);
   }
 
   @override
@@ -192,7 +127,7 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
             ),
             const Spacer(),
             GestureDetector(
-              onTap: handelLogout,
+              onTap: _onSignOutTap,
               child: Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
