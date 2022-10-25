@@ -47,5 +47,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>The app use camera to scan QR code for links to websites.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo library access required in order to save photo or scan QR code photo.</string>
 </dict>
 </plist>
