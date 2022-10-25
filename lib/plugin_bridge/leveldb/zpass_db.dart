@@ -5,6 +5,11 @@ import 'package:flkv/flkv.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:zpass/modules/home/model/password_history_entity.dart';
+import 'package:zpass/modules/home/model/address_entity.dart';
+import 'package:zpass/modules/home/model/token_collection_entity.dart';
+import 'package:zpass/modules/home/model/token_multi_send_entity.dart';
+import 'package:zpass/modules/home/model/token_info_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
@@ -26,7 +31,8 @@ class ZPassDB {
     return _instance;
   }
 
-  bool opened = false;
+  bool _opened = false;
+  String _dbPath = "";
   late KvDB _db;
 
   bool put<E extends RecordEntity> (E entity) {
@@ -122,17 +128,18 @@ class ZPassDB {
   /// 需要保证线程安全
   ///
   Future<void> open({String path=""}) async {
-    if (!opened) {
+    if (!_opened) {
       var dbPath = path;
       if (dbPath.isEmpty) {
         final applicationDocDir = await getTemporaryDirectory();
         dbPath = join(applicationDocDir.path, "zpass");
       }
       lock.synchronized(() {
-        if (!opened) {
+        if (!_opened) {
           Log.d("open db with path: $dbPath");
           _db = KvDB.open(dbPath);
-          opened = true;
+          _opened = true;
+          _dbPath = dbPath;
         }
       });
     }
@@ -142,12 +149,17 @@ class ZPassDB {
   /// 需要保证线程安全
   ///
   void close() {
-    if (opened) {
+    if (_opened) {
       lock.synchronized(() {
         Log.d("Close db");
         _db.close();
+        _dbPath = "";
       });
     }
+  }
+
+  String getDBPath() {
+    return _dbPath;
   }
 
   bool _filter(VaultItemEntity entity, String keyword, VaultItemType itemType, bool includeDeleted) {
@@ -215,7 +227,24 @@ class ZPassDB {
 
   E? _toEntity<E extends RecordEntity>(String key, String jsonStr) {
     Map<String, dynamic> jsonMap = jsonDecode(jsonStr);
-    VaultItemEntity entity = VaultItemEntity.fromJson(jsonMap);
-    return entity as E;
+    if (key.contains(EntityType.vaultItem.name)) {
+      return VaultItemEntity.fromJson(jsonMap) as E;
+    }
+    if (key.contains(EntityType.passwordHistory.name)) {
+      return PasswordHistoryEntity.fromJson(jsonMap) as E;
+    }
+    if (key.contains(EntityType.address.name)) {
+      return AddressEntity.fromJson(jsonMap) as E;
+    }
+    if (key.contains(EntityType.tokenCollection.name)) {
+      return TokenCollectionEntity.fromJson(jsonMap) as E;
+    }
+    if (key.contains(EntityType.tokenMultiSend.name)) {
+      return TokenMultiSendEntity.fromJson(jsonMap) as E;
+    }
+    if (key.contains(EntityType.tokenInfo.name)) {
+      return TokenInfoEntity.fromJson(jsonMap) as E;
+    }
+    return null;
   }
 }

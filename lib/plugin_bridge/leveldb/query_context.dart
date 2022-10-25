@@ -13,7 +13,12 @@ class QueryContext {
 }
 
 enum EntityType {
-  vaultItem(name: "vaultItem");
+  vaultItem(name: "vaultItem"),
+  passwordHistory(name: "passwordHistory"),
+  address(name: "Address"),
+  tokenCollection(name: "tokenCollection"),
+  tokenMultiSend(name: "tokenMultiSend"),
+  tokenInfo(name: "tokenInfo");
 
   const EntityType({
     required this.name

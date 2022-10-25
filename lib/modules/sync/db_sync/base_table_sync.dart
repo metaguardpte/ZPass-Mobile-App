@@ -1,19 +1,8 @@
+
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/plugin_bridge/leveldb/record_entity.dart';
-import 'package:zpass/plugin_bridge/leveldb/sync/vault_table_sync.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 
-///
-/// ZPass DB数据同步逻辑； https://fjzx.yuque.com/uesase/kabox2/29715911
-///
-class DBSyncUnit {
-  static void sync(String remoteDBPath) {
-    var tableSyncUnits = <BaseTableSyncUnit>[VaultTableSyncUnit()];
-    for (var unit in tableSyncUnits) {
-      unit.sync(remoteDBPath);
-    }
-  }
-}
 
 class BaseTableSyncUnit<T extends RecordEntity> {
   EntityType entityType;
@@ -29,7 +18,7 @@ class BaseTableSyncUnit<T extends RecordEntity> {
 
     var changedEntities = getChanged(remoteMap, localMap);
     _doSync(changedEntities);
-    deleteDuplicateEntities();
+    postSync();
   }
 
   List<T> getChanged(Map<String, T> remoteMap, Map<String, T> localMap) {
@@ -40,9 +29,9 @@ class BaseTableSyncUnit<T extends RecordEntity> {
         changed.add(remoteEntity);
       }
 
-      T? latestEntity = getMergedEntity(remoteEntity, localEntity!);
-      if (latestEntity != null) {
-        changed.add(latestEntity);
+      T? mergedEntity = getMergedEntity(remoteEntity, localEntity!);
+      if (mergedEntity != null) {
+        changed.add(mergedEntity);
       }
     });
 
@@ -52,7 +41,7 @@ class BaseTableSyncUnit<T extends RecordEntity> {
   ///
   /// Empty method, override in VaultTableSyncUnit
   ///
-  void deleteDuplicateEntities() {
+  void postSync() {
   }
 
   ///
@@ -67,10 +56,11 @@ class BaseTableSyncUnit<T extends RecordEntity> {
     var remoteRestoreTime = remoteT.restoreTime;
     var localRestoreTime = localT.restoreTime;
 
-    if (localRestoreTime==null && remoteRestoreTime!=null) {
+    if (localRestoreTime == null && remoteRestoreTime != null) {
       return remoteT;
     }
-    if (localRestoreTime!=null && remoteRestoreTime!=null && remoteRestoreTime>localRestoreTime) {
+    if (localRestoreTime != null && remoteRestoreTime != null &&
+        remoteRestoreTime > localRestoreTime) {
       return remoteT;
     }
 
@@ -83,12 +73,11 @@ class BaseTableSyncUnit<T extends RecordEntity> {
       postMerge(latestVersion, localT);
     }
 
-    if (relativePropsChanged(remoteT, localT))  {
+    if (relativePropsChanged(remoteT, localT)) {
       latestVersion = localT;
       postMerge(latestVersion, remoteT);
     }
 
-    //restoreTime, updateTime, isDeleted not changed
     return latestVersion;
   }
 
@@ -124,4 +113,3 @@ class BaseTableSyncUnit<T extends RecordEntity> {
     }
   }
 }
-
