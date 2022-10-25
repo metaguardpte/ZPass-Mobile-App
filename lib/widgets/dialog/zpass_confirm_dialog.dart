@@ -37,6 +37,7 @@ class ZPassConfirmDialog extends ZPassDialog {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               decoration: const BoxDecoration(
                 border: Border(bottom: BorderSide(color: Color(0xFFEBEBEE), width: 0.5))

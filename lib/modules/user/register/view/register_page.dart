@@ -200,7 +200,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
 
   Widget _buildSecretDialogMessage() {
     return EasyRichText(
-      "${S.current.registerSaveSecretKeyDialogMessage}${S.current.registerSecretKeyPDFKey}",
+      "${S.current.registerSaveSecretKeyDialogMessage}\n${S.current.registerSecretKeyPDFKey}",
       textAlign: TextAlign.center,
       defaultStyle: const TextStyle(fontSize: 18, color: Color(0xFF16181A), height: 1.6),
         patternList: [
