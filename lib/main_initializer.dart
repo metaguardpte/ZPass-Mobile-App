@@ -11,6 +11,7 @@ import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
 import 'package:zpass/rpc/rpc_manager.dart';
 import 'package:zpass/util/log_utils.dart';
+import 'package:zpass/util/secure_storage.dart';
 
 class MainInitializer {
   ///
@@ -58,6 +59,7 @@ class MainInitializer {
   ///
   static void initAfterAuthorize(BuildContext context) async {
     // 初始化用户数据
+    await UserProvider().restore();
     final userInfo = UserProvider().userInfo;
     // 跳转登录或注册
     if (userInfo.email != null && userInfo.secretKey != null) {
