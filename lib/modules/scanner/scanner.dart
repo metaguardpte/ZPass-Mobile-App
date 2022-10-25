@@ -93,12 +93,32 @@ class _ScannerModeState extends State<ScannerMode> {
 
   void _onQRViewCreated(QRViewController controller) async {
     this.controller = controller;
-    await controller.resumeCamera();
+    if (Device.isAndroid) {
+      await controller.resumeCamera();
+    }
     controller.scannedDataStream.listen((Barcode? scanData) {
       if (scanData?.code != null) {
         BackToParentPage(scanData?.code);
       }
     });
+  }
+
+  Widget _buildCloseBtn() {
+    return SafeArea(
+      bottom: false,
+      right: false,
+      child: GestureDetector(
+        onTap: _handelClose,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(25.5, 25, 0, 0),
+          width: 40,
+          height: 40,
+          child:
+          const Icon(ZPassIcons.icClose,color: Colors.white,size: 24,),
+        ),
+      ),
+    );
   }
 
   @override
@@ -121,17 +141,7 @@ class _ScannerModeState extends State<ScannerMode> {
             onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
           ),
         ),
-        GestureDetector(
-          onTap: _handelClose,
-          child: Container(
-            // color: Colors.red,
-            margin: const EdgeInsets.fromLTRB(25.5, 25, 0, 0),
-            width: 40,
-            height: 40,
-            child:
-                const Icon(ZPassIcons.icClose,color: Colors.white,size: 24,),
-          ),
-        ),
+        _buildCloseBtn(),
         Positioned(
             right: 100,
             bottom: 70,
