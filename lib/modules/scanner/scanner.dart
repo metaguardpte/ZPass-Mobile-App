@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:zpass/modules/scanner/switch_flash.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/util/device_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/load_image.dart';
 import 'package:zxing2/qrcode.dart';
 import 'dart:io';
@@ -39,7 +42,21 @@ class _ScannerModeState extends State<ScannerMode> {
   _handelClose() {
     BackToParentPage(null);
   }
+
+  _checkIOSPhotosPermission() async {
+    if (Device.isAndroid) return true;
+    final status = await Permission.photos.request();
+    if (status == PermissionStatus.granted) return true;
+    Toast.showMiddleToast(
+      'No Photos Permission , Please go to the system settings to open the permission',
+      height: 180,
+      type: ToastType.error,
+    );
+    return false;
+  }
   _handelPickImage() async{
+    bool isGranted = await _checkIOSPhotosPermission();
+    if (!isGranted) return;
     final XFile? xfile = await picker.pickImage(source: ImageSource.gallery,
         maxHeight: 2000,
         maxWidth: 1000
