@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass_crypto/zpass_crypto.dart';
@@ -20,7 +21,11 @@ class CryptoManager {
     _crypto = ZpassCrypto();
     _reqHeaders = {
       "version": "1.0.0",
-      "edition": "community-mobile",
+      "edition": Platform.isIOS
+          ? "community-mobile-ios"
+          : (Platform.isAndroid
+              ? "community-mobile-android"
+              : "community-mobile"),
       "authorization": "Bearer"
     };
   }
