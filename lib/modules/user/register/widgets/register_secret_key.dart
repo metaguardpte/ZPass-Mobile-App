@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -12,9 +11,8 @@ import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/user/register/register_provider.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
-import 'package:zpass/util/device_utils.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
-import 'package:zpass/widgets/load_image.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -38,9 +36,9 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
             _buildMessage(),
             _buildKey(),
             Gaps.vGap10,
-            _buildActionItem(S.current.registerSecretKeyCopy, ZPassIcons.icCopy, _onCopySecretKeyTap),
+            _buildActionItem(context, S.current.registerSecretKeyCopy, ZPassIcons.icCopy, _onCopySecretKeyTap),
             Gaps.vGap15,
-            _buildActionItem(S.current.registerSecretKeySave, ZPassIcons.icDownload, _onSaveSecretKeyTap),
+            _buildActionItem(context, S.current.registerSecretKeySave, ZPassIcons.icDownload, _onSaveSecretKeyTap),
           ],
         ),
       ),
@@ -82,7 +80,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
         borderRadius: BorderRadius.circular(6),
         color: const Color(0xFFF6F6F6),
       ),
-      child: Text(
+      child: SelectableText(
         provider.secretKey,
         style: const TextStyle(
             color: Color(0xFFFF7019), fontSize: 16, fontWeight: FontWeight.w500,
@@ -93,13 +91,13 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
     );
   }
 
-  Widget _buildActionItem(String title, IconData icon, GestureTapCallback event) {
+  Widget _buildActionItem(BuildContext context, String title, IconData icon, GestureTapCallback event) {
     return GestureDetector(
       onTap: event,
       child: Container(
         height: 46,
         decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFF4954FF)),
+          border: Border.all(color: context.primaryColor),
           borderRadius: BorderRadius.circular(7.5)
         ),
         child: Row(
@@ -118,7 +116,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
             ),
             Container(
               padding: const EdgeInsets.all(10),
-              child: Icon(icon, size: 20, color: const Color(0xFF4954FF),),
+              child: Icon(icon, size: 20, color: context.primaryColor,),
             )
           ],
         ),
@@ -202,7 +200,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
                         pw.Container(
                           padding: const pw.EdgeInsets.all(10),
                           color: const PdfColor.fromInt(0xFFFFFFFF),
-                          child: pw.BarcodeWidget(data: jsonEncode({"email": provider.email, "secretKey": provider.secretKey}), width: 90.0, height: 90.0, barcode: pw.Barcode.qrCode()),
+                          child: pw.BarcodeWidget(data: provider.buildQRCodeUrl, width: 90.0, height: 90.0, barcode: pw.Barcode.qrCode()),
                         ),
                         pw.Expanded(
                           child: pw.Padding(

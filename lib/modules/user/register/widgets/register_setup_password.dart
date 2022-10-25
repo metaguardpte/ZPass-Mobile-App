@@ -29,6 +29,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
             child: Column(
               children: [
                 ZPassTextField(
+                  text: provider.password,
                   autoFocus: true,
                   type: TextFieldType.password,
                   title: S.current.registerMasterPassword,
@@ -38,6 +39,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
                 ),
                 Gaps.vGap16,
                 ZPassTextField(
+                  text: provider.confirmPassword,
                   type: TextFieldType.password,
                   title: S.current.registerConfirmPassword,
                   hintText: S.current.registerConfirmPasswordHint,
@@ -62,8 +64,7 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
 
   void _checkPasswordIsValid(String value) {
     if (value.isEmpty) return;
-    bool isValid = value.isValidPassword();
-    if (!isValid) {
+    if (!value.isValidPassword) {
       Toast.show(S.current.registerPasswordFormatError);
     }
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/util/callback_funcation.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/widgets/zpass_edittext.dart';
@@ -17,6 +18,7 @@ enum TextFieldType {
 class ZPassTextField extends StatefulWidget {
   const ZPassTextField({Key? key,
     this.title,
+    this.text,
     this.hintText,
     this.textFieldTips,
     this.selectionText,
@@ -25,6 +27,7 @@ class ZPassTextField extends StatefulWidget {
     this.type = TextFieldType.text,
     this.loading = false,
     this.autoFocus = false,
+    this.regExp,
     this.onTextChange,
     this.onEditingComplete,
     this.onSendCodeTap,
@@ -34,6 +37,7 @@ class ZPassTextField extends StatefulWidget {
       : super(key: key);
 
   final String? title;
+  final String? text;
   final double? textFieldHeight;
   final String? hintText;
   final String? textFieldTips;
@@ -43,6 +47,7 @@ class ZPassTextField extends StatefulWidget {
   final TextInputType? textInputType;
   final bool? loading;
   final bool? autoFocus;
+  final String? regExp;
   final FunctionCallback<String>? onTextChange;
   final NullParamCallback? onEditingComplete;
   final NullParamCallback? onSendCodeTap;
@@ -58,19 +63,23 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+  _onListenFocus() {
+    if (!_focusNode.hasFocus) {
+      widget.onUnFocus?.call();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        widget.onUnFocus?.call();
-      }
-    });
+    _focusNode.addListener(_onListenFocus);
+    _controller.text = widget.text ?? "";
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.removeListener(_onListenFocus);
     _focusNode.dispose();
     super.dispose();
   }
@@ -181,9 +190,9 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
           padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: Text(
             widget.suffixBtnTitle ?? S.current.sendCode,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 15,
-                color: Color(0xFF4954FF),
+                color: context.primaryColor,
                 fontWeight: FontWeight.w500,
             ),
           ),
@@ -211,7 +220,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
           width: 36,
           height: 36,
           padding: const EdgeInsets.all(9),
-          child: Icon(_isSecret ? ZPassIcons.icNoSecret : ZPassIcons.icSecret, color: const Color(0xFF959BA7), size: 17,),
+          child: Icon(_isSecret ? ZPassIcons.icSecret : ZPassIcons.icNoSecret, color: const Color(0xFF959BA7), size: 17,),
         ),
       );
     }

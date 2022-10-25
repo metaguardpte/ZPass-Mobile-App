@@ -39,7 +39,6 @@ abstract class ContentAlignBottomDialog {
       return Future.value(false);
     }
     onStartShow();
-
     return showModalBottomSheet(
         context: context,
         isDismissible: isDismissible,

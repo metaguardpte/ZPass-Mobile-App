@@ -6,7 +6,6 @@ import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/styles.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/theme_utils.dart';
-import 'package:zpass/widgets/load_image.dart';
 
 class ZPassEditText extends StatefulWidget implements PreferredSizeWidget {
   final double height;
@@ -67,9 +66,17 @@ class ZPassEditTextState extends State<ZPassEditText> {
 
   @override
   Widget build(BuildContext context) {
-    final prefixIcon = widget.prefix ?? const Icon(ZPassIcons.icSearch);
+    final prefixIcon = widget.prefix ?? const Icon(ZPassIcons.icSearch, color: Colors.grey,);
     final suffixIcon = GestureDetector(
-      child: const LoadAssetImage("ic_clean", width: 17, height: 17,),
+      behavior: HitTestBehavior.opaque,
+      child: const Padding(
+        padding: EdgeInsets.all(6),
+        child: Icon(
+          ZPassIcons.icTextFieldClean,
+          color: Colors.grey,
+          size: 17,
+        ),
+      ),
       onTap: () {
         /// https://github.com/flutter/flutter/issues/35848
         SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -96,7 +103,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
       decoration: BoxDecoration(
         color: context.isDark ? Colours.dark_material_bg : bgColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
-        border: Border.all(color: _hasFocus ? context.primaryColor : Colors.transparent)
+        border: Border.all(color: _hasFocus ? context.primaryColor : Colors.transparent, width: 0.5)
       ),
       child: TextField(
         key: const Key('search_text_field'),
@@ -122,9 +129,9 @@ class ZPassEditTextState extends State<ZPassEditText> {
           hintText: widget.hintText,
           hintStyle: TextStyles.textGray12,
           suffixIcon: widget.enableClear ? (_controller.text.isNotEmpty ? suffixIcon : null) : null,
-          suffixIconConstraints: const BoxConstraints(
-            maxWidth: 20,
-            maxHeight: 20
+          suffixIconConstraints: BoxConstraints(
+            maxWidth: widget.height - 5,
+            maxHeight: widget.height - 5
           ),
           isDense: true,
         ),

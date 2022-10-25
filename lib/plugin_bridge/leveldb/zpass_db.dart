@@ -153,6 +153,7 @@ class ZPassDB {
       lock.synchronized(() {
         Log.d("Close db");
         _db.close();
+        _opened = false;
         _dbPath = "";
       });
     }

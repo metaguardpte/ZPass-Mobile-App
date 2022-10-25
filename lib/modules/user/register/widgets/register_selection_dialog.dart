@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/util/callback_funcation.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/content_align_bottom_dialog.dart';
 import 'package:zpass/widgets/custom_scroll_behavior.dart';
 
@@ -99,7 +100,7 @@ class RegisterSelectionDialog extends ContentAlignBottomDialog {
         height: 53,
         child: Text(
           S.current.cancel,
-          style: const TextStyle(color: Color(0xFF4954FF), fontSize: 18),
+          style: TextStyle(color: context.primaryColor, fontSize: 18),
         ),
       ),
     );

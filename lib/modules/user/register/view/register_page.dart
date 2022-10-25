@@ -13,11 +13,14 @@ import 'package:zpass/modules/user/register/widgets/register_secret_key.dart';
 import 'package:zpass/modules/user/register/widgets/register_setup_password.dart';
 import 'package:zpass/modules/user/register/widgets/register_stepper.dart';
 import 'package:zpass/modules/user/router_user.dart';
+import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/util/locales_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/custom_scroll_behavior.dart';
+import 'package:zpass/widgets/dialog/zpass_confirm_dialog.dart';
 import 'package:zpass/widgets/zpass_button_gradient.dart';
 
 enum RegisterType {
@@ -204,13 +207,25 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
       _doCheckEmailVerifyCode();
     } else if (provider.stepIndex == 1) {
       _doActivationAccount();
-    } else if (provider.stepIndex == 2) {
-      NavigatorUtils.push(context, RouterUser.login, replace: true, arguments: { "data": _buildResponseParam()});
+    } else if (_isLastStep()) {
+      ZPassConfirmDialog(
+        message: S.current.registerSaveSecretKeyDialogMessage,
+        reverse: true,
+        cancelText: S.current.registerNotYet,
+        onConfirmTap: _onFinish,
+      ).show(context);
     }
   }
 
+  void _onFinish() {
+    UserProvider().updateSignInList({"email": provider.email, "key": provider.secretKey});
+    UserProvider().userEmail = provider.email;
+    UserProvider().userSecretKey = provider.secretKey;
+    NavigatorUtils.push(context, RouterUser.login, replace: true);
+  }
+
   void _nextStep() async {
-    FocusManager.instance.primaryFocus?.unfocus();
+    // FocusManager.instance.primaryFocus?.unfocus();
     provider.stepIndex++;
     _controller.nextPage(duration: const Duration(milliseconds: 350), curve: Curves.linear);
   }
@@ -246,7 +261,7 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     }
     final error = (await provider.doCheckEmailVerifyCode()) ?? "";
     if (error.isNotEmpty) {
-      Toast.show(error);
+      Toast.show(LocalesUtils.message(error));
       return;
     }
     _nextStep();
@@ -268,14 +283,14 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
       return;
     }
 
-    if (!provider.password.isValidPassword()) {
+    if (!provider.password.isValidPassword) {
       Toast.show(S.current.registerPasswordFormatError);
       return;
     }
 
     final error = (await provider.doActivationAccount()) ?? "";
     if (error.isNotEmpty) {
-      Toast.show(error);
+      Toast.show(LocalesUtils.message(error));
       return;
     }
     _nextStep();

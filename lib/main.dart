@@ -32,15 +32,8 @@ Future<void> main() async {
   //不申请任何权限的最小同步初始化
   await MainInitializer.initBeforeAuthorize();
 
-  /// 1.22 预览功能: 在输入频率与显示刷新率不匹配情况下提供平滑的滚动效果
-  // GestureBinding.instance?.resamplingEnabled = true;
   /// 异常处理
   handleError(() => runApp(const MyApp()));
-
-  /// 隐藏状态栏。为启动页、引导页设置。完成后修改回显示状态栏。
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-      overlays: [SystemUiOverlay.bottom]);
-  // 相关问题跟踪：https://github.com/flutter/flutter/issues/73351
 }
 
 class MyApp extends StatelessWidget {

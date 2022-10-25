@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class ZPassIcons {
   ZPassIcons._();
 
-  static const _kFontFam = 'iconfont';
+  static const _kFontFam = 'IconFont';
   static const String? _kFontPkg = null;
 
   /// home bottom navigation bar tab icon
@@ -21,12 +21,16 @@ class ZPassIcons {
   static const IconData icInformation = IconData(0xe6f5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSearch = IconData(0xe6e6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSort = IconData(0xe6eb, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icKey = IconData(0xe6f9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData favKey = IconData(0xe6f9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData favNotes = IconData(0xe6fa, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData favCard = IconData(0xe6f7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData favIdentity = IconData(0xe6f8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   static const IconData icNavBack = IconData(0xe6d6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icTextFieldClean = IconData(0xe6d8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSecret = IconData(0xe6e1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icNoSecret = IconData(0xe6e0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icXCircle = IconData(0xe6ea, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icCopy = IconData(0xe6dc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icDownload = IconData(0xe6db, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSelectionArrow = IconData(0xe6de, fontFamily: _kFontFam, fontPackage: _kFontPkg);

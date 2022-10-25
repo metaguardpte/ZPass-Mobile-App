@@ -68,6 +68,7 @@ dependencies:
   zpass_crypto:
     path: plugins/zpass_crypto
   synchronized: ^3.0.0+3
+  permission_handler: ^9.2.0
 
 dev_dependencies:
   flutter_test:
@@ -95,11 +96,14 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/2.0x/
+    - assets/images/3.0x/
     - assets/images/home/
     - assets/images/signin/
     - assets/images/entrance/
-    - assets/images/2.0x/
-    - assets/images/3.0x/
+    - assets/images/favicon/
+    - assets/images/favicon/2.0x/
+    - assets/images/favicon/3.0x/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

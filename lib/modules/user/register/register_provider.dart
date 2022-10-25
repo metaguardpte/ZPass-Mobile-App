@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:zpass/base/api/register_services.dart';
+import 'package:zpass/base/app_config.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/base/network/base_resp.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
@@ -97,6 +98,9 @@ class RegisterProvider extends BaseProvider {
     _secretKey = value;
   }
 
+  // 构建二维码链接
+  String get buildQRCodeUrl => "${AppConfig.zpassDownloadUrl}?email=$email&secretKey=$secretKey";
+
   Map<String, dynamic> _activationPayload = {};
 
   /// api request
@@ -132,8 +136,8 @@ class RegisterProvider extends BaseProvider {
 
   Future<String?> doActivationAccount() async {
     loading = true;
-    secretKey = await CryptoManager.instance.generateSecretKey() ?? "";
-    final cryptoStr = await CryptoManager.instance.createUserKeyModel(email, confirmPassword, secretKey);
+    secretKey = await CryptoManager().generateSecretKey() ?? "";
+    final cryptoStr = await CryptoManager().createUserKeyModel(email, confirmPassword, secretKey);
     if (cryptoStr == null) {
       loading = false;
       return "User key create fail";

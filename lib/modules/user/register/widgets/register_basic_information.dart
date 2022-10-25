@@ -10,6 +10,8 @@ import 'package:zpass/modules/user/register/widgets/register_email_code.dart';
 import 'package:zpass/modules/user/register/widgets/register_selection_dialog.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
+import 'package:zpass/util/locales_utils.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/modules/user/register/widgets/zpass_register_textfield.dart';
 import 'package:zpass/extension/string_ext.dart';
@@ -31,9 +33,18 @@ class RegisterBasicInformation extends StatefulWidget {
 
 class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformation, RegisterProvider> {
   final List<String> _planTypes = [S.current.registerPlanTypePilot];
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget buildContent(BuildContext context) {
     return SingleChildScrollView(
+      controller: _controller,
       child: Column(
         children: [
           ColoredBox(
@@ -63,6 +74,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                       final loading = tuple.item1;
                       final visibleCodeField = tuple.item2;
                       return ZPassTextField(
+                        text: provider.email,
                         title: widget.type == RegisterType.business ? S.current.businessEmail : S.current.email,
                         hintText:widget.type == RegisterType.business ? S.current.businessEmailHint : S.current.emailHint,
                         suffixBtnTitle: visibleCodeField ? S.current.resendCode : null,
@@ -104,7 +116,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
             builder: (_, visible, __) {
               return Visibility(
                 visible: visible,
-                child: _buildEmailCodeTips(),
+                child: _buildEmailCodeTips(context),
               );
             },
             selector: (_, provider) => provider.visibleEmailVerifyCode,
@@ -128,13 +140,26 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
                   color: Color(0xFF16181A), fontSize: 14, fontWeight: FontWeight.w500),
             ),
           ),
-          RegisterEmailCode(onResult: (value) => provider.emailVerifyCode = value),
+          RegisterEmailCode(
+            onResult: (value) => provider.emailVerifyCode = value,
+            onListenFocus: (hasFocus) {
+              if (hasFocus) {
+                _scrollToBottom();
+              }
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildEmailCodeTips() {
+  _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), (){
+      _controller.animateTo(_controller.position.maxScrollExtent, duration: const Duration(milliseconds: 100), curve: Curves.linear);
+    });
+  }
+
+  Widget _buildEmailCodeTips(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13.5),
       child: Row(
@@ -142,7 +167,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
         children: [
           Container(
             margin: const EdgeInsets.only(top: 5),
-            child: const Icon(ZPassIcons.icWarnCircle, size: 16, color: Color(0xFF4954FF),),
+            child: Icon(ZPassIcons.icWarnCircle, size: 16, color: context.primaryColor,),
           ),
           Gaps.hGap5,
           Expanded(
@@ -188,13 +213,13 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
       Toast.show(S.current.emailHint);
       return;
     }
-    if (!provider.email.isEmail()) {
+    if (!provider.email.isEmail) {
       Toast.show(S.current.emailInvalid);
       return;
     }
     final errorId = await provider.doGetEmailVerifyCode();
     if ((errorId ?? "").isNotEmpty) {
-      Toast.show(errorId);
+      Toast.show(LocalesUtils.message(errorId!));
     }
   }
 

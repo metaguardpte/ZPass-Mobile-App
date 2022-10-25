@@ -2,8 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.zpassapp.zpass">
 
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- 适配 Android 11 软件包可见性特性 -->
     <queries>
@@ -45,10 +47,4 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <!-- 写入文件权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- 读取文件权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 相机权限 -->
-    <uses-permission android:name="android.permission.CAMERA" />
 </manifest>

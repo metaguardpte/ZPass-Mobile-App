@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zpass/util/theme_utils.dart';
 
 class RegisterStepper extends StatelessWidget {
   const RegisterStepper({Key? key, this.index = 0, this.count = 3}): super(key: key);
@@ -14,12 +15,12 @@ class RegisterStepper extends StatelessWidget {
       alignment: Alignment.center,
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        children: _buildStepItem(count, index),
+        children: _buildStepItem(context, count, index),
       ),
     );
   }
   
-  List<Widget> _buildStepItem(int count, int index) {
+  List<Widget> _buildStepItem(BuildContext context, int count, int index) {
     List<Widget> steps = [];
     for(int i = 0; i < count; i++) {
       final item = Expanded(
@@ -27,7 +28,7 @@ class RegisterStepper extends StatelessWidget {
           height: 7,
           decoration: BoxDecoration(
             // borderRadius: BorderRadius.circular(3.5),
-            color: i == index ? const Color(0xFF4954FF) : const Color(0xFFE8E8EA),
+            color: i == index ? context.primaryColor : const Color(0xFFE8E8EA),
           ),
         ),
       );

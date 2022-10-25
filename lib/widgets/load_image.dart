@@ -11,9 +11,10 @@ class LoadImage extends StatelessWidget {
     this.height,
     this.fit = BoxFit.cover, 
     this.format = ImageFormat.png,
-    this.holderImg = 'none',
+    this.holderImg = 'ic_placeholder',
     this.cacheWidth,
     this.cacheHeight,
+    this.holderError,
   });
   
   final String image;
@@ -24,6 +25,7 @@ class LoadImage extends StatelessWidget {
   final String holderImg;
   final int? cacheWidth;
   final int? cacheHeight;
+  final Widget? holderError;
   
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class LoadImage extends StatelessWidget {
       return CachedNetworkImage(
         imageUrl: image,
         placeholder: (_, __) => holder,
-        errorWidget: (_, __, dynamic error) => holder,
+        errorWidget: (_, __, dynamic error) => holderError ?? holder,
         width: width,
         height: height,
         fit: fit,
