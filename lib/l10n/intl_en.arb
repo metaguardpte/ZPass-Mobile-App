@@ -97,7 +97,7 @@
   "fullName":"Full Name",
   "planType":"planType",
   "logout":"Logout",
-  "logoutTitle":"Do your want to sign out of this account?",
+  "logoutTitle":"Do you want to sign out of this account?",
   "signOut":"Sign Out",
   "yes":"Yes",
   "logoutSuccess":"Logout Success !",
