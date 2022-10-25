@@ -88,7 +88,7 @@
   "registerSecretKeyPDFContact": "Contact Our Support Team",
   "registerSecretKeyCopyTips": "Copy success",
   "registerSecretKeyPermission": "Please enable storage permission",
-  "registerSaveSecretKeyDialogMessage": "Make sure your have keep secret key",
+  "registerSaveSecretKeyDialogMessage": "Make sure you have keep",
   "registerNotYet": "Not yet",
   "registerConfirm": "Confirm",
 
@@ -102,7 +102,7 @@
   "yes":"Yes",
   "logoutSuccess":"Logout Success !",
 
-  "loginFail":"Login Fail",
+  "loginFail":"Invalid email or password",
 
   "actionConfirm": "Confirm",
   "actionCancel": "Cancel",

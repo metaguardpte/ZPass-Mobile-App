@@ -98,15 +98,15 @@ class RpcManager {
             binaryMessenger: registrar.messenger()
         )
         channel?.setMethodCallHandler({
-            [self](call: FlutterMethodCall, result: @escaping FlutterResult) in
+            (call: FlutterMethodCall, result: @escaping FlutterResult) in
             
             switch(call.method) {
             
-            case RPC_ON_CHANNEL_READY:
-                onChannelReady()
+            case self.RPC_ON_CHANNEL_READY:
+                self.onChannelReady()
             
-            case RPC_FUN_INVOKE:
-                onInvoke(call: call, result: result)
+            case self.RPC_FUN_INVOKE:
+                self.onInvoke(call: call, result: result)
             
             default:
                 result(FlutterMethodNotImplemented)
@@ -120,15 +120,15 @@ class RpcManager {
             binaryMessenger: engine.binaryMessenger
         )
         channel?.setMethodCallHandler({
-            [self](call: FlutterMethodCall, result: @escaping FlutterResult) in
+            (call: FlutterMethodCall, result: @escaping FlutterResult) in
             
             switch(call.method) {
             
-            case RPC_ON_CHANNEL_READY:
-                onChannelReady()
+            case self.RPC_ON_CHANNEL_READY:
+                self.onChannelReady()
             
-            case RPC_FUN_INVOKE:
-                onInvoke(call: call, result: result)
+            case self.RPC_FUN_INVOKE:
+                self.onInvoke(call: call, result: result)
             
             default:
                 result(FlutterMethodNotImplemented)

@@ -8,8 +8,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zpass/util/theme_utils.dart';
 
 class RegisterProtocolCheckbox extends StatefulWidget {
-  const RegisterProtocolCheckbox({Key? key, this.onChange}) : super(key: key);
+  const RegisterProtocolCheckbox({Key? key, this.onChange, this.check = false}) : super(key: key);
 
+  final bool? check;
   final FunctionCallback<bool>? onChange;
 
   @override
@@ -17,7 +18,13 @@ class RegisterProtocolCheckbox extends StatefulWidget {
 }
 
 class _RegisterProtocolCheckboxState extends State<RegisterProtocolCheckbox> {
-  bool _isChecked = false;
+  late bool _isChecked;
+
+  @override
+  void initState() {
+    super.initState();
+    _isChecked = widget.check ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {

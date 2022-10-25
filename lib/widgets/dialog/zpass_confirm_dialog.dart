@@ -7,14 +7,22 @@ import 'package:zpass/widgets/dialog/zpass_dialog.dart';
 import '../../generated/l10n.dart';
 
 class ZPassConfirmDialog extends ZPassDialog {
-  final String message;
+  final String? message;
   final String? confirmText;
   final String? cancelText;
   final bool? reverse;
+  final Widget? slotMessage;
   final NullParamCallback? onConfirmTap;
   final NullParamCallback? onCancelTap;
 
-  ZPassConfirmDialog({required this.message, this.confirmText, this.cancelText, this.onConfirmTap, this.reverse = false, this.onCancelTap});
+  ZPassConfirmDialog(
+      {this.message,
+      this.confirmText,
+      this.cancelText,
+      this.slotMessage,
+      this.onConfirmTap,
+      this.reverse = false,
+      this.onCancelTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +37,13 @@ class ZPassConfirmDialog extends ZPassDialog {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               decoration: const BoxDecoration(
                 border: Border(bottom: BorderSide(color: Color(0xFFEBEBEE), width: 0.5))
               ),
-              child: Text(
-                message,
+              child: slotMessage ?? Text(
+                message ?? "",
                 style: const TextStyle(fontSize: 18, color: Color(0xFF16181A), height: 1.5),
                 textAlign: TextAlign.center,
               ),
