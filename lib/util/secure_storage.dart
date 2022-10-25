@@ -1,11 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorage {
-  static SecureStorage? instance;
-
-  static init() {
-    instance = SecureStorage._();
-  }
+  factory SecureStorage() => _instance;
+  static final SecureStorage _instance = SecureStorage._internal();
 
   IOSOptions _iOptions() => const IOSOptions(
       accountName: 'zero-pass'
@@ -16,7 +13,7 @@ class SecureStorage {
   );
   final _storage = const FlutterSecureStorage();
 
-  SecureStorage._();
+  SecureStorage._internal();
 
   Future<void> write({
     required String key,

@@ -16,8 +16,8 @@ class UserProvider {
   UserProvider._internal();
 
   Future<void> restore() async {
-    final signInList = await SecureStorage.instance?.read(key: _signInListKey);
-    final spData = await SecureStorage.instance?.read(key: _kUserProviderKey);
+    final signInList = await SecureStorage().read(key: _signInListKey);
+    final spData = await SecureStorage().read(key: _kUserProviderKey);
     if (signInList != null && signInList != '') {
       _loginUserList = jsonDecode(signInList);
     } else{
@@ -58,12 +58,12 @@ class UserProvider {
   }
 
   void _flush() {
-    SecureStorage.instance?.write(key: _kUserProviderKey, value: jsonEncode(_userInfo));
+    SecureStorage().write(key: _kUserProviderKey, value: jsonEncode(_userInfo));
   }
 
   void updateSignInList(Map map) {
     _loginUserList[map['email']] = map['key'];
-    SecureStorage.instance?.write(key: _signInListKey, value: jsonEncode(_loginUserList));
+    SecureStorage().write(key: _signInListKey, value: jsonEncode(_loginUserList));
   }
 
   String? getUserKeyByEmail(String email) => _loginUserList[email];

@@ -58,9 +58,6 @@ class MainInitializer {
   /// 用户授权后初始化
   ///
   static void initAfterAuthorize(BuildContext context) async {
-    // 初始化安全存储（小块数据存储）
-    SecureStorage.init();
-
     // 初始化用户数据
     await UserProvider().restore();
     final userInfo = UserProvider().userInfo;
