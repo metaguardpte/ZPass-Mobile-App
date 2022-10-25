@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
       theme: theme ?? provider.getTheme(),
       darkTheme: provider.getTheme(isDarkMode: true),
       themeMode: provider.getThemeMode(),
-      home: home ?? const SplashPage(authCallback: MainInitializer.initAfterAuthorize,),
+      home: home ?? const SplashPage(),
       onGenerateRoute: Routers.router.generator,
       localizationsDelegates: const [
         S.delegate,
