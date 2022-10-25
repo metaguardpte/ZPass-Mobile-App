@@ -93,7 +93,9 @@ class _ScannerModeState extends State<ScannerMode> {
 
   void _onQRViewCreated(QRViewController controller) async {
     this.controller = controller;
-    await controller.resumeCamera();
+    if (Device.isAndroid) {
+      await controller.resumeCamera();
+    }
     controller.scannedDataStream.listen((Barcode? scanData) {
       if (scanData?.code != null) {
         BackToParentPage(scanData?.code);
