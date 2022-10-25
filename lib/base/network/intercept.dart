@@ -6,6 +6,7 @@ import 'package:sp_util/sp_util.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zpass/base/network/error_handle.dart';
 import 'package:zpass/base/network/httpclient.dart';
+import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/constant.dart';
 import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -14,14 +15,14 @@ import 'package:zpass/util/log_utils.dart';
 class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final String accessToken = SpUtil.getString(Constant.accessToken) ?? "";
+    final String accessToken = UserProvider().userInfo.userCryptoKey?.token ?? "";
     if (accessToken.isNotEmpty) {
-      options.headers['Authorization'] = 'token $accessToken';
+      options.headers['Authorization'] = 'Bearer $accessToken';
     }
-    if (!Device.isWeb) {
-      // https://developer.github.com/v3/#user-agent-required
-      options.headers['User-Agent'] = 'Mozilla/5.0';
-    }
+    // if (!Device.isWeb) {
+    //   // https://developer.github.com/v3/#user-agent-required
+    //   options.headers['User-Agent'] = 'Mozilla/5.0';
+    // }
     super.onRequest(options, handler);
   }
 }
