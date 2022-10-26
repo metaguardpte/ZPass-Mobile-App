@@ -18,6 +18,7 @@ import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
 import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
 import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/signin/signin_by_scanner.dart';
+import 'package:zpass/modules/vault/vault_item_picker.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
@@ -106,7 +107,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       onTapNotify: (i) {
         var intercept = i == HomePageV2.dockedFake;
         if (intercept) {
-          // NavigatorUtils.push(context, RouterUser.login);
+          pickVaultType(context);
         }
         return !intercept;
       },

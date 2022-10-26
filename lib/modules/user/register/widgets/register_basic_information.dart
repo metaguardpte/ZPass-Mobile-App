@@ -198,7 +198,7 @@ class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformat
     RegisterSelectionDialog(
       title: S.current.registerPlanTypeHint,
       data: _planTypes,
-      onSelectedTap: (index) {
+      onItemSelected: (_, index) {
         provider.planTypeIndex = index;
       },
     ).show(context);
