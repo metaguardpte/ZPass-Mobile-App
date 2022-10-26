@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -20,10 +17,6 @@ class HomeAppBarBuilder extends HomeWidgetBuilder {
 
   @override
   PreferredSizeWidget build(BuildContext context) {
-
-
-
-
     final Color? iconColor = ThemeUtils.getIconColor(context);
     return AppBar(
         automaticallyImplyLeading: applyLeading(),
@@ -42,6 +35,7 @@ class HomeAppBarBuilder extends HomeWidgetBuilder {
                 colors: <Color>[Color(0xFF5273FE), Color(0xFF4342FF)]),
           ),
         ),
+        actionsIconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             tooltip: HomePageAction.scan.name,

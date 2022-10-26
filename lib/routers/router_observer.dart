@@ -21,7 +21,7 @@ class RouterObserver extends NavigatorObserver {
     super.didPop(route, previousRoute);
     String currentPage = pageName(route);
     if (currentPage.isNotEmpty) {
-      Log.d("didPop targetPage: $currentPage", tag: "RouteObserver");
+      Log.d("didPop currentPage: $currentPage", tag: "RouteObserver");
     }
     String targetPage = pageName(previousRoute);
     if (targetPage.isNotEmpty) {
