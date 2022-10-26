@@ -8,3 +8,4 @@
 
 "NSCameraUsageDescription" = "The app use camera to scan QR code for links to websites.";
 "NSPhotoLibraryUsageDescription" = "Photo library access required in order to save photo or scan QR code photo.";
+"NSFaceIDUsageDescription" = "Using the Face ID login function requires your consent and authorization";

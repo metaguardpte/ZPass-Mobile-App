@@ -41,6 +41,8 @@
   "AutoLock":"Auto-Lock on Exit",
   "UnlockWithFinger":"Unlock with Fingerprint",
   "UnlockWithFace":"Unlock with Face ID",
+  "UnlockWithBiometrics":"Unlock with Biometrics",
+  "settingConfirmMasterPassword": "Confirm Master Password",
 
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",
