@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:sp_util/sp_util.dart';
 import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
 import 'package:zpass/modules/user/model/user_info_model.dart';
 import 'package:zpass/util/secure_storage.dart';
@@ -9,6 +10,7 @@ class UserProvider {
   static final UserProvider _instance = UserProvider._internal();
   static const String _kUserProviderKey = 'kUserProvider';
   static const String _signInListKey = 'signInList';
+  static const String _kUserBiometrics = "kUserBiometrics";
 
   late UserInfoModel _userInfo;
   late Map<String , dynamic> _loginUserList;
@@ -71,5 +73,15 @@ class UserProvider {
   void clear(){
     _userInfo.userCryptoKey = UserCryptoKeyModel();
     _flush();
+  }
+
+  void putUserBiometrics(bool isOpen) {
+    if (userInfo.email == null || userInfo.secretKey == null) return;
+    SpUtil.putBool("${_kUserBiometrics}_${userInfo.email}", isOpen);
+  }
+
+  bool getUserBiometrics() {
+    if (userInfo.email == null || userInfo.secretKey == null) return false;
+    return SpUtil.getBool("${_kUserBiometrics}_${userInfo.email}") ?? false;
   }
 }

@@ -48,11 +48,12 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     UserInfoModel userInfo = UserProvider().userInfo;
-    return Container(
-        padding: const EdgeInsets.fromLTRB(16, 20.5, 16, 20.5),
-        color: const Color.fromRGBO(247, 247, 247, 1),
-        child: Scaffold(
-          body: Column(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Container(
+          padding: const EdgeInsets.fromLTRB(16, 20.5, 16, 20.5),
+          color: const Color.fromRGBO(247, 247, 247, 1),
+          child: Column(
             children: [
               Container(
                 alignment: Alignment.centerLeft,
@@ -84,7 +85,7 @@ class _SettingPageState extends State<SettingPage> {
                     children: [
                       ClipRRect(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(50)),
+                        const BorderRadius.all(Radius.circular(50)),
                         child: LoadImage(
                           userInfo.icon ?? '',
                           width: 34,
@@ -110,7 +111,7 @@ class _SettingPageState extends State<SettingPage> {
                                   child: Container(
                                     margin: const EdgeInsets.only(left: 5),
                                     padding:
-                                        const EdgeInsets.fromLTRB(7, 3, 7, 3),
+                                    const EdgeInsets.fromLTRB(7, 3, 7, 3),
                                     decoration: BoxDecoration(
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(4)),
@@ -125,7 +126,7 @@ class _SettingPageState extends State<SettingPage> {
                                       style: const TextStyle(
                                           fontSize: 10,
                                           color:
-                                              Color.fromRGBO(73, 84, 255, 1)),
+                                          Color.fromRGBO(73, 84, 255, 1)),
                                     ),
                                   ),
                                 ),
@@ -160,6 +161,7 @@ class _SettingPageState extends State<SettingPage> {
                   rightStyle: _rightTextStyle, rightColor: _rightColor)
             ],
           ),
-        ));
+      ),
+    );
   }
 }
