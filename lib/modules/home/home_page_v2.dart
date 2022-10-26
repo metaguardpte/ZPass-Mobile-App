@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';

@@ -38,15 +38,15 @@ class _SignInFormState extends State<SignInForm> {
 
   void handelSignIn() {
     if (Email.isEmpty) {
-      Toast.showMiddleToast(S.current.signinTip + S.current.email,
+      Toast.showSpec(S.current.signinTip + S.current.email,
           type: ToastType.error);
       return;
     } else if (Psw.isEmpty) {
-      Toast.showMiddleToast(S.current.signinTip + S.current.password,
+      Toast.showSpec(S.current.signinTip + S.current.password,
           type: ToastType.error);
       return;
     } else if (SeKey.isEmpty) {
-      Toast.showMiddleToast(S.current.signinTip + S.current.seKey,
+      Toast.showSpec(S.current.signinTip + S.current.seKey,
           type: ToastType.error);
       return;
     }
@@ -60,7 +60,7 @@ class _SignInFormState extends State<SignInForm> {
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     }).catchError((error) {
       loadingDialog.dismiss(context);
-      Toast.showMiddleToast(S.current.loginFail);
+      Toast.showSpec(S.current.loginFail);
     });
     //submit
   }
@@ -88,9 +88,8 @@ class _SignInFormState extends State<SignInForm> {
   getQRCode() {
     Permission.camera.request().then((status) {
       if (!status.isGranted) {
-        Toast.showMiddleToast(
+        Toast.showSpec(
             'No Camera Permission , Please go to the system settings to open the permission',
-            height: 180,
             type: ToastType.error);
         return;
       }
@@ -103,11 +102,11 @@ class _SignInFormState extends State<SignInForm> {
             emailController.text = params['email'] ?? "";
             Email = params['email'] ?? "";
           } else {
-            Toast.showMiddleToast('don`t get Secret Key');
+            Toast.showSpec('don`t get Secret Key');
           }
         } catch (e) {
           Log.d(e.toString());
-          Toast.showMiddleToast('don`t get Secret Key');
+          Toast.showSpec('don`t get Secret Key');
         }
       });
     });

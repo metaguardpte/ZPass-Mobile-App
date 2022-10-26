@@ -62,10 +62,15 @@ class MyApp extends StatelessWidget {
     /// Toast 配置
     return OKToast(
         backgroundColor: Colors.black54,
+        dismissOtherOnShow: true,
+        duration: const Duration(seconds: 2),
+        movingOnWindowChange: false,
+        position: ToastPosition.center,
+        radius: 5.0,
+        textAlign: TextAlign.center,
         textPadding:
             const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-        radius: 20.0,
-        position: ToastPosition.bottom,
+        textStyle: const TextStyle(fontSize: 18, color: Colors.white),
         child: app);
   }
 

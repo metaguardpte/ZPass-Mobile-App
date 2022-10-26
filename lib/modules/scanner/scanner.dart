@@ -47,9 +47,8 @@ class _ScannerModeState extends State<ScannerMode> {
     if (Device.isAndroid) return true;
     final status = await Permission.photos.request();
     if (status == PermissionStatus.granted) return true;
-    Toast.showMiddleToast(
+    Toast.showSpec(
       'No Photos Permission , Please go to the system settings to open the permission',
-      height: 180,
       type: ToastType.error,
     );
     return false;
