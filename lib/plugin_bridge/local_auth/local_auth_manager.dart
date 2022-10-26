@@ -26,8 +26,8 @@ class LocalAuthManager {
 
   Future<bool> canAuth() async {
     try {
-      final bool isDeviceSupported = await _auth.canCheckBiometrics && await _auth.isDeviceSupported();
-      if (!isDeviceSupported) return false;
+      final bool isSupportedBiometrics = await _auth.canCheckBiometrics;
+      if (!isSupportedBiometrics) return false;
 
       final List<BiometricType> availableBiometrics = await _getAvailableBiometrics();
       return availableBiometrics.isNotEmpty;
