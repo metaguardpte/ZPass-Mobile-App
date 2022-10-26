@@ -24,6 +24,14 @@
   "signinOrNewTip":"Log in or create a new account to access your secure vault on your device.",
    "siginScan":"Scan setup code",
    "or":"OR",
+   "confirm":"Confirm",
+   "refuse":"Refuse",
+   "signInInTo":"Sign in in to {type}",
+   "@signInInTo": {
+     "placeholders": {
+       "type": {}
+     }
+   },
 
   "General":"GENERAL",
   "Language":"Language",

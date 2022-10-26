@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,18 +13,23 @@ import 'package:zpass/modules/home/tabs/tab_identities.dart';
 import 'package:zpass/modules/home/tabs/tab_logins.dart';
 import 'package:zpass/modules/home/tabs/tab_notes.dart';
 import 'package:zpass/modules/home/widgets/home_drawer_builder.dart';
+import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/setting/router_settting.dart';
 import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
 import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
+import 'package:zpass/modules/user/router_user.dart';
+import 'package:zpass/modules/user/signin/signin_by_scanner.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/double_tap_back_exit_app.dart';
 
 class HomePageV2 extends StatefulWidget {
   static const int dockedFake = 2;
+
   const HomePageV2({Key? key}) : super(key: key);
 
   @override
@@ -129,11 +136,30 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
     return false;
   }
 
+  void _scan() {
+    NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {
+      try {
+        final params = data['data'];
+        SignInByScanner()
+            .loginByQrCode(jsonDecode(params))
+            .then((value) => NavigatorUtils.push(
+                context, RouterUser.signInByScanner,
+                arguments: {"data": params}))
+            .catchError((err) {
+          Toast.showMiddleToast(err.toString());
+          Log.d(err.toString());
+        });
+      } catch (e) {
+        Log.d(e.toString());
+      }
+    });
+  }
+
   void _onActionPerform(HomePageAction action) {
     switch (action) {
       case HomePageAction.setting:
         // _scaffoldKey.currentState?.openEndDrawer();
-      NavigatorUtils.push(context, RouterSetting.setting);
+        NavigatorUtils.push(context, RouterSetting.setting);
         break;
       case HomePageAction.locale:
         _scaffoldKey.currentState?.closeEndDrawer();
@@ -142,6 +168,9 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       case HomePageAction.theme:
         _scaffoldKey.currentState?.closeEndDrawer();
         ThemeDialog().show(context);
+        break;
+      case HomePageAction.scan:
+        _scan();
         break;
       default:
         Log.d("_onActionPerform: ${action.name}", tag: "HomePageV2");
