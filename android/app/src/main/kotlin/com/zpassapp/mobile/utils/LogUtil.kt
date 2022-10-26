@@ -1,4 +1,4 @@
-package com.zpassapp.zpass.utils
+package com.zpassapp.mobile.utils
 
 import android.util.Log
 

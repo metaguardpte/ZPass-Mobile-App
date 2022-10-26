@@ -1,7 +1,7 @@
-package com.zpassapp.zpass.rpc
+package com.zpassapp.mobile.rpc
 
 import android.app.Activity
-import com.zpassapp.zpass.utils.LogUtil
+import com.zpassapp.mobile.utils.LogUtil
 import java.lang.ref.WeakReference
 
 object SystemNavigatorProxy: RpcProxy {
