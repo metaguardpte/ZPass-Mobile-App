@@ -1,9 +1,12 @@
 
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
+import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/sync/db_sync/base_table_sync.dart';
+import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -84,21 +87,40 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
   /// Login unique generation logic reference to:
   /// https://github.com/metaguardpte/ZPassApp/blob/4ef376f1493682a80b43f2ed642152acf343d3f5/render/src/utils/loginUnique.ts#L44
   ///
-  String _generateLoginUnique(VaultItemEntity login) {
-    String url = "";
-    String username = "";
+  Future<String> _generateLoginUnique(VaultItemEntity login) async {
+    final detail = VaultItemLoginDetail.fromJson(login.detail);
+    var decryptContent = await CryptoManager()
+        .decryptText(text: detail.content)
+        .catchError((e) {
+      Log.e("decrypt login detail content failed: $e");
+    });
+    if (decryptContent == null) {
+      return "";
+    }
+
+    String url = detail.loginUri?? "";
+    String username = jsonDecode(decryptContent)["loginUser"];
     var lowerUrl = url.toLowerCase();
     var lowerUsername = username.toLowerCase();
     if (!lowerUrl.startsWith('http') && !lowerUrl.startsWith('https')) {
       lowerUrl = "http://$lowerUrl";
     }
 
+    var domainName = _getDomainName(lowerUrl);
+    return "$domainName-$lowerUsername";
+  }
+
+  String _getDomainName(String lowerUrl) {
+    if (lowerUrl.isEmpty) {
+      return lowerUrl;
+    }
+
     try {
-      var domainName = Uri.parse(lowerUrl).host;
-      return "$domainName-$lowerUsername";
+      return Uri.parse(lowerUrl).host;
     } catch (e) {
       Log.e("Error parsing url: $lowerUrl, msg: ${e.toString()}");
     }
-    return "$url-$lowerUsername";
+
+    return lowerUrl;
   }
 }
