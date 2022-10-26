@@ -145,7 +145,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
                 context, RouterUser.signInByScanner,
                 arguments: {"data": params}))
             .catchError((err) {
-          Toast.showMiddleToast(err.toString());
+          Toast.showSpec(err.toString());
           Log.d(err.toString());
         });
       } catch (e) {

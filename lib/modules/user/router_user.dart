@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:zpass/modules/scanner/scanner_end_pages/scanner_signin.dart';
+import 'package:zpass/modules/scanner/landing/scanner_signin.dart';
 import 'package:zpass/modules/user/signin/signin_page.dart';
 import 'package:zpass/routers/i_router.dart';
 
