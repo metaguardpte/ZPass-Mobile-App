@@ -8,3 +8,4 @@
 
 "NSCameraUsageDescription" = "使用扫一扫功能，需要您允许访问相机。";
 "NSPhotoLibraryUsageDescription" = "识别二维码图片、保存图片至相册，需要您允许访问照片。";
+"NSFaceIDUsageDescription" = "使用Face ID登录功能，需要您的同意和授权";
