@@ -1,13 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/base/network/httpclient.dart';
 import 'package:zpass/base/network/intercept.dart';
-import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/constant.dart';
-import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
 import 'package:zpass/rpc/rpc_manager.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -56,14 +53,11 @@ class MainInitializer {
   ///
   /// 用户授权后初始化
   ///
-  static void initAfterAuthorize(BuildContext context) async {
+  static Future<bool> initAfterAuthorize() async {
     // 初始化用户数据
+    await UserProvider().restore();
     final userInfo = UserProvider().userInfo;
     // 跳转登录或注册
-    if (userInfo.email != null && userInfo.secretKey != null) {
-      NavigatorUtils.push(context, RouterUser.login, clearStack: true);
-    } else {
-      NavigatorUtils.push(context, Routers.loginOrNew, clearStack: true);
-    }
+    return userInfo.email != null && userInfo.secretKey != null;
   }
 }

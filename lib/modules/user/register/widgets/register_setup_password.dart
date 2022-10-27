@@ -24,27 +24,28 @@ class _RegisterSetupPasswordState extends ProviderState<RegisterSetupPassword, R
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
             color: Colors.white,
             child: Column(
               children: [
                 ZPassTextField(
                   text: provider.password,
+                  regExp: passwordRegExpStr,
+                  errorMessage: S.current.registerPasswordFormatError,
                   autoFocus: true,
                   type: TextFieldType.password,
                   title: S.current.registerMasterPassword,
                   hintText: S.current.registerMasterPasswordHint,
                   onTextChange: (value) => provider.password = value,
-                  onUnFocus: () => _checkPasswordIsValid(provider.password),
                 ),
-                Gaps.vGap16,
                 ZPassTextField(
                   text: provider.confirmPassword,
+                  regExp: passwordRegExpStr,
+                  errorMessage: S.current.registerPasswordFormatError,
                   type: TextFieldType.password,
                   title: S.current.registerConfirmPassword,
                   hintText: S.current.registerConfirmPasswordHint,
                   onTextChange: (value) => provider.confirmPassword = value,
-                  onUnFocus: () => _checkPasswordIsValid(provider.confirmPassword),
                 ),
               ],
             ),

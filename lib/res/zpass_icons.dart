@@ -43,4 +43,11 @@ class ZPassIcons {
   static const IconData icClipboard = IconData(0xe6dc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icQrScan = IconData(0xe6e7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icClose = IconData(0xe6d2, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icWarningTriangle = IconData(0xe6e8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icInfo = IconData(0xe6dd, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icLock = IconData(0xe6e5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icSecretKey = IconData(0xe6e9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icFingerprint = IconData(0xe6d5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icFaceID = IconData(0xe6df, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icBiometrics = IconData(0xe6fe, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

@@ -23,24 +23,27 @@ class ZPassEditText extends StatefulWidget implements PreferredSizeWidget {
   final int? maxLength;
   final Color? bgColor;
   final Color? focusBgColor;
+  final Color? borderColor;
+  final bool? obscureText;
 
-  const ZPassEditText(
-      {this.hintText,
-      this.initialText,
-      this.prefix,
-      this.height = 45,
-      this.borderRadius = 8,
-      this.enableClear = true,
-      this.enablePrefix = true,
-      this.action = TextInputAction.done,
-      this.onChanged,
-      this.onSubmitted,
-      this.autofocus = false,
-      this.textSize = 13,
-      this.maxLength,
-      this.bgColor,
-      this.focusBgColor,
-      Key? key})
+  const ZPassEditText({this.hintText,
+    this.initialText,
+    this.prefix,
+    this.height = 45,
+    this.borderRadius = 8,
+    this.enableClear = true,
+    this.enablePrefix = true,
+    this.action = TextInputAction.done,
+    this.onChanged,
+    this.onSubmitted,
+    this.autofocus = false,
+    this.textSize = 13,
+    this.maxLength,
+    this.bgColor,
+    this.focusBgColor,
+    this.borderColor = Colors.transparent,
+    this.obscureText = false,
+    Key? key})
       : super(key: key);
 
   @override
@@ -54,6 +57,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
   final FocusNode _focus = FocusNode();
   late final TextEditingController _controller;
   var _hasFocus = false;
+  bool _isSecret = true;
 
   @override
   void initState() {
@@ -67,7 +71,72 @@ class ZPassEditTextState extends State<ZPassEditText> {
   @override
   Widget build(BuildContext context) {
     final prefixIcon = widget.prefix ?? const Icon(ZPassIcons.icSearch, color: Colors.grey,);
-    final suffixIcon = GestureDetector(
+    final clear = _buildClear();
+    final secret = _buildSecret();
+    final suffixIcon = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        widget.enableClear ? (_controller.text.isNotEmpty ? clear : Gaps.empty) : Gaps.empty,
+        secret,
+      ],
+    );
+    final prefixIconWidget = Padding(
+      padding: const EdgeInsets.only(left: 0.0),
+      child: prefixIcon,
+    );
+
+    var bgColor = widget.bgColor ?? Colours.bg_gray;
+    if (_hasFocus) bgColor = widget.focusBgColor ?? Colours.bg_gray;
+
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 7),
+      height: widget.height,
+      decoration: BoxDecoration(
+        color: context.isDark ? Colours.dark_material_bg : bgColor,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        border: Border.all(color: _hasFocus ? context.primaryColor : widget.borderColor!, width: 0.5)
+      ),
+      child: TextField(
+        key: const Key('search_text_field'),
+        controller: _controller,
+        focusNode: _focus,
+        autofocus: widget.autofocus,
+        maxLines: 1,
+        obscureText: widget.obscureText! ? _isSecret : false,
+        textInputAction: widget.action,
+        onSubmitted: (String val) {
+          _focus.unfocus();
+          widget.onSubmitted?.call(val);
+        },
+        onChanged: (text) {
+          if (widget.onChanged != null) {
+            widget.onChanged!.call(text);
+          }
+          setState(() {});
+        },
+        style: TextStyle(fontSize: widget.textSize,),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          icon: widget.enablePrefix ? prefixIconWidget : Gaps.empty,
+          hintText: widget.hintText,
+          hintStyle: TextStyles.textGray12,
+          suffixIcon: suffixIcon,
+          suffixIconConstraints: BoxConstraints(
+            maxWidth: widget.height * 2,
+            maxHeight: widget.height - 5
+          ),
+          isDense: true,
+        ),
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(widget.maxLength)
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClear() {
+    return GestureDetector(
       behavior: HitTestBehavior.opaque,
       child: const Padding(
         padding: EdgeInsets.all(6),
@@ -88,58 +157,25 @@ class ZPassEditTextState extends State<ZPassEditText> {
         });
       },
     );
-    final prefixIconWidget = Padding(
-      padding: const EdgeInsets.only(left: 0.0),
-      child: prefixIcon,
-    );
+  }
 
-    var bgColor = widget.bgColor ?? Colours.bg_gray;
-    if (_hasFocus) bgColor = widget.focusBgColor ?? Colours.bg_gray;
-
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 7),
-      height: widget.height,
-      decoration: BoxDecoration(
-        color: context.isDark ? Colours.dark_material_bg : bgColor,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        border: Border.all(color: _hasFocus ? context.primaryColor : Colors.transparent, width: 0.5)
-      ),
-      child: TextField(
-        key: const Key('search_text_field'),
-        controller: _controller,
-        focusNode: _focus,
-        autofocus: widget.autofocus,
-        maxLines: 1,
-        textInputAction: widget.action,
-        onSubmitted: (String val) {
-          _focus.unfocus();
-          widget.onSubmitted?.call(val);
-        },
-        onChanged: (text) {
-          if (widget.onChanged != null) {
-            widget.onChanged!.call(text);
-          }
-          setState(() {});
-        },
-        style: TextStyle(fontSize: widget.textSize,),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          icon: widget.enablePrefix ? prefixIconWidget : Gaps.empty,
-          hintText: widget.hintText,
-          hintStyle: TextStyles.textGray12,
-          suffixIcon: widget.enableClear ? (_controller.text.isNotEmpty ? suffixIcon : null) : null,
-          suffixIconConstraints: BoxConstraints(
-            maxWidth: widget.height - 5,
-            maxHeight: widget.height - 5
-          ),
-          isDense: true,
+  Widget _buildSecret() {
+    return widget.obscureText! ? GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        setState(() {
+          _isSecret = !_isSecret;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Icon(
+          _isSecret ? ZPassIcons.icSecret : ZPassIcons.icNoSecret,
+          color: const Color(0xFF959BA7),
+          size: 17,
         ),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(widget.maxLength)
-        ],
       ),
-    );
+    ) : Gaps.empty;
   }
 
   void requestFocus() {

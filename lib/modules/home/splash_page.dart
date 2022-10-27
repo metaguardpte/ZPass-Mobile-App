@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:zpass/util/callback_funcation.dart';
+import 'package:zpass/main_initializer.dart';
+import 'package:zpass/modules/user/router_user.dart';
+import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/routers/routers.dart';
 import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/generated/l10n.dart';
 
 class SplashPage extends StatefulWidget {
-  final FunctionCallback<BuildContext> authCallback;
-
-  const SplashPage({Key? key, required this.authCallback}) : super(key: key);
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
   _SplashPageState createState() => _SplashPageState();
@@ -27,9 +28,15 @@ class _SplashPageState extends State<SplashPage> {
     //   }
     // });
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () async {
       // fake auth
-      widget.authCallback.call(context);
+      MainInitializer.initAfterAuthorize().then((credentialExist) {
+        if (credentialExist) {
+          NavigatorUtils.push(context, RouterUser.login, clearStack: true);
+        } else {
+          NavigatorUtils.push(context, Routers.loginOrNew, clearStack: true);
+        }
+      });
     });
   }
   @override

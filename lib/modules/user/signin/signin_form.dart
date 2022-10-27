@@ -9,6 +9,7 @@ import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
 import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
+import 'package:zpass/plugin_bridge/local_auth/local_auth_manager.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
@@ -38,15 +39,15 @@ class _SignInFormState extends State<SignInForm> {
 
   void handelSignIn() {
     if (Email.isEmpty) {
-      Toast.showMiddleToast(S.current.signinTip + S.current.email,
+      Toast.showSpec(S.current.signinTip + S.current.email,
           type: ToastType.error);
       return;
     } else if (Psw.isEmpty) {
-      Toast.showMiddleToast(S.current.signinTip + S.current.password,
+      Toast.showSpec(S.current.signinTip + S.current.password,
           type: ToastType.error);
       return;
     } else if (SeKey.isEmpty) {
-      Toast.showMiddleToast(S.current.signinTip + S.current.seKey,
+      Toast.showSpec(S.current.signinTip + S.current.seKey,
           type: ToastType.error);
       return;
     }
@@ -60,7 +61,7 @@ class _SignInFormState extends State<SignInForm> {
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     }).catchError((error) {
       loadingDialog.dismiss(context);
-      Toast.showMiddleToast(S.current.loginFail);
+      Toast.showSpec(S.current.loginFail);
     });
     //submit
   }
@@ -88,9 +89,8 @@ class _SignInFormState extends State<SignInForm> {
   getQRCode() {
     Permission.camera.request().then((status) {
       if (!status.isGranted) {
-        Toast.showMiddleToast(
+        Toast.showSpec(
             'No Camera Permission , Please go to the system settings to open the permission',
-            height: 180,
             type: ToastType.error);
         return;
       }
@@ -103,11 +103,11 @@ class _SignInFormState extends State<SignInForm> {
             emailController.text = params['email'] ?? "";
             Email = params['email'] ?? "";
           } else {
-            Toast.showMiddleToast('don`t get Secret Key');
+            Toast.showSpec('don`t get Secret Key');
           }
         } catch (e) {
           Log.d(e.toString());
-          Toast.showMiddleToast('don`t get Secret Key');
+          Toast.showSpec('don`t get Secret Key');
         }
       });
     });
@@ -123,10 +123,20 @@ class _SignInFormState extends State<SignInForm> {
     emailController.text = Email;
   }
 
+  void _localAuth() async {
+    if (!UserProvider().getUserBiometrics()) return;
+    final result = await LocalAuthManager().canAuth();
+    if (result) {
+      final auth = await LocalAuthManager().authenticate();
+      Log.d("local auth result is:$auth");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _initDefaultValue();
+    _localAuth();
     // 添加listener监听
     // 对应的TextField失去或者获取焦点都会回调此监听
     focusNode.addListener(() {

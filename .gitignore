@@ -33,7 +33,6 @@ migrate_working_dir/
 /build/
 .fvm
 lib/generated/
-plugins
 
 # Symbolication related
 app.*.symbols

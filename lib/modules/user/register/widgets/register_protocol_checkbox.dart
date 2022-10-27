@@ -5,11 +5,13 @@ import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 
 class RegisterProtocolCheckbox extends StatefulWidget {
-  const RegisterProtocolCheckbox({Key? key, this.onChange}) : super(key: key);
+  const RegisterProtocolCheckbox({Key? key, this.onChange, this.check = false}) : super(key: key);
 
+  final bool? check;
   final FunctionCallback<bool>? onChange;
 
   @override
@@ -17,7 +19,13 @@ class RegisterProtocolCheckbox extends StatefulWidget {
 }
 
 class _RegisterProtocolCheckboxState extends State<RegisterProtocolCheckbox> {
-  bool _isChecked = false;
+  late bool _isChecked;
+
+  @override
+  void initState() {
+    super.initState();
+    _isChecked = widget.check ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +91,7 @@ class _RegisterProtocolCheckboxState extends State<RegisterProtocolCheckbox> {
     final uri = Uri.parse(url);
     bool isCanLaunch = await canLaunchUrl(uri);
     if(isCanLaunch) {
-      await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
+      await launchUrl(uri, mode: Device.isAndroid ? LaunchMode.externalNonBrowserApplication : LaunchMode.platformDefault);
     }
   }
 }

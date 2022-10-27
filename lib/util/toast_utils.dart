@@ -1,72 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:zpass/widgets/load_image.dart';
+import 'package:zpass/res/colors.dart';
+import 'package:zpass/res/gaps.dart';
+import 'package:zpass/res/zpass_icons.dart';
 
 enum ToastType { warning, error, info }
 
 /// Toast工具类
 class Toast {
-  static void show(String? msg, {int duration = 2000}) {
+  static ToastFuture? show(String? msg) {
     if (msg == null) {
-      return;
+      return null;
     }
-    showToast(msg,
-        duration: Duration(milliseconds: duration),
-        dismissOtherToast: true,
-        position: ToastPosition.center,
-        radius: 5,
-        textStyle: const TextStyle(fontSize: 18, color: Colors.white));
+    return showSpec(msg);
   }
 
-  static String SwitchIcon(ToastType type) {
-    var imageUrl = '';
-    switch (type) {
-      case ToastType.info:
-        imageUrl = '2.0x/Info@2x';
-        break;
-      case ToastType.warning:
-        imageUrl = '2.0x/Warning@2x';
-        break;
-      case ToastType.error:
-        imageUrl = '2.0x/XCircle@2x';
-        break;
+  static ToastFuture? showSpec(String? msg, {ToastType type = ToastType.info}) {
+    if (msg == null) {
+      return null;
     }
-    return imageUrl;
-  }
-
-  static void showMiddleToast(String? msg,
-      {int duration = 2000, ToastType type = ToastType.info,double height = 120}) {
-    showToastWidget(
-      duration:Duration(milliseconds: duration),
-      Container(
-        constraints:const BoxConstraints(maxWidth: 270, minWidth: 200),
-        padding: const EdgeInsets.fromLTRB(21, 24, 21, 0),
-
-        height: height,
-        decoration: const BoxDecoration(
-            color: Color.fromRGBO(0, 0, 0, 0.8000),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+    final Widget widget = Container(
+      constraints: const BoxConstraints(maxWidth: 270, minHeight: 60),
+      padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5.0),
+        color: Colours.black80,
+      ),
+      child: ClipRect(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            LoadAssetImage(
-              SwitchIcon(type),
-              width: 36,
-              height: 36,
+            Icon(_switchIcon(type), color: Colors.white,),
+            Gaps.vGap8,
+            Text(
+              msg,
+              maxLines: 3,
+              overflow: TextOverflow.fade,
             ),
-            Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  msg ?? '',
-                  style: const TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ))
           ],
         ),
       ),
-      dismissOtherToast: true,
-      position: ToastPosition.center,
     );
+    return showToastWidget(
+      widget,
+    );
+  }
+
+  static IconData _switchIcon(ToastType type) {
+    switch (type) {
+      case ToastType.warning:
+        return ZPassIcons.icWarningTriangle;
+      case ToastType.error:
+        return ZPassIcons.icXCircle;
+      case ToastType.info:
+      default:
+        return ZPassIcons.icInfo;
+    }
   }
 
   static void cancelToast() {

@@ -1,7 +1,7 @@
-package com.zpassapp.zpass.rpc
+package com.zpassapp.mobile.rpc
 
-import com.zpassapp.zpass.BuildConfig
-import com.zpassapp.zpass.utils.LogUtil
+import com.zpassapp.mobile.BuildConfig
+import com.zpassapp.mobile.utils.LogUtil
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.channels.Channel
 import java.lang.Exception

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/user/model/user_info_model.dart';
+import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
-import 'package:zpass/routers/routers.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_confirm_dialog.dart';
 import 'package:zpass/widgets/list.dart';
@@ -39,9 +39,8 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
 
   _doSignOut() {
     UserProvider().clear();
-    Toast.showMiddleToast(S.current.logoutSuccess,
-        type: ToastType.info);
-    NavigatorUtils.push(context, Routers.loginOrNew, clearStack: true);
+    NavigatorUtils.push(context, RouterUser.login,
+        clearStack: true);
   }
 
   @override

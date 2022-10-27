@@ -1,4 +1,4 @@
-package com.zpassapp.zpass.rpc
+package com.zpassapp.mobile.rpc
 
 import com.google.gson.Gson
 import io.flutter.embedding.engine.FlutterEngine

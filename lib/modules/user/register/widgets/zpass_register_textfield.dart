@@ -4,9 +4,7 @@ import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/theme_utils.dart';
-import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/res/zpass_icons.dart';
-import 'package:zpass/widgets/zpass_edittext.dart';
 
 enum TextFieldType {
   text,
@@ -28,6 +26,7 @@ class ZPassTextField extends StatefulWidget {
     this.loading = false,
     this.autoFocus = false,
     this.regExp,
+    this.errorMessage,
     this.onTextChange,
     this.onEditingComplete,
     this.onSendCodeTap,
@@ -48,6 +47,7 @@ class ZPassTextField extends StatefulWidget {
   final bool? loading;
   final bool? autoFocus;
   final String? regExp;
+  final String? errorMessage;
   final FunctionCallback<String>? onTextChange;
   final NullParamCallback? onEditingComplete;
   final NullParamCallback? onSendCodeTap;
@@ -62,11 +62,20 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
   bool _isSecret = true;
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  bool _isError = false;
 
   _onListenFocus() {
     if (!_focusNode.hasFocus) {
       widget.onUnFocus?.call();
+      _doVerifyRegExp();
+      setState(() {});
     }
+  }
+
+  _doVerifyRegExp() {
+    if ((widget.regExp ?? "").isEmpty) return;
+    bool result = RegExp(widget.regExp!).hasMatch(_controller.text);
+    _isError = !result;
   }
 
   @override
@@ -90,6 +99,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       children: [
         (widget.title ?? "").isNotEmpty ? _buildHeader() : Gaps.empty,
         _buildBody(),
+        _buildErrorMessage(),
         _buildTextFieldTips()
       ],
     );
@@ -113,7 +123,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       height: widget.textFieldHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(7.5),
-          border: Border.all(width: 1,color: const Color(0xFFEBEBEE)),
+          border: Border.all(width: 1,color: _isError ? const Color(0xFFFF4343) : const Color(0xFFEBEBEE)),
         ),
       child: Row(
         children: [
@@ -238,6 +248,16 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
     ) : Gaps.empty;
   }
 
+  Widget _buildErrorMessage() {
+    return Container(
+      width: double.infinity,
+      child: Text(
+        _isError ? widget.errorMessage ?? "" : "",
+        style: const TextStyle(fontSize: 12, color: Color(0xFFFF4343), height: 1.3),
+      ),
+    );
+  }
+
   _switchPassword() {
     setState(() {
       _isSecret = !_isSecret;
@@ -248,6 +268,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
     if (widget.onTextChange != null) {
       widget.onTextChange!.call(value);
     }
+    _doVerifyRegExp();
     setState(() {});
   }
 

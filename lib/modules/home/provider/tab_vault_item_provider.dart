@@ -25,7 +25,7 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemWrapper> {
     loading = true;
     var queryContext = QueryContext(keyword, EntityType.vaultItem, type, SortBy.values[sortType.index]);
     // query from db
-    var entities = _repoDB.query(queryContext);
+    var entities = await _repoDB.query(queryContext);
     // grouping
     var entityGroups = Groups.grouping(entities, queryContext.sortBy);
     // adapt the entity groups

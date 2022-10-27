@@ -24,7 +24,14 @@
   "signinOrNewTip":"Log in or create a new account to access your secure vault on your device.",
   "siginScan":"Scan setup code",
   "or":"OR",
-
+  "confirm":"Confirm",
+  "refuse":"Refuse",
+  "signInInTo":"Sign in in to {type}",
+  "@signInInTo": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "General":"GENERAL",
   "Language":"Language",
   "DataRoaming":"Data Roaming",
@@ -33,7 +40,8 @@
   "AutoLock":"Auto-Lock on Exit",
   "UnlockWithFinger":"Unlock with Fingerprint",
   "UnlockWithFace":"Unlock with Face ID",
-
+  "UnlockWithBiometrics":"Unlock with Biometrics",
+  "settingConfirmMasterPassword": "Confirm Master Password",
 
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",
@@ -88,7 +96,7 @@
   "registerSecretKeyPDFContact": "Contact Our Support Team",
   "registerSecretKeyCopyTips": "Copy success",
   "registerSecretKeyPermission": "Please enable storage permission",
-  "registerSaveSecretKeyDialogMessage": "Make sure your have keep secret key",
+  "registerSaveSecretKeyDialogMessage": "Make sure you have keep",
   "registerNotYet": "Not yet",
   "registerConfirm": "Confirm",
 
@@ -97,25 +105,16 @@
   "fullName":"Full Name",
   "planType":"planType",
   "logout":"Logout",
-  "logoutTitle":"Do your want to sign out of this account?",
+  "logoutTitle":"Do you want to sign out of this account?",
   "signOut":"Sign Out",
   "yes":"Yes",
   "logoutSuccess":"Logout Success !",
 
-  "loginFail":"Login Fail",
+  "loginFail":"Invalid email or password",
 
   "actionConfirm": "Confirm",
   "actionCancel": "Cancel",
 
-  "err.page.401.personal.title1": "You do not login your Personal space.",
-  "err.page.401.personal.title2": "If you want to access Personal space, please login with your personal secret key.",
-  "err.page.401.work.title1": "You do not login your Work Assigned space.",
-  "err.page.401.work.title2": "If you want to access Work Assigned space, please login with your business secret key.",
-  "err.page.401.back": "Back To Login",
-  "err.page.404.title2": "Sorry, the page you visited does not exist.",
-  "err.page.404.back": "Back Home",
-  "err.login.fail": "Login Failed",
-  "err.login.domainOwner": "Your account is a Domain Owner. You need to use ZPass Professional Edition in order to sign in your account. If you wish to try this edition, please regiseter a new account.",
   "err_activation_failed": "Activation failed",
   "err_already_exist_in_domain": "Already existed in domain",
   "err_app_not_found": "App is not found",

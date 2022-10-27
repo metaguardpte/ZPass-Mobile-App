@@ -49,12 +49,18 @@ class _PswInputState extends State<PswInput> {
         width: 20,
         height: 20,
       ),
-      suffixIcon: IconButton(
-          alignment: Alignment.centerRight,
-          onPressed: switchPassword,
-          icon: _showPasword
-              ? const Icon(ZPassIcons.icNoSecret,color: Color.fromRGBO(174, 183, 197, 1),size: 18)
-              : const Icon(ZPassIcons.icSecret,color: Color.fromRGBO(174, 183, 197, 1),size: 18)
+      suffixIcon:GestureDetector (
+          behavior: HitTestBehavior.opaque,
+
+          onTap: switchPassword,
+          child: Container(
+            height: 40,
+            width: 30,
+            alignment: Alignment.centerRight,
+            child: _showPasword
+                ? const Icon(ZPassIcons.icNoSecret,color: Color.fromRGBO(174, 183, 197, 1),size: 18)
+                : const Icon(ZPassIcons.icSecret,color: Color.fromRGBO(174, 183, 197, 1),size: 18),
+          )
       ),
     );
 

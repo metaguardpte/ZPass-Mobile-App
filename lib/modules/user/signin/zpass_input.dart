@@ -91,8 +91,7 @@ class _ZPassTextFieldWidgetState extends State<ZPassTextFieldWidget> {
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(right: widget.suffixIcon != null  ? 6 : 0),
+          SizedBox(
             width: widget.suffixIcon != null ? 20 : 0,
             child: Offstage(
               offstage: false,

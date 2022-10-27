@@ -26,9 +26,10 @@ class RegisterStepper extends StatelessWidget {
       final item = Expanded(
         child: Container(
           height: 7,
+          margin: const EdgeInsets.symmetric(horizontal: 1.5),
           decoration: BoxDecoration(
-            // borderRadius: BorderRadius.circular(3.5),
-            color: i == index ? context.primaryColor : const Color(0xFFE8E8EA),
+            borderRadius: BorderRadius.circular(3.5),
+            color: i <= index ? context.primaryColor : const Color(0xFFE8E8EA),
           ),
         ),
       );
@@ -37,14 +38,4 @@ class RegisterStepper extends StatelessWidget {
     return steps;
   }
 
-  Widget _buildDot() {
-    return Container(
-      width: 4,
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.red,//const Color(0xFFF3F5F8),
-        borderRadius: BorderRadius.circular(3),
-      ),
-    );
-  }
 }

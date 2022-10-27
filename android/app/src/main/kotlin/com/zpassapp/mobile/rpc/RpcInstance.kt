@@ -1,4 +1,4 @@
-package com.zpassapp.zpass.rpc
+package com.zpassapp.mobile.rpc
 
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
