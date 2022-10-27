@@ -11,14 +11,9 @@ abstract class RepoBase<T> {
   Future<dynamic> init();
 
   ///
-  /// 条件过滤
-  ///
-  List<T> filterBy(EntityType entityType);
-
-  ///
   /// 条件查询
   ///
-  List<T> query(QueryContext queryContext);
+  Future<List<T>> query(QueryContext queryContext);
 
   ///
   /// 删除数据项

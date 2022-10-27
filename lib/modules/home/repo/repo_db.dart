@@ -22,12 +22,7 @@ class RepoDB extends RepoBase<VaultItemEntity> {
   }
 
   @override
-  List<VaultItemEntity> filterBy(EntityType entityType) {
-    return _db.list(entityType);
-  }
-
-  @override
-  List<VaultItemEntity> query(QueryContext queryContext) {
+  Future<List<VaultItemEntity>> query(QueryContext queryContext) async {
     return _db.listVaultItemEntity(queryContext);
   }
 
