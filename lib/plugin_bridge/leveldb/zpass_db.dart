@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flkv/flkv.dart';
 import 'package:path/path.dart';
@@ -7,14 +6,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
-import 'package:zpass/plugin_bridge/leveldb/groups.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/util/log_utils.dart';
 
 import 'record_entity.dart';
 
 ///
-/// 单例
+/// Singleton
 ///
 class ZPassDB {
 
@@ -28,9 +26,9 @@ class ZPassDB {
   }
 
   bool _opened = false;
-  late KvDB _db;
+  late LevelDB _db;
 
-  bool put<E extends RecordEntity> (E entity) {
+  Future<bool> put<E extends RecordEntity> (E entity) async {
     String key = entity.getEntityKey();
     if (key.isEmpty) {
       return false;
@@ -41,37 +39,32 @@ class ZPassDB {
       return false;
     }
 
-    Uint8List keyUint8List = _toUint8List(key);
-    Uint8List valueUint8List = _toUint8List(value);
-    return _db.put(keyUint8List, valueUint8List);
+    return _db.put(key, value);
   }
 
-  E? get<E extends RecordEntity>(String? key) {
+  Future<E?> get<E extends RecordEntity>(String? key) async {
     if (key == null || key.isEmpty) {
       return null;
     }
 
-    var keyUint8List = _toUint8List(key);
-    var valueUintList = _db.get(keyUint8List);
-    if (valueUintList == null) {
+    var value = await _db.get(key);
+    if (value == null) {
       return null;
     }
 
-    String jsonStr = _toSting(valueUintList);
-    return _toEntity(key, jsonStr);
+    return _toEntity(key, value);
   }
 
-  bool delete(String? key) {
+  Future<bool> delete(String? key) async {
     if (key == null || key.isEmpty) {
       return false;
     }
 
-    var uint8list = _toUint8List(key);
-    return _db.delete(uint8list);
+    return _db.delete(key);
   }
 
-  List<E> list<E extends RecordEntity>(EntityType type) {
-    List<Record> records = _db.list();
+  Future<List<E>> list<E extends RecordEntity>(EntityType type) async {
+    List<Record> records = await _db.list();
     var typeName = type.name;
     var entities = <E>[];
     for (var record in records) {
@@ -90,20 +83,18 @@ class ZPassDB {
   }
 
   ///
-  /// 根据sortBy字段
-  ///   sort by : createTime, updateTime
+  /// sort by : createTime, updateTime
   ///
-  /// 按下面四个维度分组
-  ///   group by: today, yesterday, week, month, null
+  /// group by: today, yesterday, week, month, null
   ///
-  List<VaultItemEntity> listVaultItemEntity(QueryContext queryContext) {
+  Future<List<VaultItemEntity>> listVaultItemEntity(QueryContext queryContext) async {
     var entityType = queryContext.entityType;
     if (entityType != EntityType.vaultItem) {
       return <VaultItemEntity>[];
     }
 
     var keyword = queryContext.keyword;
-    var records = list(entityType);
+    var records = await list(entityType);
     var entities = <VaultItemEntity>[];
     for (var rec in records) {
       var entity = rec as VaultItemEntity;
@@ -118,9 +109,6 @@ class ZPassDB {
     return entities;
   }
 
-  ///
-  /// 需要保证线程安全
-  ///
   Future<void> open({String path=""}) async {
     if (!_opened) {
       var dbPath = path;
@@ -131,16 +119,14 @@ class ZPassDB {
       lock.synchronized(() {
         if (!_opened) {
           Log.d("open db with path: ${dbPath}");
-          _db = KvDB.open(dbPath);
+          _db = LevelDB(dbPath);
+          _db.open();
           _opened = true;
         }
       });
     }
   }
 
-  ///
-  /// 需要保证线程安全
-  ///
   void close() {
     if (_opened) {
       lock.synchronized(() {
@@ -199,14 +185,6 @@ class ZPassDB {
     }
 
     return -1;
-  }
-
-  Uint8List _toUint8List(String src) {
-    return Uint8List.fromList(utf8.encode(src));
-  }
-
-  String _toSting(Uint8List uint8list) {
-    return utf8.decode(uint8list);
   }
 
   E? _toEntity<E extends RecordEntity>(String key, String jsonStr) {
