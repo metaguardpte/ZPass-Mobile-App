@@ -137,6 +137,10 @@ class ZPassDB {
     }
   }
 
+  String getDBPath() {
+    return "";
+  }
+
   bool _filter(VaultItemEntity entity, String keyword, VaultItemType itemType) {
     var type = entity.type;
     bool typeMatched = (type==itemType.index);

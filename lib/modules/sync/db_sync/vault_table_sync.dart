@@ -51,9 +51,9 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
   /// 4. Merge tags in all Login entities
   ///
   @override
-  void postSync() {
+  void postSync() async {
     QueryContext queryContext = QueryContext("", EntityType.vaultItem, VaultItemType.login, SortBy.createTime);
-    var logins = ZPassDB().listVaultItemEntity(queryContext);
+    var logins = await ZPassDB().listVaultItemEntity(queryContext);
     var uniqueToLogins = groupBy(logins, (login) => _generateLoginUnique(login));
 
     var changed = <VaultItemEntity>[];
@@ -94,7 +94,7 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
         .catchError((e) {
       Log.e("decrypt login detail content failed: $e");
     });
-    if (decryptContent == null) {
+    if (decryptContent.isEmpty) {
       return "";
     }
 
