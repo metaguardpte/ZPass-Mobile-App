@@ -67,8 +67,12 @@ dependencies:
     path: plugins/flkv
   zpass_crypto:
     path: plugins/zpass_crypto
+  p7zip:
+    path: plugins/p7zip
   synchronized: ^3.0.0+3
   permission_handler: ^9.2.0
+  googleapis: ^9.2.0
+  google_sign_in: ^5.4.2
 
 dev_dependencies:
   flutter_test:
