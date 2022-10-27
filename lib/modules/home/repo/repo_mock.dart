@@ -23,7 +23,7 @@ class RepoMock extends RepoBase<VaultItemEntity> {
   }
 
   @override
-  List<VaultItemEntity> query(QueryContext queryContext) {
+  Future<List<VaultItemEntity>> query(QueryContext queryContext) async {
     return <VaultItemEntity>[];
   }
 

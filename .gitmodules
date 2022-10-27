@@ -1,9 +1,12 @@
 [submodule "plugins/flkv"]
 	path = plugins/flkv
 	url = git@git.ziniao.com:A25-Hubstudio-INT/a25-zpass-mobile/a25-zpass-mobile-plugin-leveldb.git
+	branch = main
 [submodule "plugins/zpass_crypto"]
 	path = plugins/zpass_crypto
 	url = git@git.ziniao.com:A25-Hubstudio-INT/a25-zpass-mobile/a25-zpass-mobile-plugin-secretlib.git
+	branch = main
 [submodule "plugins/p7zip"]
 	path = plugins/p7zip
 	url = git@git.ziniao.com:A25-Hubstudio-INT/a25-zpass-mobile/a25-zpass-mobile-plugin-7z.git
+	branch = main

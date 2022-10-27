@@ -99,14 +99,13 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
     }
 
     String url = detail.loginUri?? "";
-    String username = jsonDecode(decryptContent)["loginUser"];
     var lowerUrl = url.toLowerCase();
-    var lowerUsername = username.toLowerCase();
     if (!lowerUrl.startsWith('http') && !lowerUrl.startsWith('https')) {
       lowerUrl = "http://$lowerUrl";
     }
-
     var domainName = _getDomainName(lowerUrl);
+    String username = jsonDecode(decryptContent)["loginUser"];
+    var lowerUsername = username.toLowerCase();
     return "$domainName-$lowerUsername";
   }
 
