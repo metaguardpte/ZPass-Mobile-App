@@ -5,16 +5,15 @@ class RowData {
   dynamic text;
   String? path;
   Widget? right;
-
   RowData({this.icon, this.text, this.path, this.right});
 }
 
 class ListWidget extends StatefulWidget {
-  const ListWidget({Key? key, required this.rows, this.withIcon = true})
+  const ListWidget({Key? key, required this.rows, this.withIcon = true,this.flex})
       : super(key: key);
   final List<RowData> rows;
   final bool withIcon;
-
+  final int? flex;
   @override
   State<ListWidget> createState() => _ListWidgetState();
 }
@@ -47,7 +46,7 @@ class _ListWidgetState extends State<ListWidget> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: widget.withIcon ? 2 : 1,
+                    flex: widget.flex != null ? widget.flex! : (widget.withIcon ? 2 : 1),
                     child: Material(
                       child: Container(
                         margin: EdgeInsets.only(left: widget.withIcon ? 0 : 12),

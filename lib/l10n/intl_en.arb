@@ -40,6 +40,21 @@
   "AutoLock":"Auto-Lock on Exit",
   "UnlockWithFinger":"Unlock with Fingerprint",
   "UnlockWithFace":"Unlock with Face ID",
+
+  "backupAndSync":"Backup and Sync",
+  "syncProvider":"Sync Provider",
+  "backup":"Backup",
+  "sync":"Sync",
+  "lastBackupTime":"Last Backup Time",
+  "lastSyncTime":"Last Sync Time",
+  "successfully":"Successfully",
+
+  "IPFS":"IPFS",
+  "googleDrive":"Google Drive",
+  "dropBox":"DropBox",
+  "iCloud":"iCloud",
+
+
   "UnlockWithBiometrics":"Unlock with Biometrics",
   "settingConfirmMasterPassword": "Confirm Master Password",
 

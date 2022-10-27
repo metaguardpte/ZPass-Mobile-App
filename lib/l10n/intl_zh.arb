@@ -44,6 +44,19 @@
   "UnlockWithBiometrics":"Unlock with Biometrics",
   "settingConfirmMasterPassword": "Confirm Master Password",
 
+  "backupAndSync":"Backup and Sync",
+  "syncProvider":"Sync Provider",
+  "backup":"Backup",
+  "sync":"Sync",
+  "lastBackupTime":"Last Backup Time",
+  "lastSyncTime":"Last Sync Time",
+  "successfully":"Successfully",
+
+  "IPFS":"IPFS",
+  "googleDrive":"Google Drive",
+  "dropBox":"DropBox",
+  "iCloud":"iCloud",
+
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",
   "registerTitleSecret": "Keep your secret key created",
