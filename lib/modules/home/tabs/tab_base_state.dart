@@ -161,8 +161,11 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
       elements: provider.dataSource,
       groupBy: listGroupBy,
       groupSeparatorBuilder: buildGroupSeparator,
-      itemBuilder: buildListItem,
-      groupItemBuilder: buildListGroupItem,
+      itemBuilder: (_, item) =>
+          _buildReactItem(item, buildListItem(context, item)),
+      groupItemBuilder: (_, T item, bool groupStart, bool groupEnd) =>
+          _buildReactItem(
+              item, buildListGroupItem(context, item, groupStart, groupEnd)),
       separator: buildListSeparator(),
       useStickyGroupSeparators: stickyGroupSeparators,
       floatingHeader: floatingHeader,
@@ -210,6 +213,13 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
         ));
   }
 
+  Widget _buildReactItem(T element, Widget child) {
+    return InkWell(
+      onTap: () => onItemClicked(element),
+      child: child,
+    );
+  }
+
   @protected
   Widget buildListItem(BuildContext context, T element);
 
@@ -242,5 +252,10 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
   @protected
   void onSearchValueChanged(String changed) {
     provider.filterData(keyword: changed);
+  }
+
+  @protected
+  void onItemClicked(T item) {
+    // do something
   }
 }

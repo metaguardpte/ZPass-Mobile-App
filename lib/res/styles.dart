@@ -76,4 +76,15 @@ class TextStyles {
     fontSize: Dimens.font_sp14,
     color: Colours.dark_unselected_item_color
   );
+
+  static const TextStyle textAppbar = TextStyle(
+    fontSize: Dimens.font_sp18,
+    fontWeight: FontWeight.w500,
+    color: Colours.text1,
+  );
+  static const TextStyle textAppbarDark = TextStyle(
+      fontSize: Dimens.font_sp18,
+      fontWeight: FontWeight.w500,
+      color: Colours.dark_text1
+  );
 }

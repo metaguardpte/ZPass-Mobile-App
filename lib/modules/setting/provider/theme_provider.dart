@@ -72,8 +72,12 @@ class ThemeProvider extends ChangeNotifier {
       ),
       appBarTheme: AppBarTheme(
         elevation: 0.0,
-        color: isDarkMode ? Colours.dark_bg_color : Colors.white,
+        centerTitle: true,
+        color: isDarkMode ? Colours.background_dark : Colours.background,
+        iconTheme: IconThemeData(color: isDarkMode ? Colors.white : Colors.black),
+        actionsIconTheme: IconThemeData(color: isDarkMode ? Colours.dark_app_main : Colours.app_main),
         systemOverlayStyle: isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+        titleTextStyle: isDarkMode ? TextStyles.textAppbarDark : TextStyles.textAppbar,
       ),
       dividerTheme: DividerThemeData(
         color: isDarkMode ? Colours.dark_line : Colours.line,

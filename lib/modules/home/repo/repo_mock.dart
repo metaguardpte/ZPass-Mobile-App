@@ -17,14 +17,8 @@ class RepoMock extends RepoBase<VaultItemEntity> {
   }
 
   @override
-  List<VaultItemEntity> filterBy(EntityType entityType) {
-    var name = entityType.name;
-    return rawData.where((element) => element.tags?.contains(name) ?? false).toList();
-  }
-
-  @override
-  Future<List<VaultItemEntity>> query(QueryContext queryContext) async {
-    return <VaultItemEntity>[];
+  Future<List<VaultItemEntity>> query(QueryContext queryContext) {
+    return Future.value(<VaultItemEntity>[]);
   }
 
   List<VaultItemEntity> filterByType(VaultItemType type) {

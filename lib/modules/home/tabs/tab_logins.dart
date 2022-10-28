@@ -5,6 +5,8 @@ import 'package:zpass/modules/home/provider/vault_item_sort_type.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/tabs/tab_base_state.dart';
 import 'package:zpass/modules/home/tabs/tab_widget_helper.dart';
+import 'package:zpass/modules/vault/vault_routers.dart';
+import 'package:zpass/routers/fluro_navigator.dart';
 
 class TabLoginsPage extends StatefulWidget {
   const TabLoginsPage({Key? key}) : super(key: key);
@@ -49,6 +51,12 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
   @override
   String listGroupBy(VaultItemWrapper element) {
     return element.groupName;
+  }
+
+  @override
+  void onItemClicked(VaultItemWrapper item) {
+    NavigatorUtils.push(context, RoutersVault.vaultDetailLogin,
+        arguments: {"item": item.raw});
   }
 
   @override

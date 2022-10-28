@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:zpass/plugin_bridge/leveldb/record_entity.dart';
 part 'vault_item_entity.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class VaultItemEntity extends RecordEntity {
   String name;
   String? description;

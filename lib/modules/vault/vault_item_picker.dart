@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
+import 'package:zpass/modules/vault/vault_routers.dart';
+import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_picker_dialog.dart';
 
@@ -30,11 +32,18 @@ class VaultItemPicker extends ZPassPickerDialog<VaultItemType> {
 }
 
 void pickVaultType(BuildContext context) {
-  final data = VaultItemType.values.sublist(0, 4);
   itemSelected(type, index) {
     Log.d("pick vault item type: $type");
+    switch (type) {
+      case VaultItemType.login:
+        NavigatorUtils.push(context, RoutersVault.vaultDetailLogin);
+        break;
+    }
   }
 
-  VaultItemPicker(data: data, onItemSelected: itemSelected, title: "Items")
+  VaultItemPicker(
+          data: VaultItemType.values.sublist(0, 4),
+          onItemSelected: itemSelected,
+          title: "Items")
       .show(context);
 }
