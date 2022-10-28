@@ -1,6 +1,9 @@
 {
   "_locale": "en",
 
+  "on":"ON",
+  "off":"OFF",
+
   "appName": "ZPass",
   "appSlogan": "Your digital assets management and automation tool.",
   "appExitTips": "Press back again to Exit",
