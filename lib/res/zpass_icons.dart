@@ -26,6 +26,8 @@ class ZPassIcons {
   static const IconData favCard = IconData(0xe6f7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData favIdentity = IconData(0xe6f8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
+  static const IconData icSync = IconData(0xe6fb, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icBackup = IconData(0xe6fc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icNavBack = IconData(0xe6d6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icTextFieldClean = IconData(0xe6d8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSecret = IconData(0xe6e1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
