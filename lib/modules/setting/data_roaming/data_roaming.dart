@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
-import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/setting/data_roaming/sync_provider_picker.dart';
 import 'package:zpass/modules/setting/switch.dart';
@@ -26,11 +25,7 @@ class _DataRoamingPageState extends State<DataRoamingPage> {
   late TextStyle _rightTextStyle;
 
   _handelSyncProviderModalShow() {
-    // var picker = SyncProviderPicker(data: [
-    //   SyncProviderType.login
-    // ], onItemSelected: (SyncProviderType t, int t2) {  },
-    // title: S.current.syncProvider);
-    pickVaultType(context, (type, index) {
+    pickSyncType(context, (type, index) {
       Log.d('type change ---------------------- $type');
       setState(() {
         _syncProviderType = type;
