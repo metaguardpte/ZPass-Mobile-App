@@ -76,7 +76,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
     Log.d("APP State: ${state.toString()}", tag: "AppLifecycleState");
     if (state == AppLifecycleState.resumed) {
     } else if (state == AppLifecycleState.detached) {
-      ZPassDB().close();
+
     } else {
 
     }
@@ -186,6 +186,5 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-    ZPassDB().close();
   }
 }
