@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
@@ -10,7 +11,6 @@ import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:zpass/util/log_utils.dart';
-import 'package:collection/collection.dart';
 
 class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
 
@@ -54,18 +54,35 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
   void postSync() async {
     QueryContext queryContext = QueryContext("", EntityType.vaultItem, VaultItemType.login, SortBy.createTime);
     var logins = await ZPassDB().listVaultItemEntity(queryContext);
-    var uniqueToLogins = groupBy(logins, (login) => _generateLoginUnique(login));
+    var loginWrappers = <LoginEntityWrapper>[];
+    for (var login in logins) {
+      var wrap = await _toLoginWrapper(login);
+      loginWrappers.add(wrap);
+    }
 
+    var uniqueToLogins = groupBy(loginWrappers, (u) => u.loginUnique);
     var changed = <VaultItemEntity>[];
-    uniqueToLogins.forEach((key, entities) {
-      var length = entities.length;
+    uniqueToLogins.forEach((key, wrappers) {
+      //NULL means error decrypt the content, ignore the merge
+      if (key == "NULL") {
+        return;
+      }
+
+      var length = wrappers.length;
       var duplicatedNotFound = (length < 2);
       if (duplicatedNotFound) {
         return;
       }
-      _updateOneTimePasswordAndTagsIfNecessary(entities);
-      changed.addAll(entities);
+
+      _updateOneTimePasswordAndTagsIfNecessary(wrappers);
+      for (var w in wrappers) {
+        changed.add(w.raw);
+      }
     });
+
+    for (var entity in changed) {
+      ZPassDB().put(entity);
+    }
   }
 
   int? _getMax(int? num1, int? num2) {
@@ -78,27 +95,35 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
     return max(num1, num2);
   }
 
-  void _updateOneTimePasswordAndTagsIfNecessary(List<VaultItemEntity> entities) {
-    //sort by update time desc
-    entities.sort((a, b) => b.updateTime.compareTo(a.updateTime));
+  ///decrypt content:
+  ///{
+  // 	"loginUser": "nn@tempmail.cn",
+  // 	"loginPassword": "abc123!!!",
+  // 	"oneTimePassword": "123",
+  // 	"passwordUpdateTime": "2022-10-27T01:59:55.858Z"
+  // }
+  Future<LoginEntityWrapper> _toLoginWrapper(VaultItemEntity raw) async {
+    var detail = raw.detail;
+    var vaultItemLoginDetail = VaultItemLoginDetail.fromJson(detail);
+    var decryptContent = await CryptoManager()
+        .decryptText(text: vaultItemLoginDetail.content)
+        .catchError((e) {
+      Log.e("decrypt login detail content failed: $e");
+    });
+    var loginUnique = await _generateLoginUnique(vaultItemLoginDetail.loginUri, decryptContent);
+    return LoginEntityWrapper(raw, loginUnique, vaultItemLoginDetail, decryptContent);
   }
 
   ///
   /// Login unique generation logic reference to:
   /// https://github.com/metaguardpte/ZPassApp/blob/4ef376f1493682a80b43f2ed642152acf343d3f5/render/src/utils/loginUnique.ts#L44
   ///
-  Future<String> _generateLoginUnique(VaultItemEntity login) async {
-    final detail = VaultItemLoginDetail.fromJson(login.detail);
-    var decryptContent = await CryptoManager()
-        .decryptText(text: detail.content)
-        .catchError((e) {
-      Log.e("decrypt login detail content failed: $e");
-    });
+  Future<String> _generateLoginUnique(String? loginUrl, String decryptContent) async {
     if (decryptContent.isEmpty) {
-      return "";
+      return "NULL";
     }
 
-    String url = detail.loginUri?? "";
+    String url = loginUrl?? "";
     var lowerUrl = url.toLowerCase();
     if (!lowerUrl.startsWith('http') && !lowerUrl.startsWith('https')) {
       lowerUrl = "http://$lowerUrl";
@@ -107,6 +132,66 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
     String username = jsonDecode(decryptContent)["loginUser"];
     var lowerUsername = username.toLowerCase();
     return "$domainName-$lowerUsername";
+  }
+
+  ///
+  /// 1. update oneTimePassword, merge tags for latest version
+  /// 2. mark isDelete as true in old version record
+  ///
+  void _updateOneTimePasswordAndTagsIfNecessary(List<LoginEntityWrapper> wrappers) async {
+    var length = wrappers.length;
+    if (length < 2) {
+      return;
+    }
+
+    wrappers.sort((a, b) => b.raw.updateTime.compareTo(a.raw.updateTime));
+    var latest = wrappers[0];
+    var oneTimePassword = latest.decryptContent["oneTimePassword"];
+    var oneTimePasswordChanged = false;
+    var tags = <String>{};
+    var latestTags = latest.raw.tags;
+    if (latestTags != null) {
+      tags.addAll(latestTags);
+    }
+
+    for (var index=1; index<length; index++) {
+      var old = wrappers[index];
+      old.raw.isDeleted = true;
+      if (oneTimePassword == null) {
+        var oldOneTimePassword = old.decryptContent["oneTimePassword"];
+        if (oldOneTimePassword != null) {
+          oneTimePassword = oldOneTimePassword;
+          oneTimePasswordChanged = true;
+        }
+      }
+
+      var oldTags = old.raw.tags;
+      if (oldTags != null) {
+        tags.addAll(oldTags);
+      }
+    }
+
+    //append tags
+    if (tags.isNotEmpty) {
+      var newTags = <String>[];
+      newTags.addAll(tags);
+      latest.raw.tags = newTags;
+    }
+
+    //update oneTimePassword
+    if (oneTimePasswordChanged) {
+      var decryptContent = latest.decryptContent;
+      decryptContent["oneTimePassword"] = oneTimePassword;
+      var jsonStr = jsonEncode(decryptContent);
+      var content = await CryptoManager().encryptText(text: jsonStr).catchError((e) {
+        Log.e("encrypt login detail content failed: $e");
+      });
+
+      if (content.isNotEmpty) {
+        latest.vaultItemLoginDetail.content = content;
+        latest.raw.detail = jsonEncode(latest.vaultItemLoginDetail);
+      }
+    }
   }
 
   String _getDomainName(String lowerUrl) {
@@ -122,4 +207,13 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
 
     return lowerUrl;
   }
+}
+
+class LoginEntityWrapper {
+  VaultItemEntity raw;
+  VaultItemLoginDetail vaultItemLoginDetail;
+  String loginUnique;
+  dynamic decryptContent;
+
+  LoginEntityWrapper(this.raw, this.loginUnique, this.vaultItemLoginDetail, this.decryptContent);
 }

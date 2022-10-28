@@ -7,6 +7,9 @@ import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 class SyncTask {
 
   void run() async {
+    //TODO schedule task
+    //read setting - google drive or IPFS
+
     BaseFileTransferManager fileTransferManager = _getFileTransferManager();
     var unzipDBFolder = await fileTransferManager.download();
 
@@ -14,6 +17,7 @@ class SyncTask {
 
     var localDBPath = ZPassDB().getDBPath();
     fileTransferManager.upload(localDBPath);
+    //TODO clean unzip folder
   }
 
   BaseFileTransferManager _getFileTransferManager() {

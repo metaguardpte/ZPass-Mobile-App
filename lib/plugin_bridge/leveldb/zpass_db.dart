@@ -116,29 +116,48 @@ class ZPassDB {
         final applicationDocDir = await getTemporaryDirectory();
         dbPath = join(applicationDocDir.path, "zpass");
       }
-      lock.synchronized(() {
-        if (!_opened) {
-          Log.d("open db with path: ${dbPath}");
-          _db = LevelDB(dbPath);
-          _db.open();
-          _opened = true;
-        }
-      });
+      if (!_opened) {
+        Log.d("open db with path: ${dbPath}");
+        _db = LevelDB(dbPath);
+        await _db.open();
+        _opened = true;
+      }
     }
   }
 
-  void close() {
+  void close() async {
     if (_opened) {
-      lock.synchronized(() {
-        Log.d("Close db");
-        _db.close();
-        _opened = false;
-      });
+      Log.d("Close db");
+      var closeResult = await _db.close();
+      Log.d("close result:: $closeResult");
+      _opened = false;
     }
+  }
+
+  Future<List<E>> tempReadRemote<E extends RecordEntity>(String remoteDBPath, EntityType type) async {
+    var tempDB = LevelDB(remoteDBPath);
+    await tempDB.open();
+    List<Record> records = await tempDB.list();
+    tempDB.close();
+    var typeName = type.name;
+    var entities = <E>[];
+    for (var record in records) {
+      var key = record.key;
+      if (!key.contains(typeName)) {
+        continue;
+      }
+      var jsonStr = record.value;
+      var entity = _toEntity(key, jsonStr) as E?;
+      if (entity == null) {
+        continue;
+      }
+      entities.add(entity);
+    }
+    return entities;
   }
 
   String getDBPath() {
-    return "";
+    return _db.getPath();
   }
 
   bool _filter(VaultItemEntity entity, String keyword, VaultItemType itemType) {

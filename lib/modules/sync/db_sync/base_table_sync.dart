@@ -10,11 +10,11 @@ class BaseTableSyncUnit<T extends RecordEntity> {
   BaseTableSyncUnit(this.entityType);
 
   void sync(String remoteDBPath) async {
-    var remoteRecords = <T>[];
-    var localRecords = <T>[];
+    var remoteRecords = await ZPassDB().tempReadRemote(remoteDBPath, entityType);
+    var localRecords = await ZPassDB().list(entityType);
 
-    var remoteMap = _toMap(remoteRecords);
-    var localMap = _toMap(localRecords);
+    var remoteMap = _toMap(_convertListType(remoteRecords));
+    var localMap = _toMap(_convertListType(localRecords));
 
     var changedEntities = getChanged(remoteMap, localMap);
     _doSync(changedEntities);
@@ -91,6 +91,15 @@ class BaseTableSyncUnit<T extends RecordEntity> {
     if (source.isDeleted && !latest.isDeleted) {
       latest.isDeleted = true;
     }
+  }
+
+  List<T> _convertListType(List<RecordEntity> records) {
+    var convertedRecords = <T>[];
+    for (var record in records) {
+      var converted = record as T;
+      convertedRecords.add(converted);
+    }
+    return convertedRecords;
   }
 
   Map<String, T> _toMap(List<T> records) {
