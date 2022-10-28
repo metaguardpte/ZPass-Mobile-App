@@ -172,6 +172,11 @@
   "err_data_sync_start_error": "同步数据启动失败",
   "err_minimum_version_required": "您的客户端版本已经不支持，请留意自动更新提醒并升级。",
   "err_duplicate_login": "账户密码(页面链接和用户名)已存在。",
-  "err_email_duplicate_domain_owner": "邮箱地址已经注册了商业帐号"
+  "err_email_duplicate_domain_owner": "邮箱地址已经注册了商业帐号",
+
+  "noSecureNotes":"Not added yet",
+  "none":"None",
+  "title":"Title",
+  "note":"Note"
 
 }

@@ -50,4 +50,9 @@ class ZPassIcons {
   static const IconData icFingerprint = IconData(0xe6d5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icFaceID = IconData(0xe6df, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icBiometrics = IconData(0xe6fe, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+  static const IconData icMenu = IconData(0xe6ff, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icNoteEdit = IconData(0xe701, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icNoteCheck = IconData(0xe700, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
 }
