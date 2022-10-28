@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
+import 'package:zpass/modules/vault/vault_detail_helper.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
-import 'package:zpass/res/resources.dart';
-import 'package:zpass/extension/string_ext.dart';
 import 'package:zpass/util/log_utils.dart';
 
 class VaultItemWrapper {
@@ -32,23 +31,7 @@ class VaultItemWrapper {
     final type = VaultItemType.values[raw.type];
     switch (type) {
       case VaultItemType.login:
-        final detail = VaultItemLoginDetail.fromJson(raw.detail);
-        final uri = Uri.tryParse(detail.loginUri ?? "");
-        if (uri == null) {
-          return null;
-        }
-        final hostWithoutWWW = uri.host.replaceAll("www.", "");
-        if (favicons.keys.contains(hostWithoutWWW)) {
-          return favicons[hostWithoutWWW];
-        } else if ((detail.loginUri ?? "").isUrl) {
-          if (detail.loginUri!.startsWith("http")) {
-            return "${uri.origin}/favicon.ico";
-          } else {
-            return "http://${uri.origin}/favicon.ico";
-          }
-        } else {
-          return null;
-        }
+        return parseVaultLoginIconUrl(raw);
       default:
         return null;
     }

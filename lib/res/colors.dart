@@ -6,6 +6,9 @@ class Colours {
   static const Color app_main = Color(0xFF4954FF);
   static const Color dark_app_main = Color(0xFF3F7AE0);
 
+  static const Color app_error = Color(0xFFFF5C53);
+  static const Color dark_app_error = Color(0xFFFF5C53);
+
   static const Color bg_color = Color(0xfff1f1f1);
   static const Color dark_bg_color = Color(0xFF18191A);
 

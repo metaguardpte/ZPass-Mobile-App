@@ -14,7 +14,7 @@ abstract class BaseVaultProvider extends BaseProvider {
     notifyListeners();
   }
 
-  bool _editing = false;
+  bool _editing = true;
   bool get editing => _editing;
   set editing(bool value) {
     if (_editing == value) {

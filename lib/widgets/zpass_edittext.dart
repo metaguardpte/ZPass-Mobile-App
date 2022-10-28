@@ -14,6 +14,7 @@ class ZPassEditText extends StatefulWidget implements PreferredSizeWidget {
   final String? hintText;
   final bool enableClear;
   final bool enablePrefix;
+  final bool enableCopy;
   final TextInputAction action;
   final double borderRadius;
   final Widget? prefix;
@@ -24,7 +25,8 @@ class ZPassEditText extends StatefulWidget implements PreferredSizeWidget {
   final Color? bgColor;
   final Color? focusBgColor;
   final Color? borderColor;
-  final bool? obscureText;
+  final bool obscureText;
+  final int maxLines;
 
   const ZPassEditText({this.hintText,
     this.initialText,
@@ -33,6 +35,7 @@ class ZPassEditText extends StatefulWidget implements PreferredSizeWidget {
     this.borderRadius = 8,
     this.enableClear = true,
     this.enablePrefix = true,
+    this.enableCopy = false,
     this.action = TextInputAction.done,
     this.onChanged,
     this.onSubmitted,
@@ -43,6 +46,7 @@ class ZPassEditText extends StatefulWidget implements PreferredSizeWidget {
     this.focusBgColor,
     this.borderColor = Colors.transparent,
     this.obscureText = false,
+    this.maxLines = 1,
     Key? key})
       : super(key: key);
 
@@ -71,13 +75,14 @@ class ZPassEditTextState extends State<ZPassEditText> {
   @override
   Widget build(BuildContext context) {
     final prefixIcon = widget.prefix ?? const Icon(ZPassIcons.icSearch, color: Colors.grey,);
-    final clear = _buildClear();
-    final secret = _buildSecret();
     final suffixIcon = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        widget.enableClear ? (_controller.text.isNotEmpty ? clear : Gaps.empty) : Gaps.empty,
-        secret,
+        Visibility(
+            visible: widget.enableClear,
+            child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty),
+        Visibility(visible: widget.obscureText, child: _buildSecret()),
+        Visibility(visible: widget.enableCopy, child: _buildCopy()),
       ],
     );
     final prefixIconWidget = Padding(
@@ -90,7 +95,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
 
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       height: widget.height,
       decoration: BoxDecoration(
         color: context.isDark ? Colours.dark_material_bg : bgColor,
@@ -102,8 +107,8 @@ class ZPassEditTextState extends State<ZPassEditText> {
         controller: _controller,
         focusNode: _focus,
         autofocus: widget.autofocus,
-        maxLines: 1,
-        obscureText: widget.obscureText! ? _isSecret : false,
+        maxLines: widget.maxLines,
+        obscureText: widget.obscureText ? _isSecret : false,
         textInputAction: widget.action,
         onSubmitted: (String val) {
           _focus.unfocus();
@@ -118,7 +123,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
         style: TextStyle(fontSize: widget.textSize,),
         decoration: InputDecoration(
           border: InputBorder.none,
-          icon: widget.enablePrefix ? prefixIconWidget : Gaps.empty,
+          icon: widget.enablePrefix ? prefixIconWidget : null,
           hintText: widget.hintText,
           hintStyle: TextStyles.textGray12,
           suffixIcon: suffixIcon,
@@ -160,7 +165,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
   }
 
   Widget _buildSecret() {
-    return widget.obscureText! ? GestureDetector(
+    return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         setState(() {
@@ -175,7 +180,25 @@ class ZPassEditTextState extends State<ZPassEditText> {
           size: 17,
         ),
       ),
-    ) : Gaps.empty;
+    );
+  }
+
+  Widget _buildCopy() {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        if (_controller.text.isEmpty) return;
+        Clipboard.setData(ClipboardData(text: _controller.text));
+      },
+      child: const Padding(
+        padding: EdgeInsets.all(6),
+        child: Icon(
+          ZPassIcons.icCopy,
+          color: Color(0xFF959BA7),
+          size: 17,
+        ),
+      ),
+    );
   }
 
   void requestFocus() {

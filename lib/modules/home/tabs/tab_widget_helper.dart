@@ -32,7 +32,7 @@ Widget renderListItem(BuildContext context, VaultItemWrapper element) {
       child: _renderListContent(context, element));
 }
 
-Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
+Widget renderVaultFavIcon({required int vaultType, String? iconUrl}) {
   final randomColors = faviconColors[
           math.Random().nextInt(100) % faviconColorsGradient.length] ??
       Colours.app_main;
@@ -44,11 +44,10 @@ Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
           color: randomColors,
           borderRadius: BorderRadius.circular(9)),
       child: Icon(
-        VaultItemType.values[element.raw.type].defaultFav,
+        VaultItemType.values[vaultType].defaultFav,
         color: Colors.white,
       ));
-  final iconUrl = element.icon;
-  final favIcon = iconUrl != null
+  return iconUrl != null
       ? ClipRRect(
           borderRadius: BorderRadius.circular(9),
           child: LoadImage(
@@ -56,6 +55,9 @@ Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
             holderError: fallbackIcon,
           ))
       : fallbackIcon;
+}
+
+Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
   final noSubTitle = element.raw.type == VaultItemType.note.index;
   return ListTile(
     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: noSubTitle ? 2 : 0),
@@ -74,7 +76,7 @@ Widget _renderListContent(BuildContext context, VaultItemWrapper element) {
                 //   color: context.textColor2,
                 // ),
                 borderRadius: BorderRadius.circular(9)),
-            child: favIcon),
+            child: renderVaultFavIcon(vaultType: element.raw.type, iconUrl: element.icon)),
       ],
     ),
     title: Text(element.title, style: TextStyle(color: context.textColor1, fontSize: 15, fontWeight: FontWeight.w500),),
