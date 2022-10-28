@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,9 +11,11 @@ import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/plugin_bridge/local_auth/local_auth_manager.dart';
+import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/routers/routers.dart';
+import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_loading_dialog.dart';
@@ -30,6 +33,7 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   late final loadingDialog = ZPassLoadingDialog();
   FocusNode focusNode = FocusNode();
+  Widget _biometricsButton = Gaps.empty;
 
   String recode(String code) {
     if (code.length < 9) return code;
@@ -53,17 +57,22 @@ class _SignInFormState extends State<SignInForm> {
     }
     loadingDialog.show(context, barrierDismissible: false);
     CryptoManager().login(Email, Psw, AppConfig.serverUrl, SeKey).then((value) {
-      UserProvider().userEmail = Email;
-      UserProvider().userSecretKey = SeKey;
       UserProvider().userCryptoKey = UserCryptoKeyModel.fromJson(value);
-      UserProvider().updateSignInList({"email": Email, "key": SeKey});
-      loadingDialog.dismiss(context);
-      NavigatorUtils.push(context, Routers.home, clearStack: true);
+      _loginSuccess();
+      UserProvider().putUserLastLoginTime(DateTime.now());
     }).catchError((error) {
       loadingDialog.dismiss(context);
       Toast.showSpec(S.current.loginFail);
     });
     //submit
+  }
+
+  _loginSuccess() {
+    UserProvider().userEmail = Email;
+    UserProvider().userSecretKey = SeKey;
+    UserProvider().updateSignInList({"email": Email, "key": SeKey});
+    loadingDialog.dismiss(context);
+    NavigatorUtils.push(context, Routers.home, clearStack: true);
   }
 
   var SeKey = '';
@@ -123,20 +132,46 @@ class _SignInFormState extends State<SignInForm> {
     emailController.text = Email;
   }
 
-  void _localAuth() async {
+  void _checkLocalAuth() async {
     if (!UserProvider().getUserBiometrics()) return;
     final result = await LocalAuthManager().canAuth();
     if (result) {
-      final auth = await LocalAuthManager().authenticate();
-      Log.d("local auth result is:$auth");
+      _buildUserBiometricsBtn();
+      final isExpired = UserProvider().checkBiometricsIsExpired();
+      if (!isExpired) {
+        _doAuthenticate();
+      }
     }
+  }
+
+  void _doAuthenticate() async {
+    final auth = await LocalAuthManager().authenticate();
+    Log.d("local auth result is:$auth");
+    if (auth) {
+      _doOfflineLogin();
+    }
+  }
+
+  void _doOfflineLogin() {
+    final userInfo = UserProvider().userInfo;
+    CryptoManager().offlineLogin(
+      userInfo.email ?? "",
+      userInfo.userCryptoKey?.masterKeyExported ?? "",
+      userInfo.userCryptoKey?.masterKeyHash ?? "",
+      userInfo.userCryptoKey?.personalDataKey ?? "",
+      userInfo.userCryptoKey?.enterpriseDataKey ?? "",
+    ).then((value) {
+      _loginSuccess();
+    }).catchError((error) {
+      Toast.showSpec(S.current.loginFail);
+    });
   }
 
   @override
   void initState() {
     super.initState();
     _initDefaultValue();
-    _localAuth();
+    _checkLocalAuth();
     // 添加listener监听
     // 对应的TextField失去或者获取焦点都会回调此监听
     focusNode.addListener(() {
@@ -223,9 +258,17 @@ class _SignInFormState extends State<SignInForm> {
                         Color.fromRGBO(67, 66, 255, 1)
                       ]),
                   borderRadius: BorderRadius.all(Radius.circular(23))),
-              child: Text(
-                S.current.login,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Text(
+                      S.current.login,
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  _biometricsButton,
+                ],
               ),
             )),
         Container(
@@ -293,5 +336,36 @@ class _SignInFormState extends State<SignInForm> {
         ),
       ],
     );
+  }
+
+  void _buildUserBiometricsBtn() async {
+    IconData icon = await _fetchBiometricsBtnIcon();
+    _biometricsButton = Row(
+      children: [
+        const Spacer(),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 12),
+          child: VerticalDivider(
+            color: Color.fromRGBO(255, 255, 255, 0.28),
+          ),
+        ),
+        Gaps.hGap5,
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: _doAuthenticate,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            child: Icon(icon, size: 24, color: Colors.white,),
+          ),
+        )
+      ],
+    );
+   setState(() {});
+  }
+
+  Future<IconData> _fetchBiometricsBtnIcon() async {
+    if (Device.isAndroid) return ZPassIcons.icBiometrics;
+    final bool isSupportedFacID = await LocalAuthManager().isSupportedFaceID();
+    return isSupportedFacID ? ZPassIcons.icFaceID : ZPassIcons.icFingerprint;
   }
 }

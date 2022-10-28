@@ -59,4 +59,5 @@ class ZPassIcons {
   static const IconData icSave = IconData(0xe700, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icEditing = IconData(0xe701, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icPhoto = IconData(0xe6e4, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icRequirePassword = IconData(0xe6fd, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

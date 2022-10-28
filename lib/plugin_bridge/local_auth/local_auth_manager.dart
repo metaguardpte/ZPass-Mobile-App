@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:zpass/util/log_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 
 class LocalAuthManager {
   factory LocalAuthManager() => _instance;
@@ -56,6 +57,7 @@ class LocalAuthManager {
       return result;
     } on PlatformException catch(e) {
       Log.e("authenticate fail, code:${e.code}, message:${e.message}", tag: _tag);
+      Toast.showSpec(e.message, type: ToastType.error);
       return Future.value(false);
     }
   }

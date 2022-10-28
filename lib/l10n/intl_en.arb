@@ -60,6 +60,13 @@
 
   "UnlockWithBiometrics":"Unlock with Biometrics",
   "settingConfirmMasterPassword": "Confirm Master Password",
+  "settingRequirePassword": "Require Password",
+  "settingRequirePasswordDays": "Every {day} days",
+  "@settingRequirePasswordDays": {
+    "placeholders": {
+      "day": {}
+    }
+  },
 
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",
@@ -162,7 +169,7 @@
   "err_record_not_found": "Record is not found",
   "err_server_error": "Server Error",
   "err_user_not_found": "User is not found",
-  "err_time_out": "Request time out",
+  "err_time_out": "Request timeout",
   "err_internal_error": "Internal Error",
   "err_forbidden": "Request forbidden",
   "err_unknown_error": "Unknown Error",
