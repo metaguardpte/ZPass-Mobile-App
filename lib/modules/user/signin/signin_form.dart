@@ -43,16 +43,13 @@ class _SignInFormState extends State<SignInForm> {
 
   void handelSignIn() {
     if (Email.isEmpty) {
-      Toast.showSpec(S.current.signinTip + S.current.email,
-          type: ToastType.error);
+      Toast.showError(S.current.signinTip + S.current.email);
       return;
     } else if (Psw.isEmpty) {
-      Toast.showSpec(S.current.signinTip + S.current.password,
-          type: ToastType.error);
+      Toast.showError(S.current.signinTip + S.current.password);
       return;
     } else if (SeKey.isEmpty) {
-      Toast.showSpec(S.current.signinTip + S.current.seKey,
-          type: ToastType.error);
+      Toast.showError(S.current.signinTip + S.current.seKey);
       return;
     }
     loadingDialog.show(context, barrierDismissible: false);
@@ -98,9 +95,8 @@ class _SignInFormState extends State<SignInForm> {
   getQRCode() {
     Permission.camera.request().then((status) {
       if (!status.isGranted) {
-        Toast.showSpec(
-            'No Camera Permission , Please go to the system settings to open the permission',
-            type: ToastType.error);
+        Toast.showError(
+            'No Camera Permission , Please go to the system settings to open the permission');
         return;
       }
       NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {

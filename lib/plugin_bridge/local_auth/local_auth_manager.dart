@@ -64,7 +64,7 @@ class LocalAuthManager {
       return result;
     } on PlatformException catch(e) {
       Log.e("authenticate fail, code:${e.code}, message:${e.message}", tag: _tag);
-      Toast.showSpec(e.message, type: ToastType.error);
+      Toast.showError(e.message);
       return Future.value(false);
     }
   }

@@ -15,6 +15,20 @@ class Toast {
     return showSpec(msg);
   }
 
+  static ToastFuture? showError(String? msg) {
+    if (msg == null) {
+      return null;
+    }
+    return showSpec(msg, type: ToastType.error);
+  }
+
+  static ToastFuture? showWaring(String? msg) {
+    if (msg == null) {
+      return null;
+    }
+    return showSpec(msg, type: ToastType.warning);
+  }
+
   static ToastFuture? showSpec(String? msg, {ToastType type = ToastType.info}) {
     if (msg == null) {
       return null;
