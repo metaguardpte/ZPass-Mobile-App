@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flkv/flkv.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:synchronized/synchronized.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
@@ -16,10 +15,9 @@ import 'record_entity.dart';
 ///
 class ZPassDB {
 
-  ZPassDB._privateConstructor();
+  ZPassDB._();
 
-  static final ZPassDB _instance = ZPassDB._privateConstructor();
-  static final Lock lock = Lock(reentrant:true);
+  static final ZPassDB _instance = ZPassDB._();
 
   factory ZPassDB(){
     return _instance;
@@ -117,7 +115,7 @@ class ZPassDB {
         dbPath = join(applicationDocDir.path, "zpass");
       }
       if (!_opened) {
-        Log.d("open db with path: ${dbPath}");
+        Log.d("open db with path: $dbPath");
         _db = LevelDB(dbPath);
         await _db.open();
         _opened = true;
