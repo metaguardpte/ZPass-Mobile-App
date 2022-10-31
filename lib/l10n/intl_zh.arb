@@ -186,6 +186,11 @@
   "err_duplicate_login": "账户密码(页面链接和用户名)已存在。",
   "err_email_duplicate_domain_owner": "邮箱地址已经注册了商业帐号",
 
+  "noSecureNotes":"Not added yet",
+  "none":"None",
+  "title":"Title",
+  "note":"Note"
+
   "vaultTitle": "标题",
   "vaultLoginName": "登录账号",
   "vaultLoginPwd": "登录密码",

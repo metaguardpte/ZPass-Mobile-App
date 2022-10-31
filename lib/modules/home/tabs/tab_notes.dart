@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/model/vault_item_wrapper.dart';
 import 'package:zpass/modules/home/provider/tab_vault_item_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
@@ -15,7 +16,7 @@ class TabNotesPage extends StatefulWidget {
 class _TabNotesPageState extends TabBasePageState<TabNotesPage,
     VaultItemWrapper, TabVaultItemProvider> {
   @override
-  String get emptyTips => "No Notes";
+  String get emptyTips => S.current.noSecureNotes;
 
   @override
   String get emptyImage => "home/empty_notes";
