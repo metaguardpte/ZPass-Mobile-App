@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
+import 'package:zpass/modules/home/provider/home_provider.dart';
 import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
 import 'package:zpass/modules/vault/vault_item_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
@@ -10,7 +11,7 @@ import 'package:zpass/util/log_utils.dart';
 class LoginDetailProvider extends BaseVaultProvider {
   static const String _tag = "LoginDetailProvider";
 
-  LoginDetailProvider(super.db);
+  LoginDetailProvider(): super(HomeProvider().repoDB);
 
   String? get targetUrl {
     if (entity == null) return null;

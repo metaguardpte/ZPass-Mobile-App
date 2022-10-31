@@ -64,7 +64,7 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
       if (result["changed"] == true) {
         provider.fetchData(reset: true);
       }
-    }, arguments: {"item": item.raw, "db": provider.repoDB});
+    }, arguments: {"item": item.raw});
   }
 
   @override

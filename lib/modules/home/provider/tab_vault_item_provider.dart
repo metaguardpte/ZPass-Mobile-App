@@ -1,4 +1,5 @@
 import 'package:zpass/modules/home/model/vault_item_wrapper.dart';
+import 'package:zpass/modules/home/provider/home_provider.dart';
 import 'package:zpass/modules/home/provider/tab_base_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/repo/repo_db.dart';
@@ -10,10 +11,8 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemWrapper> {
   final VaultItemType type;
   late final RepoDB _repoDB;
 
-  RepoDB get repoDB => _repoDB;
-
   TabVaultItemProvider({required this.type}) {
-    _repoDB = RepoDB();
+    _repoDB = HomeProvider().repoDB;
   }
 
   @override
@@ -56,7 +55,5 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemWrapper> {
   @override
   void dispose() {
     super.dispose();
-    _repoDB.close();
   }
-
 }

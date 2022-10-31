@@ -19,7 +19,6 @@ import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
 import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/signin/signin_by_scanner.dart';
 import 'package:zpass/modules/vault/vault_item_picker.dart';
-import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -76,9 +75,9 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
     Log.d("APP State: ${state.toString()}", tag: "AppLifecycleState");
     if (state == AppLifecycleState.resumed) {
     } else if (state == AppLifecycleState.paused) {
-      ZPassDB().flush();
+      provider.repoDB.flush();
     } else if (state == AppLifecycleState.detached) {
-      ZPassDB().close();
+      provider.repoDB.close();
     } else {
 
     }
@@ -188,5 +187,6 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+    provider.repoDB.close();
   }
 }
