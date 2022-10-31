@@ -36,6 +36,8 @@
      }
    },
 
+  "unlockWithBiometrics": "Unlock with Biometrics",
+
   "General":"GENERAL",
   "Language":"Language",
   "DataRoaming":"Data Roaming",

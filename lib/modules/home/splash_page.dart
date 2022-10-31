@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:zpass/main_initializer.dart';
 import 'package:zpass/modules/user/router_user.dart';
@@ -32,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
       // fake auth
       MainInitializer.initAfterAuthorize().then((credentialExist) {
         if (credentialExist) {
-          NavigatorUtils.push(context, RouterUser.login, clearStack: true);
+          NavigatorUtils.push(context, RouterUser.login,  clearStack: true, arguments: {"data": jsonEncode({ "canAuth": true })});
         } else {
           NavigatorUtils.push(context, Routers.loginOrNew, clearStack: true);
         }

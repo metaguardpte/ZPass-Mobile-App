@@ -124,15 +124,19 @@ class _SignInFormState extends State<SignInForm> {
 
   void _initDefaultValue() {
     final userinfo = UserProvider().userInfo;
-    if ((widget.data ?? userinfo.email ?? "").isEmpty) return;
-    final defaultValue = jsonDecode(widget.data ?? "{}");
-    Email = defaultValue["email"] ?? userinfo.email ?? "";
-    SeKey = defaultValue["secretKey"] ?? userinfo.secretKey ?? "";
+    if ((userinfo.email ?? "").isEmpty) return;
+    Email = userinfo.email ?? "";
+    SeKey = userinfo.secretKey ?? "";
     SeKeyController.text = recode(SeKey);
     emailController.text = Email;
   }
 
   void _checkLocalAuth() async {
+    if ((widget.data ?? "").isEmpty) return;
+    final param = jsonDecode(widget.data!);
+    final canAuth = param["canAuth"] ?? false;
+    if (!canAuth) return;
+
     if (!UserProvider().getUserBiometrics()) return;
     final result = await LocalAuthManager().canAuth();
     if (result) {

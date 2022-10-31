@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/user/register/router_register.dart';
@@ -9,7 +11,7 @@ class LoginOrNewPage extends StatelessWidget {
   const LoginOrNewPage({Key? key}) : super(key: key);
 
   toLoginPage(context) {
-    NavigatorUtils.push(context,RouterUser.login);
+    NavigatorUtils.push(context,RouterUser.login, arguments: {"data": jsonEncode({ "canAuth": true })});
   }
 
   toCreateAccountPage(context) {
