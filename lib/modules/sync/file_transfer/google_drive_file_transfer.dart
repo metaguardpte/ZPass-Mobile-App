@@ -1,4 +1,3 @@
-
 import 'dart:core';
 import 'dart:io';
 
@@ -11,19 +10,22 @@ import "package:http/http.dart" as http;
 import 'package:_discoveryapis_commons/_discoveryapis_commons.dart' as commons;
 import 'package:zpass/util/log_utils.dart';
 
-
 class GoogleDriveFileTransferManager extends BaseFileTransferManager {
+  GoogleSignIn? _googleSignIn;
+  GoogleSignInAccount? _account;
   drive.DriveApi? _driveApi;
   final _defaultDir = "zpass";
+  final _defaultUserDir = "sync-";
 
   @override
-  Future<String> doDownload() async {
-    if (_driveApi == null){
+  Future<String> doDownload(String userId) async {
+    if (_account == null) {
       await _signinUser();
     }
 
-    String? fileId = await getDefaultFileId(_driveApi!);
-    Object result = await _driveApi!.files.get(fileId!, downloadOptions: commons.DownloadOptions.fullMedia);
+    String? fileId = await _getDefaultFileId(_driveApi!, userId);
+    Object result = await _driveApi!.files
+        .get(fileId!, downloadOptions: commons.DownloadOptions.fullMedia);
     result as commons.Media;
 
     List<int> dataStore = [];
@@ -31,58 +33,87 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
     String tempPath = tempDir.path;
     String uniqueFile = "${getUniqueDir()}.7z";
 
+    String zipFile = '$tempPath$separator$userId$separator$uniqueFile';
     await result.stream.listen((data) {
       dataStore.insertAll(dataStore.length, data);
     }, onDone: () async {
-      File file = File('$tempPath/$uniqueFile');
+      File file = File(zipFile);
       await file.writeAsBytes(dataStore);
     }, onError: (error) {
       Log.e("download $fileId from google dirve failed:${error.toString()}");
     });
 
-    return uniqueFile;
+    return zipFile;
   }
 
   @override
-  Future doUpload(String source, {String dest = ''}) async {
-    if (_driveApi == null){
+  Future doUpload(String source, String userId) async {
+    if (_account == null) {
       await _signinUser();
     }
 
     File sourceFile = File(source);
     drive.File fileToUpload = drive.File();
     fileToUpload.name = defaultZipFileName;
-    if (dest.isEmpty) {
-      String? folderId = await _getFolderId(_driveApi!);
-      fileToUpload.parents = [folderId!];
-    }
+
     try {
-      await _driveApi?.files.create(
-        fileToUpload,
-        uploadMedia: drive.Media(sourceFile.openRead(), sourceFile.lengthSync()),
-      );
-    }catch (e) {
+      var zipFileId = await _getDefaultFileId(_driveApi!, userId);
+      if (zipFileId == null) {
+        String? defaultFolderId = await _getDefaultDirId(_driveApi!);
+        String? userFolderId =
+            await _getUserDirId(_driveApi!, defaultFolderId!, userId);
+
+        fileToUpload.parents = [userFolderId!];
+
+        await _driveApi?.files.create(
+          fileToUpload,
+          uploadMedia:
+              drive.Media(sourceFile.openRead(), sourceFile.lengthSync()),
+        );
+      } else {
+        await _driveApi?.files.update(fileToUpload, zipFileId);
+      }
+    } catch (e) {
       Log.e("upload to google dirve failed:${e.toString()}");
     }
   }
 
   Future _signinUser() async {
-    final googleSignIn =
-    signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
-    GoogleSignInAccount? account = await googleSignIn.signIn();
-    final authHeaders = await account!.authHeaders;
-    final authenticateClient = GoogleAuthClient(authHeaders);
-    _driveApi = drive.DriveApi(authenticateClient);
+    try {
+      _googleSignIn =
+          signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+      _account = await _googleSignIn!.signIn();
+      final authHeaders = await _account!.authHeaders;
+      final authenticateClient = GoogleAuthClient(authHeaders);
+      _driveApi = drive.DriveApi(authenticateClient);
+    } catch (error) {
+      Log.e("google signout failed:$error");
+    }
   }
 
-  Future<String?> getDefaultFileId(drive.DriveApi driveApi) async {
-    final folderId = await _getFolderId(driveApi);
+  Future<void> _signOutUser() async {
+    try {
+      await _googleSignIn!.disconnect();
+      _account = null;
+      _driveApi = null;
+    } catch (error) {
+      Log.e("google signout failed:$error");
+    }
+  }
+
+  Future<String?> _getDefaultFileId(
+      drive.DriveApi driveApi, String userId) async {
+    final defaultFolderId = await _getDefaultDirId(driveApi);
+    final userFolderId =
+        await _getUserDirId(driveApi, defaultFolderId!, userId);
+
     drive.FileList fileList = await driveApi.files.list(
       spaces: 'drive',
-      q: "'$folderId' in parents",
+      q: "'$userFolderId' in parents",
     );
 
-    var myListFiltered = fileList.files!.where((e) => e.name == defaultZipFileName);
+    var myListFiltered =
+        fileList.files!.where((e) => e.name == defaultZipFileName);
     if (myListFiltered.isEmpty) {
       return null;
     } else {
@@ -90,7 +121,39 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
     }
   }
 
-  Future<String?> _getFolderId(drive.DriveApi driveApi) async {
+  Future<String?> _getUserDirId(
+      drive.DriveApi driveApi, String defaultFileId, String userId) async {
+    const mimeType = "application/vnd.google-apps.folder";
+    var defaultUserFolderName = '$_defaultUserDir$userId';
+    try {
+      final found = await driveApi.files.list(
+        q: "mimeType = '$mimeType' and name = '$defaultUserFolderName'",
+        $fields: "files(id, name)",
+      );
+      final files = found.files;
+      if (files == null) {
+        return null;
+      }
+      // The folder already exists
+      if (files.isNotEmpty) {
+        return files.first.id;
+      }
+
+      // Create a folder
+      var folder = drive.File();
+      folder.name = defaultUserFolderName;
+      folder.mimeType = mimeType;
+      folder.parents = [defaultFileId];
+
+      final folderCreation = await driveApi.files.create(folder);
+      return folderCreation.id;
+    } catch (e) {
+      Log.e("get google dirve user folderId failed:${e.toString()}");
+      return null;
+    }
+  }
+
+  Future<String?> _getDefaultDirId(drive.DriveApi driveApi) async {
     const mimeType = "application/vnd.google-apps.folder";
 
     try {
@@ -115,11 +178,10 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
       final folderCreation = await driveApi.files.create(folder);
       return folderCreation.id;
     } catch (e) {
-      Log.e("get google dirve folderId failed:${e.toString()}");
+      Log.e("get google dirve default folderId failed:${e.toString()}");
       return null;
     }
   }
-
 }
 
 class GoogleAuthClient extends http.BaseClient {
