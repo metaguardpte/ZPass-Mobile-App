@@ -50,9 +50,12 @@ class ZPassIcons {
   static const IconData icInfo = IconData(0xe6dd, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icLock = IconData(0xe6e5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSecretKey = IconData(0xe6e9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icFingerprint = IconData(0xe6d5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icFaceID = IconData(0xe6df, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData icBiometrics = IconData(0xe6fe, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icFaceID = IconData(0xe702, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icFaceIDWarn = IconData(0xe703, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icFingerprintWarn = IconData(0xe704, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icFingerprint = IconData(0xe705, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icBiometrics = IconData(0xe706, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icBiometricsWarn = IconData(0xe707, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
   /// vault item detail icons
   static const IconData icOperate = IconData(0xe6ff, fontFamily: _kFontFam, fontPackage: _kFontPkg);
