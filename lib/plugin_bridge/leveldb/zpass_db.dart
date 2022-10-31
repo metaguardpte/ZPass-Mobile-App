@@ -109,6 +109,10 @@ class ZPassDB {
     return entities;
   }
 
+  Future<bool> flush() async {
+    return _db.flush();
+  }
+
   Future<void> open({String path=""}) async {
     if (!_opened) {
       var dbPath = path;
