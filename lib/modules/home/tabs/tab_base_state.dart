@@ -11,7 +11,7 @@ import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/common_widgets.dart';
 import 'package:zpass/widgets/grouped_list/grouped_list.dart';
 import 'package:zpass/widgets/load_image.dart';
-import 'package:zpass/widgets/zpass_edittext.dart';
+import 'package:zpass/widgets/zpass_form_edittext.dart';
 
 abstract class TabBasePageState<V extends StatefulWidget, T,
     P extends TabBaseProvider<T>> extends AliveProviderState<V, P> {
@@ -73,7 +73,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
 
   Widget _buildSearchInput() {
     return Expanded(
-      child: ZPassEditText(
+      child: ZPassFormEditText(
         hintText: "Search",
         height: 35,
         action: TextInputAction.search,
@@ -81,8 +81,9 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
         onChanged: onSearchValueChanged,
         borderRadius: 17.25,
         bgColor: const Color(0xFFEAEBED),
-        focusBgColor: Colors.white,
         textSize: 14,
+        filled: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 3),
       ),
     );
   }

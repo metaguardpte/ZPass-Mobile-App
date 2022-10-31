@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zpass/extension/int_ext.dart';
+import 'package:zpass/extension/string_ext.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
-import 'package:zpass/modules/home/repo/repo_db.dart';
 import 'package:zpass/modules/vault/login/login_detail_helper.dart';
 import 'package:zpass/modules/vault/login/login_detail_provider.dart';
 import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
@@ -12,13 +12,12 @@ import 'package:zpass/res/resources.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/zpass_card.dart';
-import 'package:zpass/widgets/zpass_edittext.dart';
+import 'package:zpass/widgets/zpass_form_edittext.dart';
 
 class LoginDetailPage extends StatefulWidget {
-  final VaultItemEntity data;
-  final RepoDB db;
+  final VaultItemEntity? data;
 
-  const LoginDetailPage({Key? key, required this.data, required this.db})
+  const LoginDetailPage({Key? key, this.data})
       : super(key: key);
 
   @override
@@ -30,9 +29,9 @@ class _LoginDetailPageState
   static const double itemHeight = 30, space = 12;
 
   final _formKey = GlobalKey<FormState>();
-  final _loginNameKey = GlobalKey<ZPassEditTextState>();
-  final _loginPwdKey = GlobalKey<ZPassEditTextState>();
-  final _loginNoteKey = GlobalKey<ZPassEditTextState>();
+  final _loginNameKey = GlobalKey<ZPassFormEditTextState>();
+  final _loginPwdKey = GlobalKey<ZPassFormEditTextState>();
+  final _loginNoteKey = GlobalKey<ZPassFormEditTextState>();
 
   @override
   void initState() {
@@ -45,7 +44,7 @@ class _LoginDetailPageState
 
   @override
   LoginDetailProvider prepareProvider() {
-    return LoginDetailProvider(widget.db);
+    return LoginDetailProvider();
   }
 
   @override
@@ -94,45 +93,80 @@ class _LoginDetailPageState
             children: [
               buildHint(context, S.current.vaultTitle, star: editing),
               Gaps.vGap8,
-              ZPassEditText(
+              ZPassFormEditText(
                 initialText: provider.entity?.name,
                 hintText: emptyHint,
                 prefix: buildLoginFav(context, provider.entity),
+                filled: true,
+                enable: editing,
                 enableClear: editing,
                 enableCopy: !editing,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter item name";
+                  }
+                  return null;
+                },
               ),
               Gaps.vGap16,
               buildHint(context, S.current.vaultLoginName, star: editing),
               Gaps.vGap8,
-              ZPassEditText(
+              ZPassFormEditText(
                 key: _loginNameKey,
                 initialText: content?.loginUser,
                 hintText: emptyHint,
+                filled: true,
+                enable: editing,
                 enablePrefix: false,
                 enableClear: editing,
                 enableCopy: !editing,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter login name";
+                  }
+                  return null;
+                },
               ),
               Gaps.vGap16,
               buildHint(context, S.current.vaultLoginPwd, star: editing),
               Gaps.vGap8,
-              ZPassEditText(
+              ZPassFormEditText(
                 key: _loginPwdKey,
                 initialText: content?.loginPassword,
                 hintText: emptyHint,
                 obscureText: !editing,
+                filled: true,
+                enable: editing,
                 enablePrefix: false,
                 enableClear: editing,
                 enableCopy: !editing,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter login password";
+                  }
+                  return null;
+                },
               ),
               Gaps.vGap16,
               buildHint(context, S.current.vaultLoginURL, star: editing),
               Gaps.vGap8,
-              ZPassEditText(
+              ZPassFormEditText(
                 initialText: provider.targetUrl,
                 hintText: emptyHint,
+                filled: true,
+                enable: editing,
                 enablePrefix: false,
                 enableClear: editing,
                 enableCopy: !editing,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter login page url";
+                  }
+                  if (!(value as String).isUrl) {
+                    return "Please enter valid url";
+                  }
+                  return null;
+                },
               ),
             ],
           )),
@@ -147,10 +181,12 @@ class _LoginDetailPageState
           children: [
             buildHint(context, S.current.vaultNote, star: false),
             Gaps.vGap8,
-            ZPassEditText(
+            ZPassFormEditText(
               key: _loginNoteKey,
               initialText: content?.note,
               hintText: emptyHint,
+              filled: true,
+              enable: editing,
               enablePrefix: false,
               enableClear: editing,
               enableCopy: !editing,
@@ -257,5 +293,14 @@ class _LoginDetailPageState
             )),
       ],
     );
+  }
+
+  @override
+  void onEditPress() {
+    //try to save
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    provider.editing = !provider.editing;
   }
 }
