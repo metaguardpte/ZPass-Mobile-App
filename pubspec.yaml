@@ -75,6 +75,7 @@ dependencies:
   local_auth: ^2.1.2
   googleapis: ^9.2.0
   google_sign_in: ^5.4.2
+  uuid: ^3.0.6
 
 dev_dependencies:
   flutter_test:

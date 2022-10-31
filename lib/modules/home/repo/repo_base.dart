@@ -18,7 +18,7 @@ abstract class RepoBase<T> {
   ///
   /// 删除数据项
   ///
-  bool remove(T item);
+  Future<bool> remove(T item);
 
   ///
   /// 条件删除数据项
@@ -28,7 +28,7 @@ abstract class RepoBase<T> {
   ///
   /// 增加数据项
   ///
-  bool add(T item);
+  Future<bool> add(T item);
 
   ///
   /// 增加数据列表

@@ -213,6 +213,7 @@ class ZPassDB {
   }
 
   E? _toEntity<E extends RecordEntity>(String key, String jsonStr) {
+    Log.d("record key: $key", tag: "ZPassDB");
     Map<String, dynamic> jsonMap = jsonDecode(jsonStr);
     VaultItemEntity entity = VaultItemEntity.fromJson(jsonMap);
     return entity as E;

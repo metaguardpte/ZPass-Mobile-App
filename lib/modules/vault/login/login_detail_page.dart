@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:zpass/extension/int_ext.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
+import 'package:zpass/modules/home/repo/repo_db.dart';
 import 'package:zpass/modules/vault/login/login_detail_helper.dart';
 import 'package:zpass/modules/vault/login/login_detail_provider.dart';
 import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
@@ -14,9 +15,11 @@ import 'package:zpass/widgets/zpass_card.dart';
 import 'package:zpass/widgets/zpass_edittext.dart';
 
 class LoginDetailPage extends StatefulWidget {
-  final VaultItemEntity? data;
+  final VaultItemEntity data;
+  final RepoDB db;
 
-  const LoginDetailPage({Key? key, required this.data}) : super(key: key);
+  const LoginDetailPage({Key? key, required this.data, required this.db})
+      : super(key: key);
 
   @override
   State<LoginDetailPage> createState() => _LoginDetailPageState();
@@ -42,7 +45,7 @@ class _LoginDetailPageState
 
   @override
   LoginDetailProvider prepareProvider() {
-    return LoginDetailProvider();
+    return LoginDetailProvider(widget.db);
   }
 
   @override

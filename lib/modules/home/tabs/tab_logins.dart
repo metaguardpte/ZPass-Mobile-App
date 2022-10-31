@@ -7,6 +7,7 @@ import 'package:zpass/modules/home/tabs/tab_base_state.dart';
 import 'package:zpass/modules/home/tabs/tab_widget_helper.dart';
 import 'package:zpass/modules/vault/vault_routers.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/util/log_utils.dart';
 
 class TabLoginsPage extends StatefulWidget {
   const TabLoginsPage({Key? key}) : super(key: key);
@@ -55,8 +56,15 @@ class _TabLoginsPageState extends TabBasePageState<TabLoginsPage,
 
   @override
   void onItemClicked(VaultItemWrapper item) {
-    NavigatorUtils.push(context, RoutersVault.vaultDetailLogin,
-        arguments: {"item": item.raw});
+    NavigatorUtils.pushResult(context, RoutersVault.vaultDetailLogin,
+        (dynamic result) {
+      Log.d(
+          "${RoutersVault.vaultDetailLogin} router result: ${result?.toString()}",
+          tag: "TabLoginsPageState");
+      if (result["changed"] == true) {
+        provider.fetchData(reset: true);
+      }
+    }, arguments: {"item": item.raw, "db": provider.repoDB});
   }
 
   @override

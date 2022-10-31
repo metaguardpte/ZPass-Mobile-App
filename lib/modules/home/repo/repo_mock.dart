@@ -5,9 +5,9 @@ import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 
 class RepoMock extends RepoBase<VaultItemEntity> {
   @override
-  bool add(VaultItemEntity item) {
+  Future<bool> add(VaultItemEntity item) {
     rawData.add(item);
-    return true;
+    return Future.value(true);
   }
 
   @override
@@ -84,8 +84,9 @@ class RepoMock extends RepoBase<VaultItemEntity> {
   }
 
   @override
-  bool remove(VaultItemEntity item) {
-    return rawData.remove(item);
+  Future<bool> remove(VaultItemEntity item) {
+    rawData.remove(item);
+    return Future.value(true);
   }
 
   @override
@@ -96,6 +97,6 @@ class RepoMock extends RepoBase<VaultItemEntity> {
 
   @override
   void close() {
-
+    rawData.clear();
   }
 }

@@ -30,4 +30,9 @@ class VaultItemEntity extends RecordEntity {
 
   @override
   Map<String, dynamic> toJson() => _$VaultItemEntityToJson(this);
+
+  @override
+  String getEntityKey() {
+    return "!vaultItem!$id";
+  }
 }

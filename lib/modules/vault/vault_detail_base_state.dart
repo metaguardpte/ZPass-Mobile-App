@@ -6,6 +6,9 @@ import 'package:zpass/modules/vault/vault_item_provider.dart';
 import 'package:zpass/res/colors.dart';
 import 'package:zpass/res/styles.dart';
 import 'package:zpass/res/zpass_icons.dart';
+import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/util/log_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/common_widgets.dart';
 
 abstract class BaseVaultPageState<V extends StatefulWidget,
@@ -98,6 +101,22 @@ abstract class BaseVaultPageState<V extends StatefulWidget,
   void onMorePress() {}
 
   void onMenuPress(int index) {
-
+    switch (index) {
+      case 1:
+        //delete
+        provider.removeData().then((succeed) {
+          if (succeed) {
+            Toast.show("Item deleted: ${provider.entity?.name ?? ""}");
+            NavigatorUtils.goBackWithParams(context, {"changed": true});
+          } else {
+            Toast.showError("Failed to delete");
+          }
+        }).catchError((e) {
+          Toast.showError("Failed to delete: $e");
+        });
+        break;
+      default:
+        Log.d("not processed menu: $index", tag: "VaultDetailBaseState");
+    }
   }
 }

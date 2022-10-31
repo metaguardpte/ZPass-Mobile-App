@@ -10,6 +10,8 @@ class TabVaultItemProvider extends TabBaseProvider<VaultItemWrapper> {
   final VaultItemType type;
   late final RepoDB _repoDB;
 
+  RepoDB get repoDB => _repoDB;
+
   TabVaultItemProvider({required this.type}) {
     _repoDB = RepoDB();
   }

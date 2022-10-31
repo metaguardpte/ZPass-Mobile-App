@@ -1,11 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
+import 'package:zpass/modules/home/repo/repo_db.dart';
 
 abstract class BaseVaultProvider extends BaseProvider {
 
-  Future<dynamic> analyticsData(VaultItemEntity? data) {
-    return Future.value(null);
-  }
+  @protected
+  late final RepoDB db;
+
+  BaseVaultProvider(this.db);
 
   VaultItemEntity? _entity;
   VaultItemEntity? get entity => _entity;
@@ -32,5 +35,16 @@ abstract class BaseVaultProvider extends BaseProvider {
     }
     _loading = value;
     notifyListeners();
+  }
+
+  Future<dynamic> analyticsData(VaultItemEntity? data) {
+    return Future.value(null);
+  }
+
+  Future<dynamic> removeData() {
+    if (entity == null) {
+      return Future.error("vault entity is null");
+    }
+    return db.remove(entity!);
   }
 }

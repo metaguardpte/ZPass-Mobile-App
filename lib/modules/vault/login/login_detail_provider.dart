@@ -10,6 +10,8 @@ import 'package:zpass/util/log_utils.dart';
 class LoginDetailProvider extends BaseVaultProvider {
   static const String _tag = "LoginDetailProvider";
 
+  LoginDetailProvider(super.db);
+
   String? get targetUrl {
     if (entity == null) return null;
     final detail = VaultItemLoginDetail.fromJson(entity!.detail);

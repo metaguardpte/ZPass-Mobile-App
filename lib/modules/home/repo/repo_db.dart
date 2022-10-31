@@ -10,9 +10,8 @@ class RepoDB extends RepoBase<VaultItemEntity> {
   late ZPassDB _db;
 
   @override
-  bool add(VaultItemEntity item) {
-    // TODO: implement add
-    throw UnimplementedError();
+  Future<bool> add(VaultItemEntity item) {
+    return _db.put(item);
   }
 
   @override
@@ -28,8 +27,7 @@ class RepoDB extends RepoBase<VaultItemEntity> {
 
   @override
   Future<bool> flush() {
-    // TODO: implement flush
-    throw UnimplementedError();
+    return _db.flush();
   }
 
   @override
@@ -41,9 +39,8 @@ class RepoDB extends RepoBase<VaultItemEntity> {
   }
 
   @override
-  bool remove(VaultItemEntity item) {
-    // TODO: implement remove
-    throw UnimplementedError();
+  Future<bool> remove(VaultItemEntity item) {
+    return _db.delete(item.getEntityKey());
   }
 
   @override
