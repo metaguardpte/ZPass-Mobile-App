@@ -13,7 +13,7 @@ class SyncTask {
     BaseFileTransferManager fileTransferManager = _getFileTransferManager();
     var unzipDBFolder = await fileTransferManager.download("");
 
-    DBSyncUnit.sync(unzipDBFolder);
+    DBSyncUnit.sync(unzipDBFolder!);
 
     var localDBPath = ZPassDB().getDBPath();
     fileTransferManager.upload(localDBPath, "");

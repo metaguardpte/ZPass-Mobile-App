@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
@@ -14,6 +15,8 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
   GoogleSignIn? _googleSignIn;
   GoogleSignInAccount? _account;
   drive.DriveApi? _driveApi;
+  final _completer = Completer<String>();
+
   final _defaultDir = "zpass";
   final _defaultUserDir = "sync-";
 
@@ -33,17 +36,23 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
     String tempPath = tempDir.path;
     String uniqueFile = "${getUniqueDir()}.7z";
 
-    String zipFile = '$tempPath$separator$userId$separator$uniqueFile';
-    await result.stream.listen((data) {
+    //folder name with only number is FORBIDDEN!
+    String zipFile = '$tempPath${separator}sync-$userId$separator$uniqueFile';
+
+    result.stream.listen((data) {
       dataStore.insertAll(dataStore.length, data);
     }, onDone: () async {
       File file = File(zipFile);
-      await file.writeAsBytes(dataStore);
+      file.createSync(recursive: true);
+      file.writeAsBytesSync(dataStore, mode: FileMode.write, flush: true);
+
+      return _completer.complete(zipFile);
     }, onError: (error) {
       Log.e("download $fileId from google dirve failed:${error.toString()}");
+      return _completer.completeError(zipFile);
     });
 
-    return zipFile;
+    return _completer.future;
   }
 
   @override
@@ -87,7 +96,7 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
       final authenticateClient = GoogleAuthClient(authHeaders);
       _driveApi = drive.DriveApi(authenticateClient);
     } catch (error) {
-      Log.e("google signout failed:$error");
+      Log.e("google signin failed:$error");
     }
   }
 

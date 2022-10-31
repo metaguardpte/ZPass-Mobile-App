@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zpass/plugin_bridge/p7zip/p7zip.dart';
+import 'package:zpass/util/log_utils.dart';
 
 abstract class BaseFileTransferManager {
 
@@ -15,10 +16,20 @@ abstract class BaseFileTransferManager {
   Future doUpload(String source, String userId);
 
   ///zip file path in dedicated storage
-  Future<String> download(String userId) async {
+  Future<String?> download(String userId) async {
     String localZipFile = await doDownload(userId);
-    String? decompressToPath = await P7zip.decompressZipToPath(fromZip: localZipFile);
-    return decompressToPath!;
+    try {
+      String? decompressToPath = await P7zip.decompressZipToPath(
+          fromZip: localZipFile);
+      return decompressToPath;
+    } catch (e) {
+      Log.e("decompress zip file failed after download:${e.toString()}");
+    }
+    if (File(localZipFile).existsSync()){
+      File(localZipFile).delete();
+    }
+
+    return null;
   }
 
   ///source: directory that contains files to be archived
@@ -27,17 +38,25 @@ abstract class BaseFileTransferManager {
     String uniquePath = '${tempDir.path}$separator${getUniqueDir()}$separator';
     copyDir(source, uniquePath);
 
-    List<String> toBeArchivedFiles = <String>[];
-    List<FileSystemEntity> tempFiles = Directory(uniquePath).listSync();
-    for(FileSystemEntity f in tempFiles) {
-      if (FileSystemEntity.isDirectorySync(f.path)) {
-        continue;
+    try {
+      List<String> toBeArchivedFiles = <String>[];
+      List<FileSystemEntity> tempFiles = Directory(uniquePath).listSync();
+      for (FileSystemEntity f in tempFiles) {
+        if (FileSystemEntity.isDirectorySync(f.path)) {
+          continue;
+        }
+        toBeArchivedFiles.add(f.path);
       }
-      toBeArchivedFiles.add(f.path);
+      String zipFilePath = '$uniquePath$defaultZipFileName';
+      await P7zip.compressFileListToZip(
+          files: toBeArchivedFiles, toZip: zipFilePath);
+
+      await doUpload(zipFilePath, userId);
+    }catch (e) {
+      Log.e("upload to google dirve failed:${e.toString()}");
     }
-    String zipFilePath = '$uniquePath$defaultZipFileName';
-    await P7zip.compressFileListToZip(files: toBeArchivedFiles, toZip: zipFilePath);
-    await doUpload(zipFilePath, userId);
+
+    Directory(uniquePath).delete(recursive: true);
   }
 
   String getUniqueDir(){
