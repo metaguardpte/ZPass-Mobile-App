@@ -163,7 +163,7 @@ class CryptoManager {
       Log.e("encrypt text fail:${model.msg}", tag: _tag);
       return Future.error("encrypt text fail:${model.msg}");
     }
-    return model.data;
+    return Future.value(model.data);
   }
 
   Future<String> decryptText({required String text, bool isPersonal = true,}) {
@@ -179,7 +179,7 @@ class CryptoManager {
       Log.e("decrypt text fail:${model.msg}", tag: _tag);
       return Future.error("decrypt text fail:${model.msg}");
     }
-    return model.data;
+    return Future.value(model.data);
   }
 
   String? calcPasswordHash(
