@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
+import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
 import 'package:zpass/modules/vault/vault_item_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
@@ -47,5 +48,50 @@ class LoginDetailProvider extends BaseVaultProvider {
     }
     loading = false;
     return null;
+  }
+
+  @override
+  Future<bool> updateData(
+      {required String title,
+      required String name,
+      required String passwd,
+      required String url,
+      String? note}) async {
+    // whether create new entity or not
+    entity ??= VaultItemEntity(
+        id: generateItemId(),
+        createTime: DateTime.now().millisecondsSinceEpoch,
+        updateTime: DateTime.now().millisecondsSinceEpoch,
+        useTime: DateTime.now().millisecondsSinceEpoch,
+        isDeleted: false,
+        name: title,
+        detail: null,
+        type: VaultItemType.login.index);
+    // whether create new content or not
+    content ??= VaultItemLoginContent(
+        loginUser: name, loginPassword: passwd, note: note);
+    // update content
+    content!.loginUser = name;
+    content!.loginPassword = passwd;
+    content!.note = note;
+
+    String? encryptedContent;
+    await CryptoManager()
+        .encryptText(text: jsonEncode(content!.toJson()))
+        .then((value) => encryptedContent = value)
+        .catchError((e) {
+      Log.e("encrypt login detail content failed: $e", tag: _tag);
+    });
+    if (encryptedContent == null) {
+      return Future.error("vault entity detail's content encrypt failed");
+    }
+    final detail = VaultItemLoginDetail();
+    detail.loginUri = url;
+    detail.content = encryptedContent;
+    // update entity
+    entity!.name = title;
+    entity!.detail = detail.toJson();
+    //TODO update tags
+    return db.update(entity!);
   }
 }

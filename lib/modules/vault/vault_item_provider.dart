@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/repo/repo_db.dart';
@@ -47,4 +48,20 @@ abstract class BaseVaultProvider extends BaseProvider {
     }
     return db.remove(entity!);
   }
+
+  Future<dynamic> updateData(
+      {required String title,
+      required String name,
+      required String passwd,
+      required String url,
+      String? note,}) {
+    if (entity == null) {
+      return Future.error("vault entity is null");
+    }
+
+    entity!.name = title;
+    return db.update(entity!);
+  }
+
+  String generateItemId() => const Uuid().v4().replaceAll("-", "");
 }

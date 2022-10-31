@@ -96,6 +96,11 @@ class RepoMock extends RepoBase<VaultItemEntity> {
   }
 
   @override
+  Future<bool> update(VaultItemEntity item) {
+    return Future.value(false);
+  }
+
+  @override
   void close() {
     rawData.clear();
   }

@@ -70,12 +70,12 @@ class ThemeProvider extends ChangeNotifier {
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: isDarkMode ? TextStyles.textHint14 : TextStyles.textDarkGray14,
         fillColor: isDarkMode ? Colours.dark_bg_gray : const Color(0xFFF9F9F9),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(7.5),
-          borderSide: BorderSide(
-              width: 0.5,
-              color: isDarkMode ? Colours.dark_material_bg : const Color(0xFFEBEBEE)),
-        ),
+        // border: OutlineInputBorder(
+        //   borderRadius: BorderRadius.circular(7.5),
+        //   borderSide: BorderSide(
+        //       width: 0.5,
+        //       color: isDarkMode ? Colours.dark_material_bg : const Color(0xFFEBEBEE)),
+        // ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.5),
           borderSide: BorderSide(

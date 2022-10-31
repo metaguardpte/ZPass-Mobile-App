@@ -36,6 +36,11 @@ abstract class RepoBase<T> {
   bool addAll(List<T> items);
 
   ///
+  /// 修改数据项
+  ///
+  Future<bool> update(T item);
+
+  ///
   /// 写入数据，执行io操作
   ///
   Future<bool> flush();

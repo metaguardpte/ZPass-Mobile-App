@@ -235,6 +235,8 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
     _controller.text = keyword;
   }
 
+  String get text => _controller.text;
+
   @override
   void dispose() {
     super.dispose();

@@ -18,7 +18,6 @@ abstract class TabBaseProvider<T> extends BaseProvider {
   VaultItemSortType get sortType => _sortType;
   set sortType(VaultItemSortType type) {
     if (_sortType != type) {
-      fetchData(reset: true);
       _sortType = type;
       notifyListeners();
     }

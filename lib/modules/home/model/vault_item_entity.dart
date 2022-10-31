@@ -18,12 +18,12 @@ class VaultItemEntity extends RecordEntity {
       required super.createTime,
       required super.isDeleted,
       required this.name,
-      required this.description,
       required this.detail,
       required this.type,
-      required this.star,
-      required this.tags,
-      required this.useTime});
+      this.description,
+      this.star,
+      this.tags,
+      this.useTime});
 
   factory VaultItemEntity.fromJson(Map<String, dynamic> json) =>
       _$VaultItemEntityFromJson(json);

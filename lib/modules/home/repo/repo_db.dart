@@ -50,6 +50,11 @@ class RepoDB extends RepoBase<VaultItemEntity> {
   }
 
   @override
+  Future<bool> update(VaultItemEntity item) {
+    return _db.put(item);
+  }
+
+  @override
   void close() {
     _db.close();
   }

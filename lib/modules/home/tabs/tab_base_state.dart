@@ -150,7 +150,10 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
             child: menuContent(Text(VaultItemSortType.createTime.desc),
                 provider.sortType == VaultItemSortType.createTime)),
       ],
-      onSelected: (VaultItemSortType sortType) => provider.sortType = sortType,
+      onSelected: (VaultItemSortType sortType) {
+        provider.sortType = sortType;
+        provider.fetchData(reset: true);
+      },
       child: _buildSorter(provider.sortType),
     );
   }

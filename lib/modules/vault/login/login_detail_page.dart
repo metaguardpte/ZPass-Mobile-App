@@ -9,8 +9,10 @@ import 'package:zpass/modules/vault/login/login_detail_provider.dart';
 import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
 import 'package:zpass/modules/vault/vault_detail_base_state.dart';
 import 'package:zpass/res/resources.dart';
+import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/zpass_card.dart';
 import 'package:zpass/widgets/zpass_form_edittext.dart';
 
@@ -29,9 +31,11 @@ class _LoginDetailPageState
   static const double itemHeight = 30, space = 12;
 
   final _formKey = GlobalKey<FormState>();
-  final _loginNameKey = GlobalKey<ZPassFormEditTextState>();
-  final _loginPwdKey = GlobalKey<ZPassFormEditTextState>();
-  final _loginNoteKey = GlobalKey<ZPassFormEditTextState>();
+  final _titleKey = GlobalKey<ZPassFormEditTextState>();
+  final _nameKey = GlobalKey<ZPassFormEditTextState>();
+  final _pwdKey = GlobalKey<ZPassFormEditTextState>();
+  final _urlKey = GlobalKey<ZPassFormEditTextState>();
+  final _noteKey = GlobalKey<ZPassFormEditTextState>();
 
   @override
   void initState() {
@@ -57,10 +61,10 @@ class _LoginDetailPageState
               Log.d(
                   "user: ${content?.loginUser}, password: ${content?.loginPassword}");
               if (content != null) {
-                _loginNameKey.currentState?.fillText(content.loginUser);
-                _loginPwdKey.currentState?.fillText(content.loginPassword);
+                _nameKey.currentState?.fillText(content.loginUser);
+                _pwdKey.currentState?.fillText(content.loginPassword);
                 if (content.note != null) {
-                  _loginNoteKey.currentState?.fillText(content.note!);
+                  _noteKey.currentState?.fillText(content.note!);
                 }
               }
               return Column(
@@ -94,6 +98,7 @@ class _LoginDetailPageState
               buildHint(context, S.current.vaultTitle, star: editing),
               Gaps.vGap8,
               ZPassFormEditText(
+                key: _titleKey,
                 initialText: provider.entity?.name,
                 hintText: emptyHint,
                 prefix: buildLoginFav(context, provider.entity),
@@ -112,7 +117,7 @@ class _LoginDetailPageState
               buildHint(context, S.current.vaultLoginName, star: editing),
               Gaps.vGap8,
               ZPassFormEditText(
-                key: _loginNameKey,
+                key: _nameKey,
                 initialText: content?.loginUser,
                 hintText: emptyHint,
                 filled: true,
@@ -131,7 +136,7 @@ class _LoginDetailPageState
               buildHint(context, S.current.vaultLoginPwd, star: editing),
               Gaps.vGap8,
               ZPassFormEditText(
-                key: _loginPwdKey,
+                key: _pwdKey,
                 initialText: content?.loginPassword,
                 hintText: emptyHint,
                 obscureText: !editing,
@@ -151,6 +156,7 @@ class _LoginDetailPageState
               buildHint(context, S.current.vaultLoginURL, star: editing),
               Gaps.vGap8,
               ZPassFormEditText(
+                key: _urlKey,
                 initialText: provider.targetUrl,
                 hintText: emptyHint,
                 filled: true,
@@ -182,7 +188,7 @@ class _LoginDetailPageState
             buildHint(context, S.current.vaultNote, star: false),
             Gaps.vGap8,
             ZPassFormEditText(
-              key: _loginNoteKey,
+              key: _noteKey,
               initialText: content?.note,
               hintText: emptyHint,
               filled: true,
@@ -297,10 +303,31 @@ class _LoginDetailPageState
 
   @override
   void onEditPress() {
-    //try to save
-    if (!_formKey.currentState!.validate()) {
-      return;
+    if (provider.editing) {
+      //try to save
+      if (!_formKey.currentState!.validate()) {
+        return;
+      }
+      provider.editing = false;
+
+      provider.updateData(
+        title: _titleKey.currentState!.text,
+        name: _nameKey.currentState!.text,
+        passwd: _pwdKey.currentState!.text,
+        url: _urlKey.currentState!.text,
+        note: _noteKey.currentState!.text
+      ).then((succeed) {
+        if (succeed) {
+          Toast.show("Item saved");
+          NavigatorUtils.goBackWithParams(context, {"changed": true});
+        } else {
+          Toast.showError("Failed to save item");
+        }
+      } ).catchError((e) {
+        Toast.showError("Failed to save item: $e");
+      });
+    } else {
+      provider.editing = true;
     }
-    provider.editing = !provider.editing;
   }
 }
