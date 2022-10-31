@@ -1,6 +1,9 @@
 {
   "_locale": "zh",
 
+  "on":"ON",
+  "off":"OFF",
+
   "appName": "ZPass",
   "appSlogan": "Your digital assets management and automation tool.",
   "appExitTips": "再次点击返回退出",
@@ -33,6 +36,8 @@
      }
    },
 
+  "unlockWithBiometrics": "Unlock with Biometrics",
+
   "General":"GENERAL",
   "Language":"Language",
   "DataRoaming":"Data Roaming",
@@ -43,6 +48,13 @@
   "UnlockWithFace":"Unlock with Face ID",
   "UnlockWithBiometrics":"Unlock with Biometrics",
   "settingConfirmMasterPassword": "Confirm Master Password",
+  "settingRequirePassword": "Require Password",
+  "settingRequirePasswordDays": "每{day}天",
+  "@settingRequirePasswordDays": {
+    "placeholders": {
+      "day": {}
+    }
+  },
 
   "backupAndSync":"Backup and Sync",
   "syncProvider":"Sync Provider",
@@ -172,6 +184,12 @@
   "err_data_sync_start_error": "同步数据启动失败",
   "err_minimum_version_required": "您的客户端版本已经不支持，请留意自动更新提醒并升级。",
   "err_duplicate_login": "账户密码(页面链接和用户名)已存在。",
-  "err_email_duplicate_domain_owner": "邮箱地址已经注册了商业帐号"
+  "err_email_duplicate_domain_owner": "邮箱地址已经注册了商业帐号",
 
+  "vaultTitle": "标题",
+  "vaultLoginName": "登录账号",
+  "vaultLoginPwd": "登录密码",
+  "vaultLoginURL": "登录页面",
+  "vaultNote": "备注",
+  "vaultTag": "标签"
 }

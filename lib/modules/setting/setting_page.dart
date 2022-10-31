@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/modules/setting/general.dart';
+import 'package:zpass/modules/setting/provider/setting_provider.dart';
 import 'package:zpass/modules/setting/router_settting.dart';
 import 'package:zpass/modules/setting/security.dart';
 import 'package:zpass/modules/user/model/user_info_model.dart';
@@ -28,7 +30,7 @@ class UserInfo {
       required this.userName});
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _SettingPageState extends ProviderState<SettingPage, SettingProvider> {
   bool _fingerPrintType = false;
 
   onFingerPrintChange(bool value) {
@@ -46,7 +48,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     UserInfoModel userInfo = UserProvider().userInfo;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -158,10 +160,18 @@ class _SettingPageState extends State<SettingPage> {
               GeneralWidget(
                   rightStyle: _rightTextStyle, rightColor: _rightColor),
               SecurityWidget(
-                  rightStyle: _rightTextStyle, rightColor: _rightColor)
-            ],
+              provider: provider,
+              rightStyle: _rightTextStyle,
+              rightColor: _rightColor,
+            )
+          ],
           ),
       ),
     );
+  }
+
+  @override
+  SettingProvider prepareProvider() {
+    return SettingProvider();
   }
 }

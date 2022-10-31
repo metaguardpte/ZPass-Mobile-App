@@ -186,6 +186,5 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-    ZPassDB().close();
   }
 }

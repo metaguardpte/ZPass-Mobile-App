@@ -16,6 +16,7 @@ class ZPassIcons {
   static const IconData identities = IconData(0xe6f1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData identitiesActive = IconData(0xe6ef, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
+  /// home tab icons
   static const IconData icMore = IconData(0xe6f4, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icScan = IconData(0xe6e7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icInformation = IconData(0xe6f5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -26,6 +27,8 @@ class ZPassIcons {
   static const IconData favCard = IconData(0xe6f7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData favIdentity = IconData(0xe6f8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
+  static const IconData icSync = IconData(0xe6fb, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icBackup = IconData(0xe6fc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icNavBack = IconData(0xe6d6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icTextFieldClean = IconData(0xe6d8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icSecret = IconData(0xe6e1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -50,4 +53,11 @@ class ZPassIcons {
   static const IconData icFingerprint = IconData(0xe6d5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icFaceID = IconData(0xe6df, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icBiometrics = IconData(0xe6fe, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+  /// vault item detail icons
+  static const IconData icOperate = IconData(0xe6ff, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icSave = IconData(0xe700, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icEditing = IconData(0xe701, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icPhoto = IconData(0xe6e4, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icRequirePassword = IconData(0xe6fd, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

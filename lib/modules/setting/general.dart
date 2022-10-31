@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/setting/router_settting.dart';
+import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/widgets/list.dart';
@@ -59,7 +60,7 @@ class _GeneralWidgetState extends State<GeneralWidget> {
               children: [
                 const Spacer(),
                 Padding(
-                    padding: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.only(right: 10,top: 10,bottom: 10),
                     child: Material(
                         child: Text(
                       'OFF',

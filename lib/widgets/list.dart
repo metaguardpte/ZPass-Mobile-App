@@ -44,30 +44,28 @@ class _ListWidgetState extends State<ListWidget> {
                               width: 1)))
                   : null,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    flex: widget.flex != null ? widget.flex! : (widget.withIcon ? 2 : 1),
-                    child: Material(
-                      child: Container(
-                        margin: EdgeInsets.only(left: widget.withIcon ? 0 : 12),
-                        child: rows[i].text is Widget
-                            ? rows[i].text
-                            : Text(
-                                rows[i].text,
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                                maxLines: 1,
-                              ),
-                      ),
+                  Material(
+                    child: Container(
+                      margin: EdgeInsets.only(left: widget.withIcon ? 0 : 12),
+                      child: rows[i].text is Widget
+                          ? rows[i].text
+                          : Text(
+                              rows[i].text,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 16),
+                              maxLines: 1,
+                            ),
                     ),
                   ),
                   Expanded(
-                      flex: widget.withIcon ? 1: 2,
-                      child: Container(
-                        padding: const EdgeInsets.only(right: 12),
-                        alignment: Alignment.centerRight,
-                        child: rows[i].right,
-                      ))
+                    child: Container(
+                      padding: const EdgeInsets.only(right: 12),
+                      alignment: Alignment.centerRight,
+                      child: rows[i].right,
+                    ),
+                  ),
                 ],
               ),
             ))

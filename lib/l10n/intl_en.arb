@@ -1,6 +1,9 @@
 {
   "_locale": "en",
 
+  "on":"ON",
+  "off":"OFF",
+
   "appName": "ZPass",
   "appSlogan": "Your digital assets management and automation tool.",
   "appExitTips": "Press back again to Exit",
@@ -32,6 +35,9 @@
       "type": {}
     }
   },
+
+  "unlockWithBiometrics": "Unlock with Biometrics",
+
   "General":"GENERAL",
   "Language":"Language",
   "DataRoaming":"Data Roaming",
@@ -57,6 +63,13 @@
 
   "UnlockWithBiometrics":"Unlock with Biometrics",
   "settingConfirmMasterPassword": "Confirm Master Password",
+  "settingRequirePassword": "Require Password",
+  "settingRequirePasswordDays": "Every {day} days",
+  "@settingRequirePasswordDays": {
+    "placeholders": {
+      "day": {}
+    }
+  },
 
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",
@@ -159,7 +172,7 @@
   "err_record_not_found": "Record is not found",
   "err_server_error": "Server Error",
   "err_user_not_found": "User is not found",
-  "err_time_out": "Request time out",
+  "err_time_out": "Request timeout",
   "err_internal_error": "Internal Error",
   "err_forbidden": "Request forbidden",
   "err_unknown_error": "Unknown Error",
@@ -174,6 +187,12 @@
   "err_data_sync_start_error": "Sync data start failed",
   "err_minimum_version_required": "Your version of the App is not supported now. Please notice the auto-upgrade reminder to upgrade.",
   "err_duplicate_login": "Login (Page URL and Login Name) already exists.",
-  "err_email_duplicate_domain_owner": "Email address has a registered business account"
+  "err_email_duplicate_domain_owner": "Email address has a registered business account",
 
+  "vaultTitle": "Title",
+  "vaultLoginName": "Login Name",
+  "vaultLoginPwd": "Login Password",
+  "vaultLoginURL": "Login Page URL",
+  "vaultNote": "Note",
+  "vaultTag": "Tag"
 }

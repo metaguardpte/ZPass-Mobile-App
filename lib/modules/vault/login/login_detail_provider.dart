@@ -10,6 +10,12 @@ import 'package:zpass/util/log_utils.dart';
 class LoginDetailProvider extends BaseVaultProvider {
   static const String _tag = "LoginDetailProvider";
 
+  String? get targetUrl {
+    if (entity == null) return null;
+    final detail = VaultItemLoginDetail.fromJson(entity!.detail);
+    return detail.loginUri;
+  }
+
   VaultItemLoginContent? _content;
   VaultItemLoginContent? get content => _content;
   set content(VaultItemLoginContent? value) {
@@ -21,6 +27,7 @@ class LoginDetailProvider extends BaseVaultProvider {
   Future<dynamic> analyticsData(VaultItemEntity? data) async {
     if (data == null) return null;
     entity = data;
+    editing = false;
     loading = true;
     try {
       final detail = VaultItemLoginDetail.fromJson(data.detail);
