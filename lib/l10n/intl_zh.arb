@@ -36,6 +36,8 @@
      }
    },
 
+  "unlockWithBiometrics": "Unlock with Biometrics",
+
   "General":"GENERAL",
   "Language":"Language",
   "DataRoaming":"Data Roaming",
@@ -46,6 +48,13 @@
   "UnlockWithFace":"Unlock with Face ID",
   "UnlockWithBiometrics":"Unlock with Biometrics",
   "settingConfirmMasterPassword": "Confirm Master Password",
+  "settingRequirePassword": "Require Password",
+  "settingRequirePasswordDays": "每{day}天",
+  "@settingRequirePasswordDays": {
+    "placeholders": {
+      "day": {}
+    }
+  },
 
   "backupAndSync":"Backup and Sync",
   "syncProvider":"Sync Provider",

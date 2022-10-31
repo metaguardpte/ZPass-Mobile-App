@@ -1,6 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/util/log_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 
 class LocalAuthManager {
   factory LocalAuthManager() => _instance;
@@ -50,12 +53,18 @@ class LocalAuthManager {
   Future<bool> authenticate() async {
     try {
       final result = await _auth.authenticate(
-        localizedReason: "Unlock with Biometrics",
+        localizedReason: S.current.unlockWithBiometrics,
         options: const AuthenticationOptions(biometricOnly: true, useErrorDialogs: false),
+        authMessages: [
+          const AndroidAuthMessages(
+            biometricHint: "",
+          ),
+        ]
       );
       return result;
     } on PlatformException catch(e) {
       Log.e("authenticate fail, code:${e.code}, message:${e.message}", tag: _tag);
+      Toast.showSpec(e.message, type: ToastType.error);
       return Future.value(false);
     }
   }

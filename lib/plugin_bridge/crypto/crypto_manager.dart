@@ -30,8 +30,8 @@ class CryptoManager {
     };
   }
 
-  Future<String> _newCryptoService() async {
-    final rep = await _crypto.newCryptoService();
+  String _newCryptoService() {
+    final rep = _crypto.newCryptoService();
     if (rep == null) {
       Log.e("new crypto service fail: return is null", tag: _tag);
       return "";
@@ -44,12 +44,12 @@ class CryptoManager {
     return model.data ?? "";
   }
 
-  Future<String?> generateSecretKey() async {
+  String? generateSecretKey() {
     // final String key = SpUtil.getString(_kSecretKey) ?? "";
     // if (key.isNotEmpty) {
     //   return Future.value(key);
     // }
-    final rep = await _crypto.generateSecretKey();
+    final rep = _crypto.generateSecretKey();
     if (rep == null) return null;
     final model = CryptoModel.fromJson(jsonDecode(rep));
     if (!model.isSuccess()) {
@@ -81,7 +81,7 @@ class CryptoManager {
     {Map<String, dynamic>? header, bool isPersonal = true,}
   ) async {
     if ((_clientId ?? "").isEmpty) {
-     final cid = await _newCryptoService();
+     final cid = _newCryptoService();
      if (cid.isEmpty) {
        return Future.error("failed to generate clientId");
      }
@@ -103,59 +103,60 @@ class CryptoManager {
       return Future.error("login fail:${model.msg}");
     }
     SpUtil.putString(_kLoginResponseKeys, model.data);
+    final result = jsonDecode(model.data);
     return jsonDecode(model.data);
   }
 
   Future<dynamic> offlineLogin(
       String user,
-      String password,
-      String key,
-      bool isPersonal,
-      ) async {
+      String masterKey,
+      String masterKeyHash,
+      String personalDataKey,
+      String enterpriseDataKey,
+      {bool isPersonal = true}
+      ) {
     if ((_clientId ?? "").isEmpty) {
-      final cid = await _newCryptoService();
+      final cid = _newCryptoService();
       if (cid.isEmpty) {
         return Future.error("failed to generate clientId");
       }
       _clientId = cid;
     }
-    final userKeys = SpUtil.getString(_kLoginResponseKeys) ?? "";
-    if (userKeys.isEmpty) return Future.value(null);
-    final data = jsonDecode(userKeys);
-    final resp = await _crypto.offlineLogin(
+    // final userKeys = SpUtil.getString(_kLoginResponseKeys) ?? "";
+    // if (userKeys.isEmpty) return Future.error("user key is empty");
+    // final data = jsonDecode(userKeys);
+    final resp = _crypto.offlineLogin(
       clientId: _clientId!,
       identifierName: user,
-      masterPassword: password,
-      secretKey: key.toUpperCase(),
+      masterKey: masterKey,
+      masterKeyHash: masterKeyHash,
       isPersonal: isPersonal,
-      masterKeyHash: data["masterKeyHash"] ?? "",
-      personalDataKey: data["personalDataKey"] ?? "",
-      enterpriseDataKey: data["enterpriseDataKey"] ?? "",
+      personalDataKey: personalDataKey,
+      enterpriseDataKey: enterpriseDataKey,
     );
-    if (resp == null) return Future.error("login fail, response is null");
+    if (resp == null) return Future.error("offline login fail, response is null");
     final model = CryptoModel.fromJson(jsonDecode(resp));
     if (!model.isSuccess()) {
       Log.e("offline login fail:${model.msg}", tag: _tag);
       return Future.error("login fail:${model.msg}");
     }
-    SpUtil.putString(_kLoginResponseKeys, model.data);
-    return jsonDecode(model.data);
+    return Future.value(model.data);
   }
 
-  Future<bool> destroy() async {
-    final resp = await _crypto.destroy(clientId: _clientId ?? "");
+  bool destroy() {
+    final resp = _crypto.destroy(clientId: _clientId ?? "");
     final model = CryptoModel.fromJson(jsonDecode(resp ?? ""));
     _clientId = "";
     return model.isSuccess();
   }
 
-  Future<String> encryptText({required String text, bool isPersonal = true,}) async {
+  Future<String> encryptText({required String text, bool isPersonal = true,}) {
     if ((_clientId ?? "").isEmpty) {
-      final cid = await _newCryptoService();
+      final cid = _newCryptoService();
       if (cid.isEmpty) return Future.error("failed to generate clientId");
       _clientId = cid;
     }
-    final resp = await _crypto.encryptText(clientId: _clientId!, plaintext: text, isPersonal: isPersonal);
+    final resp = _crypto.encryptText(clientId: _clientId!, plaintext: text, isPersonal: isPersonal);
     if (resp == null) return Future.error("encrypt text fail, response is null");
     final model = CryptoModel.fromJson(jsonDecode(resp));
     if (!model.isSuccess()) {
@@ -165,18 +166,37 @@ class CryptoManager {
     return model.data;
   }
 
-  Future<String> decryptText({required String text, bool isPersonal = true,}) async {
+  Future<String> decryptText({required String text, bool isPersonal = true,}) {
     if ((_clientId ?? "").isEmpty) {
-      final cid = await _newCryptoService();
+      final cid = _newCryptoService();
       if (cid.isEmpty) return Future.error("failed to generate clientId");
       _clientId = cid;
     }
-    final resp = await _crypto.decryptText(clientId: _clientId!, cipherText: text, isPersonal: isPersonal);
+    final resp = _crypto.decryptText(clientId: _clientId!, cipherText: text, isPersonal: isPersonal);
     if (resp == null) return Future.error("decrypt text fail, response is null");
     final model = CryptoModel.fromJson(jsonDecode(resp));
     if (!model.isSuccess()) {
       Log.e("decrypt text fail:${model.msg}", tag: _tag);
       return Future.error("decrypt text fail:${model.msg}");
+    }
+    return model.data;
+  }
+
+  String? calcPasswordHash(
+      {required String user,
+        required String password,
+        required String secretKey,
+        dynamic hint}) {
+    final resp = _crypto.calcPasswordHash(
+      identifierName: user,
+      masterPassword: password,
+      secretKey: secretKey,
+    );
+    if (resp == null) return null;
+    final model = CryptoModel.fromJson(jsonDecode(resp));
+    if (!model.isSuccess()) {
+      Log.e("calcPasswordHash fail:${model.msg}", tag: _tag);
+      return null;
     }
     return model.data;
   }
