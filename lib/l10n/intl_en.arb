@@ -37,6 +37,12 @@
   },
 
   "unlockWithBiometrics": "Unlock with Biometrics",
+  "requirePasswordToLoginMessage": "Every {day} days require password to login",
+  "@requirePasswordToLoginMessage": {
+    "placeholders": {
+      "day": {}
+    }
+  },
 
   "General":"GENERAL",
   "Language":"Language",

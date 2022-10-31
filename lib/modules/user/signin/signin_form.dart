@@ -127,29 +127,33 @@ class _SignInFormState extends State<SignInForm> {
     emailController.text = Email;
   }
 
-  void _checkLocalAuth() async {
-    if ((widget.data ?? "").isEmpty) return;
+  bool _canAutomaticAuthenticate() {
+    if ((widget.data ?? "").isEmpty) return false;
     final param = jsonDecode(widget.data!);
-    final canAuth = param["canAuth"] ?? false;
-    if (!canAuth) return;
+    return param["canAuth"] ?? false;
+  }
 
+  void _checkLocalAuth() async {
     if (!UserProvider().getUserBiometrics()) return;
-    final result = await LocalAuthManager().canAuth();
-    if (result) {
+    final canAuth = await LocalAuthManager().canAuth();
+    if (canAuth) {
       _buildUserBiometricsBtn();
-      final isExpired = UserProvider().checkBiometricsIsExpired();
-      if (!isExpired) {
-        _doAuthenticate();
-      }
+      if (!_canAutomaticAuthenticate()) return;
+      _doAuthenticate();
     }
   }
 
   void _doAuthenticate() async {
-    final auth = await LocalAuthManager().authenticate();
-    Log.d("local auth result is:$auth");
-    if (auth) {
-      _doOfflineLogin();
+    final isExpired = UserProvider().checkBiometricsIsExpired();
+    if (isExpired) {
+      int day = UserProvider().getRequirePasswordDay();
+      Toast.showSpec(S.current.requirePasswordToLoginMessage(day));
+      return;
     }
+    final authResult = await LocalAuthManager().authenticate();
+    Log.d("local auth result is:$authResult");
+    if (!authResult) return;
+    _doOfflineLogin();
   }
 
   void _doOfflineLogin() {
@@ -364,8 +368,11 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   Future<IconData> _fetchBiometricsBtnIcon() async {
-    if (Device.isAndroid) return ZPassIcons.icBiometrics;
+    final isExpired = UserProvider().checkBiometricsIsExpired();
+    if (Device.isAndroid) return isExpired ? ZPassIcons.icBiometricsWarn : ZPassIcons.icBiometrics;
     final bool isSupportedFacID = await LocalAuthManager().isSupportedFaceID();
-    return isSupportedFacID ? ZPassIcons.icFaceID : ZPassIcons.icFingerprint;
+    return isSupportedFacID
+        ? (isExpired ? ZPassIcons.icFaceIDWarn : ZPassIcons.icFaceID)
+        : (isExpired ? ZPassIcons.icFingerprintWarn : ZPassIcons.icFingerprint);
   }
 }
