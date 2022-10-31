@@ -5,45 +5,64 @@ import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 
 class SecureNotesPage extends StatefulWidget {
-  const SecureNotesPage({Key? key}) : super(key: key);
-
+  const SecureNotesPage({Key? key,this.title,this.note, this.enabel = false}) : super(key: key);
+  final bool enabel;
+  final String? title;
+  final String? note;
   @override
   State<SecureNotesPage> createState() => _SecureNotesPageState();
 }
 
 class _SecureNotesPageState extends State<SecureNotesPage> {
+  late bool enable;
+  _handelActionOne(bool actionType){
+    if(!actionType){
+      setState(() {
+        enable = true;
+      });
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    enable = widget.enabel;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         actions: [
-          Container(
-            child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  width: 40,
-                  height: 30,
-                  child: Icon(
-                    ZPassIcons.icNoteCheck,
-                    color: Color.fromRGBO(73, 84, 255, 1),
-                    size: 20,
-                  ),
-                )),
-          ),
-          Container(
-            child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  width: 40,
-                  height: 30,
-                  child: Icon(
-                    ZPassIcons.icMenu,
-                    color: Color.fromRGBO(73, 84, 255, 1),
-                    size: 20,
-                  ),
-                )),
-          )
+          GestureDetector(
+            onTap: () => _handelActionOne(enable),
+              behavior: HitTestBehavior.opaque,
+              child: SizedBox(
+                width: 40,
+                height: 30,
+                child: enable
+                    ?const Icon(
+                        ZPassIcons.icNoteCheck,
+                        color: Color.fromRGBO(73, 84, 255, 1),
+                        size: 20,
+                      )
+                    :const Icon(
+                        ZPassIcons.icNoteEdit,
+                        color: Color.fromRGBO(73, 84, 255, 1),
+                        size: 20,
+                      ),
+              )),
+          GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              child: const SizedBox(
+                width: 40,
+                height: 30,
+                child:Icon(
+                  ZPassIcons.icMenu,
+                  color: Color.fromRGBO(73, 84, 255, 1),
+                  size: 20,
+                ),
+              ))
         ],
         title: Text(
           S.current.DataRoaming,
@@ -80,7 +99,7 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
               child: Column(
                 children: [
                   Row(
-                    children:  [
+                    children: [
                       const Text(
                         '*',
                         style: TextStyle(color: Colors.red, fontSize: 14),
@@ -88,7 +107,7 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                       Gaps.hGap4,
                       Text(
                         S.current.title,
-                        style:const TextStyle(fontSize: 14),
+                        style: const TextStyle(fontSize: 14),
                       )
                     ],
                   ),
@@ -97,17 +116,32 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                     height: 50,
                     padding: const EdgeInsets.only(left: 10, right: 10),
                     decoration: BoxDecoration(
+                        color: enable
+                            ? Colors.white
+                            : const Color.fromRGBO(249, 249, 249, 1),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(7.5)),
                         border: Border.all(
                             width: 1,
                             color: const Color.fromRGBO(235, 235, 238, 1))),
                     child: TextField(
+                      enabled: enable,
                       style: const TextStyle(fontSize: 16),
                       decoration: InputDecoration(
                           hintText: S.current.none,
                           labelStyle: const TextStyle(
                             color: Color.fromRGBO(147, 151, 157, 1),
+                          ),
+                          suffixIcon: GestureDetector(
+                            child: Container(
+                              width: 20,
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                ZPassIcons.icCopy,
+                                color: Color.fromRGBO(174,183,197, 1),
+                                size: 18,
+                              ),
+                            ),
                           ),
                           prefixIcon: Container(
                             width: 30,
@@ -143,37 +177,54 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                   Gaps.vGap16,
                   Row(
                     children: [
-                     const Text(
+                      const Text(
                         '*',
                         style: TextStyle(color: Colors.red, fontSize: 14),
                       ),
                       Gaps.hGap4,
                       Text(
                         S.current.note,
-                        style:const TextStyle(fontSize: 14),
+                        style: const TextStyle(fontSize: 14),
                       )
                     ],
                   ),
                   Gaps.vGap8,
                   Container(
-                    padding:const EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
                     decoration: BoxDecoration(
-                        borderRadius:const BorderRadius.all(Radius.circular(7.5)),
+                        color: enable
+                            ? Colors.white
+                            : const Color.fromRGBO(249, 249, 249, 1),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(7.5)),
                         border: Border.all(
-                            width: 1, color:const Color.fromRGBO(235, 235, 238, 1))),
+                            width: 1,
+                            color: const Color.fromRGBO(235, 235, 238, 1))),
                     child: TextField(
+                      enabled: enable,
                       style: const TextStyle(fontSize: 16),
                       decoration: InputDecoration(
+                          suffixIcon: GestureDetector(
+                            child: Container(
+                              width: 20,
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                ZPassIcons.icCopy,
+                                color: Color.fromRGBO(174,183,197, 1),
+                                size: 18,
+                              ),
+                            ),
+                          ),
                           hintText: S.current.none,
-                          labelStyle:const TextStyle(
+                          labelStyle: const TextStyle(
                             color: Color.fromRGBO(147, 151, 157, 1),
                           ),
                           // prefixIconConstraints: BoxConstraints(
                           //   maxWidth:
                           // ),
                           border: InputBorder.none),
-                          maxLines: null,
-                          minLines: 4,
+                      maxLines: null,
+                      minLines: 4,
                     ),
                   ),
                 ],
