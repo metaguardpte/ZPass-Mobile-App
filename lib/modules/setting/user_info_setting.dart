@@ -5,7 +5,6 @@ import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
-import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_confirm_dialog.dart';
 import 'package:zpass/widgets/list.dart';
 import 'package:zpass/widgets/load_image.dart';
@@ -20,7 +19,7 @@ class UserInfoSettingPage extends StatefulWidget {
 class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
   late Color rightColor;
   late TextStyle rightStyle;
-  UserInfoModel userInfo = UserProvider().userInfo;
+  UserInfoModel userInfo = UserProvider().profile.data;
 
   @override
   void initState() {

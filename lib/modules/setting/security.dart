@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +40,8 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
   @override
   void initState() {
     super.initState();
-    provider.userRequirePassword = S.current.settingRequirePasswordDays(UserProvider().getRequirePasswordDay());
+    provider.userRequirePassword = S.current.settingRequirePasswordDays(
+        UserProvider().biometrics.getRequirePasswordDay());
     _initDefaultRowData();
     _initBiometricsRowData();
   }
@@ -109,7 +109,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
    final bool canAuth = await LocalAuthManager().canAuth();
    if (!canAuth) return;
 
-   final bool isOpen = UserProvider().getUserBiometrics();
+   final bool isOpen = UserProvider().biometrics.getUserBiometrics();
    if (Device.isAndroid) {
      final biometrics = RowData(
        text: S.current.UnlockWithBiometrics,
@@ -177,7 +177,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
 
   Future<bool?> _doSwitchBiometrics(bool isOpen) async {
    if (!isOpen) {
-     UserProvider().putUserBiometrics(false);
+     UserProvider().biometrics.putUserBiometrics(false);
      return Future.value(false);
    }
    final bool auth = await LocalAuthManager().authenticate();
@@ -207,7 +207,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
       Toast.showSpec("Master password is empty");
       return await _showConfirmPasswordDialog();
     }
-    final userInfo = UserProvider().userInfo;
+    final userInfo = UserProvider().profile.data;
     final hash = CryptoManager().calcPasswordHash(
         user: userInfo.email ?? "",
         password: _confirmPassword,
@@ -217,7 +217,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
       Toast.showSpec("Master password is error");
       return await _showConfirmPasswordDialog();
     }
-    UserProvider().putUserBiometrics(true);
+    UserProvider().biometrics.putUserBiometrics(true);
     return true;
   }
 
@@ -227,7 +227,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
       data: selections.toList(),
       title: S.current.settingRequirePassword,
       onItemSelected: (item, index) {
-        UserProvider().putRequirePasswordDay(_requirePasswordDays[index]);
+        UserProvider().biometrics.putRequirePasswordDay(_requirePasswordDays[index]);
         provider.userRequirePassword = item;
       },
     ).show(context);

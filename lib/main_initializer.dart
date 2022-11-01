@@ -56,7 +56,7 @@ class MainInitializer {
   static Future<bool> initAfterAuthorize() async {
     // 初始化用户数据
     await UserProvider().restore();
-    final userInfo = UserProvider().userInfo;
+    final userInfo = UserProvider().profile.data;
     // 跳转登录或注册
     return userInfo.email != null && userInfo.secretKey != null;
   }

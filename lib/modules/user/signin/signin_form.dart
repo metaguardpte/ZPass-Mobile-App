@@ -54,9 +54,9 @@ class _SignInFormState extends State<SignInForm> {
     }
     loadingDialog.show(context, barrierDismissible: false);
     CryptoManager().login(Email, Psw, AppConfig.serverUrl, SeKey).then((value) {
-      UserProvider().userCryptoKey = UserCryptoKeyModel.fromJson(value);
+      UserProvider().profile.userCryptoKey = UserCryptoKeyModel.fromJson(value);
       _loginSuccess();
-      UserProvider().putUserLastLoginTime(DateTime.now());
+      UserProvider().biometrics.putUserLastLoginTime(DateTime.now());
     }).catchError((error) {
       loadingDialog.dismiss(context);
       Toast.showSpec(S.current.loginFail);
@@ -65,9 +65,9 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   _loginSuccess() {
-    UserProvider().userEmail = Email;
-    UserProvider().userSecretKey = SeKey;
-    UserProvider().updateSignInList({"email": Email, "key": SeKey});
+    UserProvider().profile.userEmail = Email;
+    UserProvider().profile.userSecretKey = SeKey;
+    UserProvider().secretKeys.save(email: Email, secretKey: SeKey);
     loadingDialog.dismiss(context);
     NavigatorUtils.push(context, Routers.home, clearStack: true);
   }
@@ -119,7 +119,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void _initDefaultValue() {
-    final userinfo = UserProvider().userInfo;
+    final userinfo = UserProvider().profile.data;
     if ((userinfo.email ?? "").isEmpty) return;
     Email = userinfo.email ?? "";
     SeKey = userinfo.secretKey ?? "";
@@ -134,7 +134,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void _checkLocalAuth() async {
-    if (!UserProvider().getUserBiometrics()) return;
+    if (!UserProvider().biometrics.getUserBiometrics()) return;
     final canAuth = await LocalAuthManager().canAuth();
     if (canAuth) {
       _buildUserBiometricsBtn();
@@ -144,9 +144,9 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void _doAuthenticate() async {
-    final isExpired = UserProvider().checkBiometricsIsExpired();
+    final isExpired = UserProvider().biometrics.checkBiometricsIsExpired();
     if (isExpired) {
-      int day = UserProvider().getRequirePasswordDay();
+      int day = UserProvider().biometrics.getRequirePasswordDay();
       Toast.showSpec(S.current.requirePasswordToLoginMessage(day));
       return;
     }
@@ -157,7 +157,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void _doOfflineLogin() {
-    final userInfo = UserProvider().userInfo;
+    final userInfo = UserProvider().profile.data;
     CryptoManager().offlineLogin(
       userInfo.email ?? "",
       userInfo.userCryptoKey?.masterKeyExported ?? "",
@@ -182,7 +182,7 @@ class _SignInFormState extends State<SignInForm> {
       if (focusNode.hasFocus) {
         // print('得到焦点');
       } else {
-        var key = UserProvider().getUserKeyByEmail(Email);
+        var key = UserProvider().secretKeys.get(email: Email);
         if (key != null) {
           SeKeyController.text = recode(key);
           SeKey = key;
@@ -368,7 +368,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   Future<IconData> _fetchBiometricsBtnIcon() async {
-    final isExpired = UserProvider().checkBiometricsIsExpired();
+    final isExpired = UserProvider().biometrics.checkBiometricsIsExpired();
     if (Device.isAndroid) return isExpired ? ZPassIcons.icBiometricsWarn : ZPassIcons.icBiometrics;
     final bool isSupportedFacID = await LocalAuthManager().isSupportedFaceID();
     return isSupportedFacID

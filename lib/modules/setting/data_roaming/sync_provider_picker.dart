@@ -50,10 +50,10 @@ void pickSyncType(BuildContext context,Function onChange) {
   final data = SyncProviderType.values.sublist(0, 4);
   itemSelected(SyncProviderType type, index) {
     Log.d("pick vault item type: $type");
-    UserProvider().syncProvider = type.name;
+    UserProvider().settings.syncProvider = type.name;
     onChange(type,index);
   }
-  var syncProvider = UserProvider().userSetting.syncProvider;
+  var syncProvider = UserProvider().settings.data.syncProvider;
   SyncProviderType? onSelect;
   Log.d('-------------syncProvider-------------');
   Log.d(syncProvider ?? "syncProvider none");

@@ -15,7 +15,7 @@ class LoginServices {
         "identity": identity,
       },
     ).catchError((error) {
-      Log.e("post email verify code fail:${error.toString()}", tag: _tag);
+      Log.e("postExtensionsSessionScanned fail:${error.toString()}", tag: _tag);
       return Future.value(BaseResp(code: 400, message: "", data: "request fail"));
     });
   }
@@ -27,7 +27,7 @@ class LoginServices {
         "identity": identity,
       },
     ).catchError((error) {
-      Log.e("post email verify code fail:${error.toString()}", tag: _tag);
+      Log.e("postExtensionsSessionApprove fail:${error.toString()}", tag: _tag);
       return Future.value(BaseResp(code: 400, message: "", data: "request fail"));
     });
   }
@@ -39,7 +39,7 @@ class LoginServices {
         "identity": identity,
       },
     ).catchError((error) {
-      Log.e("post email verify code fail:${error.toString()}", tag: _tag);
+      Log.e("postExtensionsSessionReject fail:${error.toString()}", tag: _tag);
       return Future.value(BaseResp(code: 400, message: "", data: "request fail"));
     });
   }

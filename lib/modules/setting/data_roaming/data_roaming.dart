@@ -86,14 +86,14 @@ class _DataRoamingPageState extends State<DataRoamingPage>
     _animationController =
         AnimationController(duration:const Duration(seconds: 300), vsync: this);
 
-    var syncProvider = UserProvider().userSetting.syncProvider;
+    var syncProvider = UserProvider().settings.data.syncProvider;
     if (syncProvider != null) {
       _syncProviderType = SyncProviderType.values
           .firstWhere((element) => element.name == syncProvider);
     } else {
       _syncProviderType = null;
     }
-    switchType = UserProvider().userSetting.backupAndSync ?? false;
+    switchType = UserProvider().settings.data.backupAndSync ?? false;
     _rightColor = const Color.fromRGBO(149, 155, 167, 1);
     _rightTextStyle = TextStyle(color: _rightColor, fontSize: 15);
     _backupAndSync = [
@@ -104,7 +104,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
             onChange: (value) async {
               setState(() {
                 switchType = value;
-                UserProvider().backupAndSync = value;
+                UserProvider().settings.backupAndSync = value;
               });
               return value;
             },

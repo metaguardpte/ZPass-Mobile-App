@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -212,10 +210,6 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
     );
   }
 
-  String _buildResponseParam() {
-    return jsonEncode({"email": provider.email, "secretKey": provider.secretKey});
-  }
-
   void _doNext() {
     if (widget.type != RegisterType.personal) return;
     if (provider.stepIndex == 0) {
@@ -233,9 +227,9 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   void _onFinish() {
-    UserProvider().updateSignInList({"email": provider.email, "key": provider.secretKey});
-    UserProvider().userEmail = provider.email;
-    UserProvider().userSecretKey = provider.secretKey;
+    UserProvider().secretKeys.save(email: provider.email, secretKey: provider.secretKey);
+    UserProvider().profile.userEmail = provider.email;
+    UserProvider().profile.userSecretKey = provider.secretKey;
     NavigatorUtils.push(context, RouterUser.login, replace: true);
   }
 

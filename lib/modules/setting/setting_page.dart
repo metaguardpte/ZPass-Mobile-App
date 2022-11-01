@@ -49,7 +49,7 @@ class _SettingPageState extends ProviderState<SettingPage, SettingProvider> {
 
   @override
   Widget buildContent(BuildContext context) {
-    UserInfoModel userInfo = UserProvider().userInfo;
+    UserInfoModel userInfo = UserProvider().profile.data;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
