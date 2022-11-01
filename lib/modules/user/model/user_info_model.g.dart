@@ -8,23 +8,27 @@ part of 'user_info_model.dart';
 
 UserInfoModel _$UserInfoModelFromJson(Map<String, dynamic> json) =>
     UserInfoModel(
-      email: json['email'] as String?,
-      icon: json['icon'] as String?,
-      name: json['name'] as String?,
-      secretKey: json['secretKey'] as String?,
-      userCryptoKey: json['userCryptoKey'] == null
+      userId: json['id'] as int,
+      userType: json['userType'] as int,
+    )
+      ..email = json['email'] as String?
+      ..secretKey = json['secretKey'] as String?
+      ..avatar = json['avatar'] as String?
+      ..userName = json['userName'] as String?
+      ..timezone = json['timezone'] as String?
+      ..userCryptoKey = json['userCryptoKey'] == null
           ? null
           : UserCryptoKeyModel.fromJson(
-              json['userCryptoKey'] as Map<String, dynamic>),
-      type: json['type'] as String?,
-    );
+              json['userCryptoKey'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$UserInfoModelToJson(UserInfoModel instance) =>
     <String, dynamic>{
+      'id': instance.userId,
+      'userType': instance.userType,
       'email': instance.email,
       'secretKey': instance.secretKey,
-      'icon': instance.icon,
-      'name': instance.name,
-      'type': instance.type,
+      'avatar': instance.avatar,
+      'userName': instance.userName,
+      'timezone': instance.timezone,
       'userCryptoKey': instance.userCryptoKey,
     };

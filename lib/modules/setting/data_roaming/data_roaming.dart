@@ -47,7 +47,8 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   _handelBackup() async {
     if (!onBackupStatus) {
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
-      var unzipDBFolder = await fileTransferManager.download("135").catchError((err){
+      final userId = UserProvider().profile.data.userId;
+      var unzipDBFolder = await fileTransferManager.download("$userId").catchError((err) {
         Log.d('err------------');
         Log.d(err.toString());
       });
@@ -72,7 +73,8 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         _animationController.forward();
         BaseFileTransferManager fileTransferManager = _getFileTransferManager();
         var localDBPath = ZPassDB().getDBPath();
-        fileTransferManager.upload(localDBPath, "1234USER");
+        final userId = UserProvider().profile.data.userId;
+        fileTransferManager.upload(localDBPath, "$userId");
       });
     } else {
       onSyncStatus = false;

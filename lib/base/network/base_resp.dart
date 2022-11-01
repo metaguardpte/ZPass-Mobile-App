@@ -10,7 +10,9 @@ class BaseResp {
 
   BaseResp({required this.code, required this.data, this.message});
 
-  factory BaseResp.fromJson(Map<String, dynamic> json) => _$BaseRespFromJson(json);
+  factory BaseResp.fromJson(Map<String, dynamic> json) =>
+      _$BaseRespFromJson(json);
+
   Map<String, dynamic> toJson() => _$BaseRespToJson(this);
 
   bool isHttpOK() {
@@ -19,7 +21,10 @@ class BaseResp {
 
   bool hasError() {
     Map<String, dynamic>? dataMap = data as Map<String, dynamic>?;
-    return dataMap!= null && dataMap.containsKey("error") && dataMap["error"] != null && (dataMap["error"] as Map<String,dynamic>).isNotEmpty;
+    return dataMap != null &&
+        dataMap.containsKey("error") &&
+        dataMap["error"] != null &&
+        (dataMap["error"] as Map<String, dynamic>).isNotEmpty;
   }
 
   dynamic getPayload() {

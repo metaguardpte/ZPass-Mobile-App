@@ -55,7 +55,7 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(50)),
                     child: LoadImage(
-                      userInfo.icon ?? '',
+                      userInfo.avatar ?? '',
                       width: 34,
                       height: 34,
                     ),
@@ -71,21 +71,21 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
           text: S.current.email,
           right: Material(
               child: Text(
-            userInfo.email ?? 'Email',
+            userInfo.email ?? '',
             style: rightStyle,
           ))),
       RowData(
           text: S.current.fullName,
           right: Material(
               child: Text(
-            userInfo.name ?? 'UserName',
+            userInfo.userName ?? 'ZPass',
             style: rightStyle,
           ))),
       RowData(
           text: S.current.planType,
           right: Material(
               child: Text(
-            userInfo.type ?? 'PlanType',
+            userInfo.type,
             style: rightStyle,
           ))),
     ];
