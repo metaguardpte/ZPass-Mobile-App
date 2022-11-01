@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:zpass/extension/int_ext.dart';
 import 'package:zpass/generated/l10n.dart';
+import 'package:zpass/modules/vault/login/login_detail_helper.dart';
+import 'package:zpass/modules/vault/secure_notes/secure_notes_icon.dart';
+import 'package:zpass/modules/vault/secure_notes/secure_notes_provider.dart';
+import 'package:zpass/modules/vault/vault_detail_base_state.dart';
 import 'package:zpass/res/gaps.dart';
-import 'package:zpass/res/zpass_icons.dart';
-import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/res/styles.dart';
+import 'package:zpass/util/theme_utils.dart';
+import 'package:zpass/widgets/zpass_form_edittext.dart';
 
 class SecureNotesPage extends StatefulWidget {
   const SecureNotesPage({Key? key}) : super(key: key);
@@ -11,177 +17,181 @@ class SecureNotesPage extends StatefulWidget {
   State<SecureNotesPage> createState() => _SecureNotesPageState();
 }
 
-class _SecureNotesPageState extends State<SecureNotesPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        actions: [
-          Container(
-            child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  width: 40,
-                  height: 30,
-                  child: Icon(
-                    ZPassIcons.icNoteCheck,
-                    color: Color.fromRGBO(73, 84, 255, 1),
-                    size: 20,
-                  ),
-                )),
-          ),
-          Container(
-            child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  width: 40,
-                  height: 30,
-                  child: Icon(
-                    ZPassIcons.icMenu,
-                    color: Color.fromRGBO(73, 84, 255, 1),
-                    size: 20,
-                  ),
-                )),
-          )
-        ],
-        title: Text(
-          S.current.DataRoaming,
-          style: const TextStyle(color: Colors.black),
-        ),
-        leading: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            NavigatorUtils.goBack(context);
-          },
-          child: const SizedBox(
-            width: 40,
-            height: 40,
-            child: Icon(
-              ZPassIcons.icNavBack,
-              color: Color.fromRGBO(94, 99, 103, 1),
-              size: 16,
-            ),
-          ),
-        ),
+class _SecureNotesPageState
+    extends BaseVaultPageState<SecureNotesPage, SecureNotesProvider> {
+  final _formKey = GlobalKey<FormState>();
+  final _secureTitle = GlobalKey<ZPassFormEditTextState>();
+  final _secureNote = GlobalKey<ZPassFormEditTextState>();
+  static const double itemHeight = 30, space = 12;
+  Widget buildTagItem(
+      {required String text,
+        bool editing = false,
+        Widget? prefix,
+        Color? color,
+        Color? bgColor}) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: bgColor ?? context.secondaryBackground,
+        borderRadius: BorderRadius.circular(15),
       ),
+      child: Container(
+          height: itemHeight,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
+          decoration: BoxDecoration(
+            borderRadius:const BorderRadius.all(Radius.circular(16)),
+            border: Border.all(
+              width: 1,
+              color:const Color.fromRGBO(190, 193, 255, 1),
+            )
+          ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            prefix ?? Gaps.empty,
+            Text(
+              text,
+              style: TextStyles.textSize14.copyWith(color: color ?? context.textColor1),
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ])),
+    );
+  }
+  Widget buildTags(bool editing) {
+    final createNew = buildTagItem(
+        text: "Add Tag",
+        prefix: Icon(
+          Icons.add,
+          size: 15,
+          color: context.primaryColor,
+        ),
+        color: context.primaryColor,
+        bgColor: const Color(0XFFF1F2FF));
+    if (provider.entity?.tags == null ||
+        provider.entity?.tags?.isEmpty == true) {
+      return createNew;
+    } else {
+      final items = <Widget>[];
+      items.addAll(List.generate(
+          provider.entity!.tags!.length,
+              (index) => buildTagItem(
+              text: provider.entity!.tags!.elementAt(index),
+              editing: editing)));
+      if (!editing) items.add(createNew);
+      return SizedBox(
+        width: double.infinity,
+        child: Wrap(
+          spacing: space,
+          runSpacing: space,
+          children: items,
+        ),
+      );
+    }
+  }
+  @override
+  Widget buildBody(bool editing) {
+    // TODO: implement buildBody
+    return Scaffold(
       body: Container(
         alignment: Alignment.center,
         margin: const EdgeInsets.only(left: 16, right: 16, top: 18),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(
-                  left: 12, right: 12, top: 18, bottom: 18),
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(11))),
-              child: Column(
-                children: [
-                  Row(
-                    children:  [
-                      const Text(
-                        '*',
-                        style: TextStyle(color: Colors.red, fontSize: 14),
-                      ),
-                      Gaps.hGap4,
-                      Text(
-                        S.current.title,
-                        style:const TextStyle(fontSize: 14),
-                      )
-                    ],
-                  ),
-                  Gaps.vGap8,
-                  Container(
-                    height: 50,
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(7.5)),
-                        border: Border.all(
-                            width: 1,
-                            color: const Color.fromRGBO(235, 235, 238, 1))),
-                    child: TextField(
-                      style: const TextStyle(fontSize: 16),
-                      decoration: InputDecoration(
-                          hintText: S.current.none,
-                          labelStyle: const TextStyle(
-                            color: Color.fromRGBO(147, 151, 157, 1),
-                          ),
-                          prefixIcon: Container(
-                            width: 30,
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 32,
-                                  height: 32,
-                                  decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(9)),
-                                    color: Color.fromRGBO(0, 122, 249, 1),
-                                  ),
-                                  child: const Icon(
-                                    ZPassIcons.favNotes,
-                                    size: 28,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Gaps.hGap10,
-                                Container(
-                                  height: 20,
-                                  width: 1,
-                                  color: const Color.fromRGBO(235, 235, 238, 1),
-                                )
-                              ],
-                            ),
-                          ),
-                          border: InputBorder.none),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(
+                    left: 12, right: 12, top: 18, bottom: 18),
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(11))),
+                child: Column(
+                  children: [
+                    buildHint(context, S.current.title, star: editing),
+                    Gaps.vGap8,
+                    ZPassFormEditText(
+                      initialText: provider.entity?.secureTitle,
+                      hintText: emptyHint,
+                      prefix: buildSecureNotesIcon(context, provider.entity),
+                      filled: true,
+                      enable: editing,
+                      bgColor:Colors.white,
+                      borderColor:const Color.fromRGBO(235,235,238,1),
+                      enableClear: editing,
+                      enableCopy: !editing,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter item title";
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  Gaps.vGap16,
-                  Row(
-                    children: [
-                     const Text(
-                        '*',
-                        style: TextStyle(color: Colors.red, fontSize: 14),
-                      ),
-                      Gaps.hGap4,
-                      Text(
-                        S.current.note,
-                        style:const TextStyle(fontSize: 14),
-                      )
-                    ],
-                  ),
-                  Gaps.vGap8,
-                  Container(
-                    padding:const EdgeInsets.only(left: 10, right: 10),
-                    decoration: BoxDecoration(
-                        borderRadius:const BorderRadius.all(Radius.circular(7.5)),
-                        border: Border.all(
-                            width: 1, color:const Color.fromRGBO(235, 235, 238, 1))),
-                    child: TextField(
-                      style: const TextStyle(fontSize: 16),
-                      decoration: InputDecoration(
-                          hintText: S.current.none,
-                          labelStyle:const TextStyle(
-                            color: Color.fromRGBO(147, 151, 157, 1),
-                          ),
-                          // prefixIconConstraints: BoxConstraints(
-                          //   maxWidth:
-                          // ),
-                          border: InputBorder.none),
-                          maxLines: null,
-                          minLines: 4,
+                    Gaps.vGap16,
+                    buildHint(context, S.current.note, star: editing),
+                    Gaps.vGap8,
+                    ZPassFormEditText(
+                      initialText: provider.entity?.secureNote,
+                      key: _secureNote,
+                      hintText: emptyHint,
+                      filled: true,
+                      enable: editing,
+                      enablePrefix: false,
+                      enableClear: editing,
+                      enableCopy: !editing,
+                      maxLines: 5,
+                      bgColor:Colors.white,
+                      borderColor:const Color.fromRGBO(235,235,238,1),
+                      height: 70,
+                      maxLength: 100,
                     ),
-                  ),
-                ],
+
+                  ],
+                ),
               ),
-            )
-          ],
+              Gaps.vGap16,
+              Container(
+                padding: const EdgeInsets.only(
+                    left: 12, right: 12, top: 18, bottom: 18),
+                alignment: Alignment.centerLeft,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(11))),
+                child: Column(
+                  children: [
+                    buildHint(context, S.current.tipsLoading, star: editing),
+                    Gaps.vGap12,
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: buildTags(editing),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
+
+  @override
+  SecureNotesProvider prepareProvider() {
+    // TODO: implement prepareProvider
+    return SecureNotesProvider();
+  }
+
+  @override
+  // TODO: implement title
+  String get title => S.current.tabSecureNotes;
+
+  @override
+  void onEditPress() {
+    //try to save
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    provider.editing = !provider.editing;
+  }
 }
+

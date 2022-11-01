@@ -34,3 +34,4 @@ Widget buildLoginFav(BuildContext context, VaultItemEntity? entity) {
           : renderVaultFavIcon(
               vaultType: entity.type, iconUrl: parseVaultLoginIconUrl(entity)));
 }
+
