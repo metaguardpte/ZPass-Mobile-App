@@ -77,10 +77,15 @@ class ZPassEditTextState extends State<ZPassEditText> {
   @override
   Widget build(BuildContext context) {
     final prefixIcon = widget.prefix ?? const Icon(ZPassIcons.icSearch, color: Colors.grey,);
-    final suffixIcon = Visibility(
-      visible: widget.enableClear,
-      child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty,
-    );
+    final suffixChildren = [
+      Visibility(
+        visible: widget.enableClear,
+        child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty,
+      ),
+      widget.obscureText ? _buildSecret() : Gaps.empty,
+      widget.enableCopy ? _buildCopy() : Gaps.empty,
+    ];
+    final suffixIcon = Row(mainAxisSize: MainAxisSize.min,children: suffixChildren,);
     final prefixIconWidget = Padding(
       padding: const EdgeInsets.only(left: 0.0),
       child: prefixIcon,
@@ -96,50 +101,42 @@ class ZPassEditTextState extends State<ZPassEditText> {
       decoration: BoxDecoration(
         color: context.isDark ? Colours.dark_material_bg : bgColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
-        border: Border.all(color: _hasFocus ? context.primaryColor : widget.borderColor!, width: 0.5)
+        border: Border.all(color: _hasFocus && widget.enableInput ? context.primaryColor : widget.borderColor!, width: 0.5)
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              key: const Key('search_text_field'),
-              controller: _controller,
-              focusNode: _focus,
-              autofocus: widget.autofocus,
-              maxLines: widget.maxLines,
-              obscureText: widget.obscureText ? _isSecret : false,
-              textInputAction: widget.action,
-              enabled: widget.enableInput,
-              onSubmitted: (String val) {
-                _focus.unfocus();
-                widget.onSubmitted?.call(val);
-              },
-              onChanged: (text) {
-                if (widget.onChanged != null) {
-                  widget.onChanged!.call(text);
-                }
-                setState(() {});
-              },
-              style: TextStyle(
-                fontSize: widget.textSize,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                icon: widget.enablePrefix ? prefixIconWidget : null,
-                hintText: widget.hintText,
-                hintStyle: TextStyles.textGray12,
-                suffixIcon: suffixIcon,
-                suffixIconConstraints: BoxConstraints(
-                    maxWidth: widget.height * 2, maxHeight: widget.height - 5),
-                isDense: true,
-              ),
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(widget.maxLength)
-              ],
-            ),
-          ),
-          widget.obscureText ? _buildSecret() : Gaps.empty,
-          widget.enableCopy ? _buildCopy() : Gaps.empty,
+      child: TextField(
+        key: const Key('search_text_field'),
+        controller: _controller,
+        focusNode: _focus,
+        autofocus: widget.autofocus,
+        maxLines: widget.maxLines,
+        obscureText: widget.obscureText ? _isSecret : false,
+        textInputAction: widget.action,
+        readOnly: !widget.enableInput,
+        onSubmitted: (String val) {
+          _focus.unfocus();
+          widget.onSubmitted?.call(val);
+        },
+        onChanged: (text) {
+          if (widget.onChanged != null) {
+            widget.onChanged!.call(text);
+          }
+          setState(() {});
+        },
+        style: TextStyle(
+          fontSize: widget.textSize,
+        ),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          icon: widget.enablePrefix ? prefixIconWidget : null,
+          hintText: widget.hintText,
+          hintStyle: TextStyles.textGray12,
+          suffixIcon: suffixIcon,
+          suffixIconConstraints: BoxConstraints(
+              maxWidth: widget.height * suffixChildren.length, maxHeight: widget.height - 5),
+          isDense: true,
+        ),
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(widget.maxLength)
         ],
       ),
     );
