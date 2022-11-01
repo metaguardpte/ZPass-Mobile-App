@@ -201,6 +201,10 @@
   "vaultLoginURL": "Login Page URL",
   "vaultNote": "Note",
   "vaultTag": "Tag",
+  "noSecureNotes":"Not added yet",
+  "none":"None",
+  "title":"Title",
+  "note":"Note"
   "vaultNone": "None",
   "vaultOther": "Other",
 
