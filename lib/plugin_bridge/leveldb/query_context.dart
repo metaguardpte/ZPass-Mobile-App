@@ -15,7 +15,7 @@ class QueryContext {
 enum EntityType {
   vaultItem(name: "vaultItem"),
   passwordHistory(name: "passwordHistory"),
-  address(name: "Address"),
+  address(name: "address"),
   tokenCollection(name: "tokenCollection"),
   tokenMultiSend(name: "tokenMultiSend"),
   tokenInfo(name: "tokenInfo");

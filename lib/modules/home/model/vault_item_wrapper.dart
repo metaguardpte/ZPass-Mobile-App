@@ -21,7 +21,15 @@ class VaultItemWrapper {
       case VaultItemType.login:
         // final detail = VaultItemLoginDetail.fromJson(raw.detail);
         // return detail.loginUri ?? "";
-        return jsonDecode(decryptContent)["loginUser"];
+        var contentData = {};
+        if (decryptContent != null) {
+          try {
+            contentData = jsonDecode(decryptContent);
+          } catch (e) {
+            Log.e("failed to decode decryptContent data to JSON");
+          }
+        }
+        return contentData["loginUser"] ?? "";
       default:
         return raw.description ?? "";
     }

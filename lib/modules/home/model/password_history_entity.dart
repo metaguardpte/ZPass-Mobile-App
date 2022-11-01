@@ -5,7 +5,7 @@ part 'password_history_entity.g.dart';
 @JsonSerializable()
 class PasswordHistoryEntity extends RecordEntity {
   String password;
-  String? source;
+  int? source;
   dynamic description;
 
   PasswordHistoryEntity(

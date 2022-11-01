@@ -7,7 +7,7 @@ import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 /// ZPass DB数据同步逻辑； https://fjzx.yuque.com/uesase/kabox2/29715911
 ///
 class DBSyncUnit {
-  static void sync(String remoteDBPath) {
+  static void sync(String remoteDBPath) async {
     var tableSyncUnits = <BaseTableSyncUnit>[
       VaultTableSyncUnit(),
       BaseTableSyncUnit(EntityType.passwordHistory),
@@ -17,8 +17,9 @@ class DBSyncUnit {
       BaseTableSyncUnit(EntityType.tokenInfo),
     ];
     for (var unit in tableSyncUnits) {
-      unit.sync(remoteDBPath);
+      await unit.sync(remoteDBPath);
     }
+    return;
   }
 }
 
