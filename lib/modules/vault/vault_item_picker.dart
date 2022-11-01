@@ -41,12 +41,15 @@ void pickVaultType(BuildContext context) {
       case VaultItemType.credit:
         NavigatorUtils.push(context, RoutersVault.vaultDetailCards);
         break;
+      case VaultItemType.note:
+        NavigatorUtils.push(context, RoutersVault.vaultSecureNotes);
+        break;
     }
   }
 
   VaultItemPicker(
-          data: VaultItemType.values.sublist(0, 4),
-          onItemSelected: itemSelected,
-          title: "Items")
+      data: VaultItemType.values.sublist(0, 4),
+      onItemSelected: itemSelected,
+      title: "Items")
       .show(context);
 }
