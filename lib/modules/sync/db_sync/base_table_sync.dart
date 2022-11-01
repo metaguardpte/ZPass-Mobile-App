@@ -9,7 +9,7 @@ class BaseTableSyncUnit<T extends RecordEntity> {
 
   BaseTableSyncUnit(this.entityType);
 
-  void sync(String remoteDBPath) async {
+  Future<void> sync(String remoteDBPath) async {
     var remoteRecords = await ZPassDB().tempReadRemote(remoteDBPath, entityType);
     var localRecords = await ZPassDB().list(entityType);
 
@@ -19,6 +19,7 @@ class BaseTableSyncUnit<T extends RecordEntity> {
     var changedEntities = getChanged(remoteMap, localMap);
     _doSync(changedEntities);
     postSync();
+    return;
   }
 
   List<T> getChanged(Map<String, T> remoteMap, Map<String, T> localMap) {
@@ -27,6 +28,7 @@ class BaseTableSyncUnit<T extends RecordEntity> {
       var localEntity = localMap[key];
       if (localEntity == null) {
         changed.add(remoteEntity);
+        return ;
       }
 
       T? mergedEntity = getMergedEntity(remoteEntity, localEntity!);
@@ -111,14 +113,15 @@ class BaseTableSyncUnit<T extends RecordEntity> {
     return idToRecordMap;
   }
 
-  void _doSync(List<T> changedEntities) {
+  Future<void> _doSync(List<T> changedEntities) async {
     if (changedEntities.isEmpty) {
       return;
     }
 
     var dbInstance = ZPassDB();
     for (var entity in changedEntities) {
-      dbInstance.put(entity);
+      await dbInstance.put(entity);
     }
+    return;
   }
 }
