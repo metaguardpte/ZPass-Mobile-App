@@ -3,6 +3,11 @@ import 'dart:convert';
 import 'package:flkv/flkv.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:zpass/modules/home/model/address_entity.dart';
+import 'package:zpass/modules/home/model/password_history_entity.dart';
+import 'package:zpass/modules/home/model/token_collection_entity.dart';
+import 'package:zpass/modules/home/model/token_info_entity.dart';
+import 'package:zpass/modules/home/model/token_multi_send_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
@@ -140,7 +145,7 @@ class ZPassDB {
     var tempDB = LevelDB(remoteDBPath);
     await tempDB.open();
     List<Record> records = await tempDB.list();
-    tempDB.close();
+    await tempDB.close();
     var typeName = type.name;
     var entities = <E>[];
     for (var record in records) {
@@ -215,6 +220,26 @@ class ZPassDB {
   E? _toEntity<E extends RecordEntity>(String key, String jsonStr) {
     Log.d("record key: $key", tag: "ZPassDB");
     Map<String, dynamic> jsonMap = jsonDecode(jsonStr);
+    if (key.contains("passwordHistory")) {
+      return PasswordHistoryEntity.fromJson(jsonMap) as E;
+    }
+
+    if (key.contains("address")) {
+      return AddressEntity.fromJson(jsonMap) as E;
+    }
+
+    if (key.contains("tokenCollection")) {
+      return TokenCollectionEntity.fromJson(jsonMap) as E;
+    }
+
+    if (key.contains("tokenMultiSend")) {
+      return TokenMultiSendEntity.fromJson(jsonMap) as E;
+    }
+
+    if (key.contains("tokenInfo")) {
+      return TokenInfoEntity.fromJson(jsonMap) as E;
+    }
+
     VaultItemEntity entity = VaultItemEntity.fromJson(jsonMap);
     return entity as E;
   }

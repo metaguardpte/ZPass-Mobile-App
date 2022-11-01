@@ -14,7 +14,7 @@ PasswordHistoryEntity _$PasswordHistoryEntityFromJson(
       createTime: json['createTime'] as int,
       isDeleted: json['isDeleted'] as bool,
       password: json['password'] as String,
-      source: json['source'] as String?,
+      source: json['source'] as int?,
       description: json['description'],
     )..restoreTime = json['restoreTime'] as int?;
 

@@ -2,6 +2,7 @@
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/plugin_bridge/leveldb/record_entity.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
+import 'package:zpass/util/log_utils.dart';
 
 
 class BaseTableSyncUnit<T extends RecordEntity> {
@@ -9,16 +10,22 @@ class BaseTableSyncUnit<T extends RecordEntity> {
 
   BaseTableSyncUnit(this.entityType);
 
-  void sync(String remoteDBPath) async {
+  Future<void> sync(String remoteDBPath) async {
     var remoteRecords = await ZPassDB().tempReadRemote(remoteDBPath, entityType);
     var localRecords = await ZPassDB().list(entityType);
+    Log.d(
+        "entity-type: $entityType, sync remoteRecords: ${remoteRecords.length}, localRecords: ${localRecords.length}",
+        tag: "BaseTableSyncUnit");
 
     var remoteMap = _toMap(_convertListType(remoteRecords));
     var localMap = _toMap(_convertListType(localRecords));
 
     var changedEntities = getChanged(remoteMap, localMap);
+    Log.d("changedEntities: ${changedEntities.length}",
+        tag: "BaseTableSyncUnit");
     _doSync(changedEntities);
     postSync();
+    return;
   }
 
   List<T> getChanged(Map<String, T> remoteMap, Map<String, T> localMap) {
@@ -27,6 +34,7 @@ class BaseTableSyncUnit<T extends RecordEntity> {
       var localEntity = localMap[key];
       if (localEntity == null) {
         changed.add(remoteEntity);
+        return ;
       }
 
       T? mergedEntity = getMergedEntity(remoteEntity, localEntity!);
@@ -111,14 +119,18 @@ class BaseTableSyncUnit<T extends RecordEntity> {
     return idToRecordMap;
   }
 
-  void _doSync(List<T> changedEntities) {
+  Future<void> _doSync(List<T> changedEntities) async {
     if (changedEntities.isEmpty) {
       return;
     }
 
     var dbInstance = ZPassDB();
     for (var entity in changedEntities) {
-      dbInstance.put(entity);
+      final putRet = await dbInstance.put(entity);
+      Log.d("entity ${entity.getEntityKey()} put result: $putRet", tag: "BaseTableSyncUnit");
     }
+    final flushRet = await dbInstance.flush();
+    Log.d("db instance flush result: $flushRet", tag: "BaseTableSyncUnit");
+    return;
   }
 }

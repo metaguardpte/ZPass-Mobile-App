@@ -4,7 +4,11 @@ import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/setting/data_roaming/sync_provider_picker.dart';
 import 'package:zpass/modules/setting/switch.dart';
+import 'package:zpass/modules/sync/db_sync/db_sync.dart';
+import 'package:zpass/modules/sync/file_transfer/base_file_transfer.dart';
+import 'package:zpass/modules/sync/file_transfer/google_drive_file_transfer.dart';
 import 'package:zpass/modules/user/user_provider.dart';
+import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
@@ -26,7 +30,6 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   late Color _rightColor;
   late TextStyle _rightTextStyle;
   late AnimationController _animationController;
-  late Animation<double> _rotate;
   bool onSyncStatus = false;
   bool onBackupStatus = false;
 
@@ -38,22 +41,38 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       });
     });
   }
-  _handelBackup() {
+  BaseFileTransferManager _getFileTransferManager() {
+    return GoogleDriveFileTransferManager();
+  }
+  _handelBackup() async {
     if (!onBackupStatus) {
+      BaseFileTransferManager fileTransferManager = _getFileTransferManager();
+      var unzipDBFolder = await fileTransferManager.download("135").catchError((err){
+        Log.d('err------------');
+        Log.d(err.toString());
+      });
+      DBSyncUnit.sync(unzipDBFolder!);
       setState(() {
         onBackupStatus = true;
         _animationController.forward();
       });
     } else {
-      onBackupStatus = false;
-      _animationController.stop();
+      setState(() {
+        onBackupStatus = false;
+        _animationController.stop();
+      });
+
     }
   }
   _handelSync() {
+    Log.d('sync---------------');
     if (!onSyncStatus) {
       setState(() {
         onSyncStatus = true;
         _animationController.forward();
+        BaseFileTransferManager fileTransferManager = _getFileTransferManager();
+        var localDBPath = ZPassDB().getDBPath();
+        fileTransferManager.upload(localDBPath, "1234USER");
       });
     } else {
       onSyncStatus = false;
@@ -65,20 +84,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(duration: Duration(seconds: 300), vsync: this);
-    _rotate = Tween<double>(
-      begin: 1,
-      end: 300,
-    ).animate(_animationController)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          // 动画完成后反转
-          _animationController.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          // 反转回初始状态时继续播放，实现无限循环
-          _animationController.forward();
-        }
-      });
+        AnimationController(duration:const Duration(seconds: 300), vsync: this);
 
     var syncProvider = UserProvider().userSetting.syncProvider;
     if (syncProvider != null) {
@@ -180,6 +186,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: _handelBackup,
+                behavior: HitTestBehavior.opaque,
                 child: Container(
                   alignment: Alignment.center,
                   height: 46,
@@ -227,6 +234,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: _handelSync,
+                behavior: HitTestBehavior.opaque,
                 child: Container(
                   alignment: Alignment.center,
                   height: 46,
@@ -274,5 +282,11 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
   }
 }
