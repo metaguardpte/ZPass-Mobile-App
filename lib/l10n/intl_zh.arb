@@ -195,12 +195,20 @@
   "noSecureNotes":"Not added yet",
   "none":"None",
   "title":"Title",
-  "note":"Note"
+  "note":"Note",
 
   "vaultTitle": "标题",
   "vaultLoginName": "登录账号",
   "vaultLoginPwd": "登录密码",
   "vaultLoginURL": "登录页面",
   "vaultNote": "备注",
-  "vaultTag": "标签"
+  "vaultTag": "标签",
+  "vaultNone": "None",
+  "vaultOther": "Other",
+
+  "vaultCardNumber": "Card Number",
+  "vaultExpiryDate": "Expiry Date",
+  "vaultCVV": "CVV",
+  "vaultZipOrPostalCode": "Zip or Postal Code",
+  "vaultCardPIN": "Card Pin"
 }
