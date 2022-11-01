@@ -12,6 +12,7 @@ class ZPassEditText extends StatefulWidget implements PreferredSizeWidget {
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final String? hintText;
+  final bool enableInput;
   final bool enableClear;
   final bool enablePrefix;
   final bool enableCopy;
@@ -33,6 +34,7 @@ class ZPassEditText extends StatefulWidget implements PreferredSizeWidget {
     this.prefix,
     this.height = 45,
     this.borderRadius = 8,
+    this.enableInput = true,
     this.enableClear = true,
     this.enablePrefix = true,
     this.enableCopy = false,
@@ -75,16 +77,15 @@ class ZPassEditTextState extends State<ZPassEditText> {
   @override
   Widget build(BuildContext context) {
     final prefixIcon = widget.prefix ?? const Icon(ZPassIcons.icSearch, color: Colors.grey,);
-    final suffixIcon = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Visibility(
-            visible: widget.enableClear,
-            child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty),
-        Visibility(visible: widget.obscureText, child: _buildSecret()),
-        Visibility(visible: widget.enableCopy, child: _buildCopy()),
-      ],
-    );
+    final suffixChildren = [
+      Visibility(
+        visible: widget.enableClear,
+        child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty,
+      ),
+      widget.obscureText ? _buildSecret() : Gaps.empty,
+      widget.enableCopy ? _buildCopy() : Gaps.empty,
+    ];
+    final suffixIcon = Row(mainAxisSize: MainAxisSize.min,children: suffixChildren,);
     final prefixIconWidget = Padding(
       padding: const EdgeInsets.only(left: 0.0),
       child: prefixIcon,
@@ -100,7 +101,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
       decoration: BoxDecoration(
         color: context.isDark ? Colours.dark_material_bg : bgColor,
         borderRadius: BorderRadius.circular(widget.borderRadius),
-        border: Border.all(color: _hasFocus ? context.primaryColor : widget.borderColor!, width: 0.5)
+        border: Border.all(color: _hasFocus && widget.enableInput ? context.primaryColor : widget.borderColor!, width: 0.5)
       ),
       child: TextField(
         key: const Key('search_text_field'),
@@ -110,6 +111,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
         maxLines: widget.maxLines,
         obscureText: widget.obscureText ? _isSecret : false,
         textInputAction: widget.action,
+        readOnly: !widget.enableInput,
         onSubmitted: (String val) {
           _focus.unfocus();
           widget.onSubmitted?.call(val);
@@ -120,7 +122,9 @@ class ZPassEditTextState extends State<ZPassEditText> {
           }
           setState(() {});
         },
-        style: TextStyle(fontSize: widget.textSize,),
+        style: TextStyle(
+          fontSize: widget.textSize,
+        ),
         decoration: InputDecoration(
           border: InputBorder.none,
           icon: widget.enablePrefix ? prefixIconWidget : null,
@@ -128,9 +132,7 @@ class ZPassEditTextState extends State<ZPassEditText> {
           hintStyle: TextStyles.textGray12,
           suffixIcon: suffixIcon,
           suffixIconConstraints: BoxConstraints(
-            maxWidth: widget.height * 2,
-            maxHeight: widget.height - 5
-          ),
+              maxWidth: widget.height * suffixChildren.length, maxHeight: widget.height - 5),
           isDense: true,
         ),
         inputFormatters: [

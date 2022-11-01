@@ -37,6 +37,12 @@
    },
 
   "unlockWithBiometrics": "Unlock with Biometrics",
+  "requirePasswordToLoginMessage": "超过{day}天需要使用密码才能登录",
+  "@requirePasswordToLoginMessage": {
+    "placeholders": {
+      "day": {}
+    }
+  },
 
   "General":"GENERAL",
   "Language":"Language",

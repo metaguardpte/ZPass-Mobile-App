@@ -37,6 +37,12 @@
   },
 
   "unlockWithBiometrics": "Unlock with Biometrics",
+  "requirePasswordToLoginMessage": "Every {day} days require password to login",
+  "@requirePasswordToLoginMessage": {
+    "placeholders": {
+      "day": {}
+    }
+  },
 
   "General":"GENERAL",
   "Language":"Language",
@@ -194,5 +200,13 @@
   "vaultLoginPwd": "Login Password",
   "vaultLoginURL": "Login Page URL",
   "vaultNote": "Note",
-  "vaultTag": "Tag"
+  "vaultTag": "Tag",
+  "vaultNone": "None",
+  "vaultOther": "Other",
+
+  "vaultCardNumber": "Card Number",
+  "vaultExpiryDate": "Expiry Date",
+  "vaultCVV": "CVV",
+  "vaultZipOrPostalCode": "Zip or Postal Code",
+  "vaultCardPIN": "Card Pin"
 }

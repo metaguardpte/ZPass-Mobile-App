@@ -38,6 +38,9 @@ void pickVaultType(BuildContext context) {
       case VaultItemType.login:
         NavigatorUtils.push(context, RoutersVault.vaultDetailLogin);
         break;
+      case VaultItemType.credit:
+        NavigatorUtils.push(context, RoutersVault.vaultDetailCards);
+        break;
     }
   }
 

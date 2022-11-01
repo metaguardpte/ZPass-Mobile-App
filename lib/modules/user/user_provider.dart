@@ -146,7 +146,7 @@ class UserProvider {
     final result = _loginInfoList.firstWhereOrNull((element) => element.email == userInfo.email);
     if (result == null) return true;
     if (result.lastLoginTime == null) return true;
-    int inDays = result.lastLoginTime!.difference(DateTime.now()).inDays;
+    int inDays = DateTime.now().difference(result.lastLoginTime!).inDays;
     return inDays > result.requirePasswordDay!;
   }
 
