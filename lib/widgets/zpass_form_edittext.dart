@@ -17,6 +17,7 @@ class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
   final bool enableClear;
   final bool enablePrefix;
   final bool enableCopy;
+  final bool readOnly;
   final TextInputAction action;
   final double? borderRadius;
   final Widget? prefix;
@@ -41,6 +42,7 @@ class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
     this.enableClear = true,
     this.enablePrefix = true,
     this.enableCopy = false,
+    this.readOnly = false,
     this.action = TextInputAction.done,
     this.onChanged,
     this.onSubmitted,
@@ -80,19 +82,21 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
   @override
   Widget build(BuildContext context) {
     final prefixIcon = widget.prefix ?? const Icon(ZPassIcons.icSearch, color: Colors.grey, size: 19,);
+    final suffixChildren = [
+      Visibility(
+          visible: widget.enableClear,
+          child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty),
+      Visibility(visible: widget.obscureText, child: _buildSecret()),
+      Visibility(visible: widget.enableCopy, child: _buildCopy()),
+    ];
     final suffixIcon = Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        Visibility(
-            visible: widget.enableClear,
-            child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty),
-        Visibility(visible: widget.obscureText, child: _buildSecret()),
-        Visibility(visible: widget.enableCopy, child: _buildCopy()),
-      ],
+      children: suffixChildren,
     );
 
     return TextFormField(
       enabled: widget.enable,
+      readOnly: widget.readOnly,
       controller: _controller,
       focusNode: _focus,
       autofocus: widget.autofocus,
@@ -117,6 +121,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
         enabledBorder: widget.borderRadius != null
             ? OutlineInputBorder(
                 borderSide: BorderSide(
+                  width: 0.5,
                     color: context.isDark
                         ? Colours.dark_material_bg
                         : widget.borderColor),
@@ -125,7 +130,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
             : null,
         focusedBorder: widget.borderRadius != null
             ? OutlineInputBorder(
-                borderSide: BorderSide(color: context.primaryColor),
+                borderSide: BorderSide(color: widget.readOnly ? widget.borderColor : context.primaryColor, width: 0.5,),
                 borderRadius: BorderRadius.circular(widget.borderRadius!),
               )
             : null,
@@ -142,7 +147,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
         hintStyle: TextStyles.textGray12,
         suffixIcon: suffixIcon,
         suffixIconConstraints: BoxConstraints(
-          maxWidth: widget.height * 2,
+          maxWidth: widget.height * suffixChildren.length,
           maxHeight: widget.height - 5
         ),
         isDense: true,
