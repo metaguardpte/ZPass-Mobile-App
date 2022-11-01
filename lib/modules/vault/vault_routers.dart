@@ -2,11 +2,13 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/vault/cards/cards_detail_page.dart';
 import 'package:zpass/modules/vault/login/login_detail_page.dart';
+import 'package:zpass/modules/vault/secure_notes/secure_notes_page.dart';
 import 'package:zpass/routers/i_router.dart';
 
 class RoutersVault extends IRouterProvider {
   static const String vaultDetailLogin = "/home/vault/login";
   static const String vaultDetailCards = "/home/vault/cards";
+  static const String vaultSecureNotes = "/home/vault/secureNotes";
 
   @override
   void initRouter(FluroRouter router) {
@@ -20,5 +22,8 @@ class RoutersVault extends IRouterProvider {
       final item = args != null ? args["item"] : null;
       return const CardsDetailPage();
     }));
+    router.define(vaultSecureNotes,
+        handler: Handler(handlerFunc: (_, __) => const SecureNotesPage()));
+
   }
 }
