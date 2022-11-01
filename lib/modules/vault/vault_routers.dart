@@ -28,6 +28,5 @@ class RoutersVault extends IRouterProvider {
       final item = args != null ? args["item"] : null;
       return const SecureNotesPage();
     }));
-
   }
 }
