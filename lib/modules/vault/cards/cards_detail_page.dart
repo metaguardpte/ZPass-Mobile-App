@@ -138,6 +138,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
               text: provider.content?.number,
               require: true,
               key: _numberKey,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true)
             )
           ],
         ),
@@ -172,6 +173,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
         Widget? prefixIcon,
         bool obscure = false,
         bool require = false,
+        TextInputType? keyboardType,
         FunctionReturn<String?, dynamic>? validator}) {
     return Container(
       child: Column(
@@ -188,6 +190,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
             obscureText: obscure,
             enableClear: editing,
             filled: !editing,
+            keyboardType: keyboardType,
             borderColor: const Color(0xFFEBEBEE),
             validator: validator ?? _validatorEditText,
           )
