@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/setting/data_roaming/sync_provider_picker.dart';
@@ -67,6 +68,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         });
       });
       DBSyncUnit.sync(unzipDBFolder!).then((value) {
+        UserProvider().settings.updateBackupDate();
         setState(() {
           onBackupStatus = false;
           _animationController.stop();
@@ -91,6 +93,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       var localDBPath = ZPassDB().getDBPath();
       final userId = UserProvider().profile.data.userId;
       fileTransferManager.upload(localDBPath, "$userId").then((value) {
+        UserProvider().settings.updateSyncDate();
         setState(() {
           onSyncStatus = false;
           _animationController.stop();
@@ -267,7 +270,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                   ),
                   Gaps.vGap10,
                   Text(
-                    S.current.lastSyncTime,
+                    '${S.current.lastBackupTime} ${UserProvider().settings.data.backupDate ?? ''}',
                     style: const TextStyle(
                         color: Color.fromRGBO(149, 155, 167, 1), fontSize: 12),
                   ),
@@ -316,7 +319,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                   ),
                   Gaps.vGap10,
                   Text(
-                    S.current.lastSyncTime,
+                    '${S.current.lastSyncTime} ${UserProvider().settings.data.syncDate ?? ''}',
                     style: const TextStyle(
                         color: Color.fromRGBO(149, 155, 167, 1), fontSize: 12),
                   ),
