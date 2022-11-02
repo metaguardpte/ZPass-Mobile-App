@@ -6,6 +6,7 @@ import 'package:zpass/modules/vault/cards/cards_detail_provider.dart';
 import 'package:zpass/modules/vault/model/vault_item_cards_content.dart';
 import 'package:zpass/modules/vault/vault_detail_base_state.dart';
 import 'package:zpass/modules/vault/vault_detail_helper.dart';
+import 'package:zpass/modules/vault/vault_detail_tags.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
@@ -33,6 +34,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
   final _zipCodeKey = GlobalKey<ZPassFormEditTextState>();
   final _cardPinKey = GlobalKey<ZPassFormEditTextState>();
   final _otherKey = GlobalKey<ZPassFormEditTextState>();
+  final _tagKey = GlobalKey<VaultDetailTagsState>();
 
   @override
   void initState() {
@@ -97,6 +99,12 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
     });
   }
 
+  @override
+  void onCancelPress() {
+    provider.tags = widget.data?.tags ?? [];
+    _tagKey.currentState?.resetTag();
+  }
+
   void _fillFormTextValue() {
     _titleKey.currentState?.fillText(provider.content?.title ?? "");
     _numberKey.currentState?.fillText(provider.content?.number ?? "");
@@ -150,7 +158,8 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
           Gaps.vGap15,
           _buildRow(editing, S.current.vaultCardPIN, obscure: true, text: provider.content?.pin, key: _cardPinKey),
           Gaps.vGap15,
-          _buildRow(editing, S.current.vaultOther, text: provider.content?.note, key: _otherKey)
+          _buildRow(editing, S.current.vaultOther, text: provider.content?.note, key: _otherKey),
+          _buildTagContainer(editing),
         ],
       ),
     );
@@ -184,6 +193,15 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildTagContainer(bool editing) {
+    return VaultDetailTags(
+      key: _tagKey,
+      tags: provider.tags,
+      editing: editing,
+      onTagChange: (value) => provider.tags = value,
     );
   }
 
