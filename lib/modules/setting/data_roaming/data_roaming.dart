@@ -33,9 +33,11 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   late AnimationController _animationController;
   bool onSyncStatus = false;
   bool onBackupStatus = false;
-
+  bool _unlock(){
+    return !onBackupStatus && !onSyncStatus;
+  }
   _handelSyncProviderModalShow() {
-    if(!onBackupStatus && !onSyncStatus){
+    if(_unlock()){
       pickSyncType(context, (type, index) {
         setState(() {
           _syncProviderType = type;
@@ -49,7 +51,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   }
 
   _handelBackup() async {
-    if (!onSyncStatus && !onBackupStatus) {
+    if (_unlock()) {
       onBackupStatus = true;
       _animationController.forward();
       setState(() {});
@@ -81,7 +83,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   }
 
   _handelSync() {
-    if (!onSyncStatus && !onBackupStatus) {
+    if (_unlock()) {
       onSyncStatus = true;
       _animationController.forward();
       setState(() {});
@@ -127,7 +129,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
           right: ListSwitch(
             defaultValue: switchType,
             onChange: (value) async {
-              if (!onSyncStatus && !onBackupStatus) {
+              if (_unlock()) {
                 switchType = value;
                 UserProvider().settings.backupAndSync = value;
                 setState(() {});
@@ -150,7 +152,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
-            if(!onSyncStatus && !onBackupStatus){
+            if(_unlock()){
               NavigatorUtils.goBack(context);
             }
           },
@@ -167,7 +169,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       ),
       body: WillPopScope(
         onWillPop: () async {
-          if(!onSyncStatus && !onBackupStatus){
+          if(_unlock()){
             return true;
           }
           return false;
