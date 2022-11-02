@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/setting/data_roaming/sync_provider_picker.dart';
@@ -34,14 +33,12 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   late AnimationController _animationController;
   bool onSyncStatus = false;
   bool onBackupStatus = false;
-  bool _unlock(){
-    return !onBackupStatus && !onSyncStatus;
-  }
+
   _handelSyncProviderModalShow() {
-    if(_unlock()){
+    if(!onBackupStatus && !onSyncStatus){
       pickSyncType(context, (type, index) {
-        _syncProviderType = type;
         setState(() {
+          _syncProviderType = type;
         });
       });
     }
@@ -52,7 +49,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   }
 
   _handelBackup() async {
-    if (_unlock()) {
+    if (!onSyncStatus && !onBackupStatus) {
       onBackupStatus = true;
       _animationController.forward();
       setState(() {});
@@ -67,17 +64,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
           _animationController.stop();
         });
       });
-      if(unzipDBFolder == null){
-        Toast.showError('There is no data online , please sync first');
-        setState(() {
-          onBackupStatus = false;
-          _animationController.stop();
-        });
-        return ;
-        
-      }
       DBSyncUnit.sync(unzipDBFolder!).then((value) {
-        UserProvider().settings.updateBackupDate();
         setState(() {
           onBackupStatus = false;
           _animationController.stop();
@@ -94,7 +81,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   }
 
   _handelSync() {
-    if (_unlock()) {
+    if (!onSyncStatus && !onBackupStatus) {
       onSyncStatus = true;
       _animationController.forward();
       setState(() {});
@@ -102,7 +89,6 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       var localDBPath = ZPassDB().getDBPath();
       final userId = UserProvider().profile.data.userId;
       fileTransferManager.upload(localDBPath, "$userId").then((value) {
-        UserProvider().settings.updateSyncDate();
         setState(() {
           onSyncStatus = false;
           _animationController.stop();
@@ -141,13 +127,9 @@ class _DataRoamingPageState extends State<DataRoamingPage>
           right: ListSwitch(
             defaultValue: switchType,
             onChange: (value) async {
-              if (_unlock()) {
+              if (!onSyncStatus && !onBackupStatus) {
                 switchType = value;
                 UserProvider().settings.backupAndSync = value;
-                if(value && UserProvider().settings.data.syncProvider == null){
-                  _syncProviderType = SyncProviderType.googleDrive;
-                  UserProvider().settings.syncProvider = SyncProviderType.googleDrive.name;
-                }
                 setState(() {});
               }
               return value;
@@ -168,7 +150,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
-            if(_unlock()){
+            if(!onSyncStatus && !onBackupStatus){
               NavigatorUtils.goBack(context);
             }
           },
@@ -185,7 +167,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       ),
       body: WillPopScope(
         onWillPop: () async {
-          if(_unlock()){
+          if(!onSyncStatus && !onBackupStatus){
             return true;
           }
           return false;
@@ -237,7 +219,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
               )
                   : Container(),
               const Spacer(),
-              (switchType && (_syncProviderType != null)) ? Column(
+              switchType ? Column(
                 children: [
                   Container(
                     alignment: Alignment.center,
@@ -283,7 +265,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                   ),
                   Gaps.vGap10,
                   Text(
-                    '${S.current.lastBackupTime} ${UserProvider().settings.data.backupDate ?? ''}',
+                    S.current.lastSyncTime,
                     style: const TextStyle(
                         color: Color.fromRGBO(149, 155, 167, 1), fontSize: 12),
                   ),
@@ -332,7 +314,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                   ),
                   Gaps.vGap10,
                   Text(
-                    '${S.current.lastSyncTime} ${UserProvider().settings.data.syncDate ?? ''}',
+                    S.current.lastSyncTime,
                     style: const TextStyle(
                         color: Color.fromRGBO(149, 155, 167, 1), fontSize: 12),
                   ),
