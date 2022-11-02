@@ -13,6 +13,7 @@ import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/list.dart';
 
 class DataRoamingPage extends StatefulWidget {
@@ -41,52 +42,76 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       });
     });
   }
+
   BaseFileTransferManager _getFileTransferManager() {
     return GoogleDriveFileTransferManager();
   }
+
   _handelBackup() async {
-    if (!onBackupStatus) {
+    if (!onSyncStatus && !onBackupStatus) {
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
       final userId = UserProvider().profile.data.userId;
-      var unzipDBFolder = await fileTransferManager.download("$userId").catchError((err) {
-        Log.d('err------------');
-        Log.d(err.toString());
+      var unzipDBFolder =
+          await fileTransferManager.download("$userId").catchError((err) {
+        Log.d(
+            'fileTransferManager download err -------------- > :  ${err.toString()}');
+        setState(() {
+          onBackupStatus = false;
+          _animationController.stop();
+        });
       });
-      DBSyncUnit.sync(unzipDBFolder!);
+      DBSyncUnit.sync(unzipDBFolder!).then((value) {
+
+        setState(() {
+          onBackupStatus = false;
+          _animationController.stop();
+        });
+        Toast.showSuccess('${S.current.backup} ${S.current.successfully}');
+      }).catchError((err) {
+        Log.d('DBSync sync err -------------- > :  ${err.toString()}');
+        setState(() {
+          onBackupStatus = false;
+          _animationController.stop();
+        });
+      });
       setState(() {
         onBackupStatus = true;
         _animationController.forward();
       });
-    } else {
-      setState(() {
-        onBackupStatus = false;
-        _animationController.stop();
-      });
-
     }
   }
+
   _handelSync() {
-    Log.d('sync---------------');
-    if (!onSyncStatus) {
+    if (!onSyncStatus && !onBackupStatus) {
       setState(() {
         onSyncStatus = true;
         _animationController.forward();
         BaseFileTransferManager fileTransferManager = _getFileTransferManager();
         var localDBPath = ZPassDB().getDBPath();
         final userId = UserProvider().profile.data.userId;
-        fileTransferManager.upload(localDBPath, "$userId");
+        fileTransferManager.upload(localDBPath, "$userId").then((value){
+         setState(() {
+           onSyncStatus = false;
+           _animationController.stop();
+         });
+         Toast.showSuccess('${S.current.sync} ${S.current.successfully}');
+        }).catchError((err) {
+          Log.d(
+              'fileTransferManager download err -------------- > :  ${err.toString()}');
+          setState(() {
+            onSyncStatus = false;
+            _animationController.stop();
+          });
+        });
       });
-    } else {
-      onSyncStatus = false;
-      _animationController.stop();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(duration:const Duration(seconds: 300), vsync: this);
+    _animationController = AnimationController(
+        duration: const Duration(seconds: 300), vsync: this);
 
     var syncProvider = UserProvider().settings.data.syncProvider;
     if (syncProvider != null) {
@@ -204,7 +229,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                       Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: onBackupStatus
-                              ?const CupertinoActivityIndicator(
+                              ? const CupertinoActivityIndicator(
                                   color: Colors.white,
                                   radius: 8,
                                 )
@@ -252,7 +277,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                       Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: onSyncStatus
-                              ?const CupertinoActivityIndicator(
+                              ? const CupertinoActivityIndicator(
                                   color: Color.fromRGBO(73, 84, 255, 1),
                                   radius: 8,
                                 )

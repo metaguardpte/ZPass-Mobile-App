@@ -45,6 +45,7 @@ class ZPassIcons {
   static const IconData icDataRoaming = IconData(0xe6d3, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icClipboard = IconData(0xe6dc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icQrScan = IconData(0xe6e7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icSuccess = IconData(0xe6f6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icClose = IconData(0xe6d2, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icWarningTriangle = IconData(0xe6e8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icInfo = IconData(0xe6dd, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -63,4 +64,9 @@ class ZPassIcons {
   static const IconData icEditing = IconData(0xe701, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icPhoto = IconData(0xe6e4, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData icRequirePassword = IconData(0xe6fd, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+  static const IconData icMenu = IconData(0xe6ff, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icNoteEdit = IconData(0xe701, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icNoteCheck = IconData(0xe700, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
 }
