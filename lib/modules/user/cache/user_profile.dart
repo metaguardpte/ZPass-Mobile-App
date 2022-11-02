@@ -14,10 +14,10 @@ class UserProfile with UserStorage {
   UserInfoModel get data => _userInfo;
 
   Future<bool> tryUpdate() {
-    if (_userInfo.userId >= 0) {
-      Log.d("userinfo id: ${_userInfo.userId}, skip update", tag: _tag);
-      return Future.value(false);
-    }
+    // if (_userInfo.userId >= 0) {
+    //   Log.d("userinfo id: ${_userInfo.userId}, skip update", tag: _tag);
+    //   return Future.value(false);
+    // }
     return UserServices().getUserProfile().then((resp) {
       if (resp.isHttpOK() && !resp.hasError()) {
         Log.d("_fetchRemote user profile successfully", tag: _tag);

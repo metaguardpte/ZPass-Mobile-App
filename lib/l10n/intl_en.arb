@@ -200,6 +200,7 @@
   "vaultLoginPwd": "Login Password",
   "vaultLoginURL": "Login Page URL",
   "vaultTag": "Tag",
+  "vaultAddTag": "Add tag",
   "noSecureNotes":"Not added yet",
   "none":"None",
   "title":"Title",

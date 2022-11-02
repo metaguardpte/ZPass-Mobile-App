@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:zpass/base/base_provider.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/vault/vault_item_provider.dart';
 import 'package:zpass/res/colors.dart';
 import 'package:zpass/res/styles.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/common_widgets.dart';
 
@@ -34,6 +36,7 @@ abstract class BaseVaultPageState<V extends StatefulWidget,
     return AppBar(
       automaticallyImplyLeading: true,
       title: Text(title),
+      leading: _buildBackBtn(),
       actions: [
         buildEditAction(editing),
         buildPopupMenu(),
@@ -47,6 +50,27 @@ abstract class BaseVaultPageState<V extends StatefulWidget,
         icon: editing
             ? const Icon(ZPassIcons.icSave)
             : const Icon(ZPassIcons.icEditing));
+  }
+
+  Widget _buildBackBtn() {
+    return Selector<P, bool>(
+        builder: (_, edit, __) {
+          final textBtn = GestureDetector(
+            onTap: _onBackTap,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+              alignment: Alignment.center,
+              child: Text(S.current.cancel, style: TextStyle(color: context.textColor1),),
+            ),
+          );
+        final iconBtn = IconButton(
+            onPressed: _onBackTap,
+            icon: const Icon(ZPassIcons.icNavBack, size: 13, color: Color(0xFF16181A)),
+          );
+          return edit ? textBtn : iconBtn;
+        },
+        selector: (_, provider) => provider.editing,
+    );
   }
 
   Widget buildPopupMenu() {
@@ -96,6 +120,19 @@ abstract class BaseVaultPageState<V extends StatefulWidget,
 
   void onEditPress() {
     provider.editing = !provider.editing;
+  }
+
+  void onCancelPress() {
+
+  }
+
+  void _onBackTap() {
+    if (!provider.editing) {
+      NavigatorUtils.goBack(context);
+      return;
+    }
+    onCancelPress();
+    provider.editing = false;
   }
 
   void onMorePress() {}

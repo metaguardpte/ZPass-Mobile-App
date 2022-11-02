@@ -7,10 +7,12 @@ import 'package:zpass/modules/vault/model/vault_item_secure_note_content.dart';
 import 'package:zpass/modules/vault/secure_notes/secure_notes_icon.dart';
 import 'package:zpass/modules/vault/secure_notes/secure_notes_provider.dart';
 import 'package:zpass/modules/vault/vault_detail_base_state.dart';
+import 'package:zpass/modules/vault/vault_detail_tags.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/styles.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
+import 'package:zpass/widgets/zpass_card.dart';
 import 'package:zpass/widgets/zpass_form_edittext.dart';
 
 class SecureNotesPage extends StatefulWidget {
@@ -27,74 +29,7 @@ class _SecureNotesPageState
   final _formKey = GlobalKey<FormState>();
   final _secureTitle = GlobalKey<ZPassFormEditTextState>();
   final _secureNote = GlobalKey<ZPassFormEditTextState>();
-  static const double itemHeight = 30, space = 12;
-
-  Widget buildTagItem(
-      {required String text,
-      bool editing = false,
-      Widget? prefix,
-      Color? color,
-      Color? bgColor}) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: bgColor ?? context.secondaryBackground,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-          height: itemHeight,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(16)),
-              border: Border.all(
-                width: 1,
-                color: const Color.fromRGBO(190, 193, 255, 1),
-              )),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            prefix ?? Gaps.empty,
-            Text(
-              text,
-              style: TextStyles.textSize14
-                  .copyWith(color: color ?? context.textColor1),
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ])),
-    );
-  }
-
-  Widget buildTags(bool editing) {
-    final createNew = buildTagItem(
-        text: "Add Tag",
-        prefix: Icon(
-          Icons.add,
-          size: 15,
-          color: context.primaryColor,
-        ),
-        color: context.primaryColor,
-        bgColor: const Color(0XFFF1F2FF));
-    if (provider.entity?.tags == null ||
-        provider.entity?.tags?.isEmpty == true) {
-      return createNew;
-    } else {
-      final items = <Widget>[];
-      items.addAll(List.generate(
-          provider.entity!.tags!.length,
-          (index) => buildTagItem(
-              text: provider.entity!.tags!.elementAt(index),
-              editing: editing)));
-      if (!editing) items.add(createNew);
-      return SizedBox(
-        width: double.infinity,
-        child: Wrap(
-          spacing: space,
-          runSpacing: space,
-          children: items,
-        ),
-      );
-    }
-  }
+  final _tagKey = GlobalKey<VaultDetailTagsState>();
 
   @override
   void initState() {
@@ -173,32 +108,27 @@ class _SecureNotesPageState
                         ),
                       ),
                       Gaps.vGap16,
-                      Container(
-                        padding: const EdgeInsets.only(
-                            left: 12, right: 12, top: 18, bottom: 18),
-                        alignment: Alignment.centerLeft,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(11))),
-                        child: Column(
-                          children: [
-                            buildHint(context, S.current.tipsLoading,
-                                star: editing),
-                            Gaps.vGap12,
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: buildTags(editing),
-                            )
-                          ],
-                        ),
-                      )
+                      _buildTagContainer(editing),
                     ],
                   ),
                 ),
               );
             },
             selector: (_, provider) => provider.content));
+  }
+
+  Widget _buildTagContainer(bool editing) {
+    return !editing && provider.tags.isEmpty
+        ? Gaps.empty
+        : ZPassCard(
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 18),
+            child: VaultDetailTags(
+              key: _tagKey,
+              tags: provider.tags,
+              editing: editing,
+              onTagChange: (value) => provider.tags = value,
+            ),
+          );
   }
 
   @override
@@ -220,5 +150,11 @@ class _SecureNotesPageState
         title: _secureTitle.currentState!.text,
         note: _secureNote.currentState!.text).then((value) => Log.d('value.toString() ${value.toString()}'));
     provider.editing = !provider.editing;
+  }
+
+  @override
+  void onCancelPress() {
+    provider.tags = [...widget.data?.tags ?? []];
+    _tagKey.currentState?.resetTag();
   }
 }

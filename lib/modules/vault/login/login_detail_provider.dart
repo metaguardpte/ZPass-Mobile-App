@@ -20,6 +20,13 @@ class LoginDetailProvider extends BaseVaultProvider {
     return detail.loginUri;
   }
 
+  List<String> _tags = [];
+  List<String> get tags => _tags;
+  set tags(List<String> value) {
+    _tags = value;
+    notifyListeners();
+  }
+
   VaultItemLoginContent? _content;
   VaultItemLoginContent? get content => _content;
   set content(VaultItemLoginContent? value) {
@@ -31,6 +38,7 @@ class LoginDetailProvider extends BaseVaultProvider {
   Future<dynamic> analyticsData(VaultItemEntity? data) async {
     if (data == null) return null;
     entity = data;
+    tags = data.tags ?? [];
     editing = false;
     loading = true;
     try {
@@ -90,6 +98,7 @@ class LoginDetailProvider extends BaseVaultProvider {
     detail.content = encryptedContent;
     // update entity
     entity!.name = title;
+    entity!.tags = tags;
     entity!.detail = detail.toJson();
     //TODO update tags
     return db.update(entity!);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:zpass/extension/string_ext.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
-import 'package:zpass/modules/home/tabs/tab_widget_helper.dart';
 import 'package:zpass/res/resources.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/theme_utils.dart';

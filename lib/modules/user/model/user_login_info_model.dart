@@ -11,7 +11,7 @@ class UserLoginInfoModel {
 
   UserLoginInfoModel({
     this.biometrics = false,
-    this.requirePasswordDay = 14,
+    this.requirePasswordDay = 7,
     this.lastLoginTime,
     required this.email,
   });
