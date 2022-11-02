@@ -201,6 +201,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
     ZPassConfirmDialog(
       message: S.current.settingConfirmMasterPassword,
       isInput: true,
+      inputObscureText: true,
       onInputChange: (value) => _confirmPassword = value,
       onConfirmTap: () async {
         final result = await _doVerifyPassword();
