@@ -54,8 +54,9 @@ class Toast {
             Gaps.vGap8,
             Text(
               msg,
-              maxLines: 3,
+              maxLines: 8,
               overflow: TextOverflow.fade,
+              style: const TextStyle(height: 1.3),
             ),
           ],
         ),
