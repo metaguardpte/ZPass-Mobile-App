@@ -8,6 +8,7 @@ import 'package:zpass/modules/vault/login/login_detail_helper.dart';
 import 'package:zpass/modules/vault/login/login_detail_provider.dart';
 import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
 import 'package:zpass/modules/vault/vault_detail_base_state.dart';
+import 'package:zpass/modules/vault/vault_detail_tags.dart';
 import 'package:zpass/res/resources.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -28,7 +29,6 @@ class LoginDetailPage extends StatefulWidget {
 
 class _LoginDetailPageState
     extends BaseVaultPageState<LoginDetailPage, LoginDetailProvider> {
-  static const double itemHeight = 30, space = 12;
 
   final _formKey = GlobalKey<FormState>();
   final _titleKey = GlobalKey<ZPassFormEditTextState>();
@@ -36,6 +36,7 @@ class _LoginDetailPageState
   final _pwdKey = GlobalKey<ZPassFormEditTextState>();
   final _urlKey = GlobalKey<ZPassFormEditTextState>();
   final _noteKey = GlobalKey<ZPassFormEditTextState>();
+  final _tagKey = GlobalKey<VaultDetailTagsState>();
 
   @override
   void initState() {
@@ -75,8 +76,7 @@ class _LoginDetailPageState
                   Visibility(
                       visible: editing ||
                           content?.note != null ||
-                          provider.entity?.tags != null &&
-                              provider.entity!.tags!.isNotEmpty,
+                              provider.tags.isNotEmpty,
                       child: buildOptionalSection(editing, content)),
                   Gaps.vGap12,
                   buildTips(),
@@ -200,71 +200,17 @@ class _LoginDetailPageState
               height: 70,
               maxLength: 100,
             ),
-            Gaps.vGap16,
-            buildHint(context, S.current.vaultTag, star: false),
-            Gaps.vGap12,
-            buildTags(editing),
+            _buildTagContainer(editing),
           ],
         ));
   }
 
-  Widget buildTags(bool editing) {
-    final createNew = buildTagItem(
-        text: "Add Tag",
-        prefix: Icon(
-          Icons.add,
-          size: 15,
-          color: context.primaryColor,
-        ),
-        color: context.primaryColor,
-        bgColor: const Color(0XFFF1F2FF));
-    if (provider.entity?.tags == null ||
-        provider.entity?.tags?.isEmpty == true) {
-      return createNew;
-    } else {
-      final items = <Widget>[];
-      items.addAll(List.generate(
-          provider.entity!.tags!.length,
-          (index) => buildTagItem(
-              text: provider.entity!.tags!.elementAt(index),
-              editing: editing)));
-      if (!editing) items.add(createNew);
-      return SizedBox(
-        width: double.infinity,
-        child: Wrap(
-          spacing: space,
-          runSpacing: space,
-          children: items,
-        ),
-      );
-    }
-  }
-
-  Widget buildTagItem(
-      {required String text,
-      bool editing = false,
-      Widget? prefix,
-      Color? color,
-      Color? bgColor}) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: bgColor ?? context.secondaryBackground,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-          height: itemHeight,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            prefix ?? Gaps.empty,
-            Text(
-              text,
-              style: TextStyles.textSize14.copyWith(color: color ?? context.textColor1),
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ])),
+  Widget _buildTagContainer(bool editing) {
+    return VaultDetailTags(
+      key: _tagKey,
+      tags: provider.tags,
+      editing: editing,
+      onTagChange: (value) => provider.tags = value,
     );
   }
 
@@ -329,5 +275,11 @@ class _LoginDetailPageState
     } else {
       provider.editing = true;
     }
+  }
+
+  @override
+  void onCancelPress() {
+    provider.tags = [...widget.data?.tags ?? []];
+    _tagKey.currentState?.resetTag();
   }
 }

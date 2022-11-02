@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/vault/vault_detail_helper.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/styles.dart';
@@ -42,7 +43,7 @@ class VaultDetailTagsState extends State<VaultDetailTags> {
             child: Column(
               children: [
                 Gaps.vGap15,
-                buildHint(context, "Tag"),
+                buildHint(context, S.current.vaultTag),
                 Gaps.vGap12,
                 _buildTags(),
               ],
@@ -64,7 +65,7 @@ class VaultDetailTagsState extends State<VaultDetailTags> {
     if (editing) {
       final createNew = _buildTagItem(
         context,
-        text: "Add Tag",
+        text: S.current.vaultAddTag,
         prefix: Icon(Icons.add, size: 15, color: context.primaryColor),
         color: context.primaryColor,
         bgColor: const Color(0XFFF1F2FF),

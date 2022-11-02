@@ -4,7 +4,6 @@ import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
-import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
 import 'package:zpass/modules/vault/model/vault_item_secure_note_content.dart';
 import 'package:zpass/modules/vault/vault_item_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
@@ -23,10 +22,18 @@ class SecureNotesProvider extends BaseVaultProvider {
     notifyListeners();
   }
 
+  List<String> _tags = [];
+  List<String> get tags => _tags;
+  set tags(List<String> value) {
+    _tags = value;
+    notifyListeners();
+  }
+
   @override
   Future<dynamic> analyticsData(VaultItemEntity? data) async {
     if (data == null) return null;
     entity = data;
+    tags = data.tags ?? [];
     editing = false;
     loading = true;
     try {
@@ -79,6 +86,7 @@ class SecureNotesProvider extends BaseVaultProvider {
     }
     // update entity
     entity!.name = title;
+    entity!.tags = tags;
     entity!.detail = {
       "content":encryptedContent
     };
