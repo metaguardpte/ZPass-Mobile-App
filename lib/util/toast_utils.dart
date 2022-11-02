@@ -4,7 +4,7 @@ import 'package:zpass/res/colors.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/zpass_icons.dart';
 
-enum ToastType { warning, error, info }
+enum ToastType { warning, error, info ,success}
 
 /// Toast工具类
 class Toast {
@@ -20,6 +20,12 @@ class Toast {
       return null;
     }
     return showSpec(msg, type: ToastType.error);
+  }
+  static ToastFuture? showSuccess(String? msg){
+    if (msg == null) {
+      return null;
+    }
+    return showSpec(msg, type: ToastType.success);
   }
 
   static ToastFuture? showWaring(String? msg) {
@@ -66,7 +72,10 @@ class Toast {
         return ZPassIcons.icWarningTriangle;
       case ToastType.error:
         return ZPassIcons.icXCircle;
+      case ToastType.success:
+        return ZPassIcons.icSuccess;
       case ToastType.info:
+
       default:
         return ZPassIcons.icInfo;
     }
