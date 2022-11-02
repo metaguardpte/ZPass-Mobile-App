@@ -26,7 +26,7 @@ class RoutersVault extends IRouterProvider {
         handler: Handler(handlerFunc: (context, _) {
       final args = ModalRoute.of(context!)?.settings.arguments as Map<String, dynamic>?;
       final item = args != null ? args["item"] : null;
-      return const SecureNotesPage();
+      return SecureNotesPage(data: item,);
     }));
   }
 }

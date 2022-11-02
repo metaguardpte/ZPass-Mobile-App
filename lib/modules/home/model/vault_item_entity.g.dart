@@ -19,7 +19,10 @@ VaultItemEntity _$VaultItemEntityFromJson(Map<String, dynamic> json) =>
       star: json['star'] as bool?,
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
       useTime: json['useTime'] as int?,
-    )..restoreTime = json['restoreTime'] as int?;
+    )
+      ..restoreTime = json['restoreTime'] as int?
+      ..title = json['title'] as String?
+      ..note = json['note'] as String?;
 
 Map<String, dynamic> _$VaultItemEntityToJson(VaultItemEntity instance) =>
     <String, dynamic>{
@@ -30,6 +33,8 @@ Map<String, dynamic> _$VaultItemEntityToJson(VaultItemEntity instance) =>
       'restoreTime': instance.restoreTime,
       'name': instance.name,
       'description': instance.description,
+      'title': instance.title,
+      'note': instance.note,
       'detail': instance.detail,
       'type': instance.type,
       'star': instance.star,

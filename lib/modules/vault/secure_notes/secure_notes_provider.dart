@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
+import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
+import 'package:zpass/modules/vault/model/vault_item_secure_note_content.dart';
 import 'package:zpass/modules/vault/vault_item_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -13,15 +15,10 @@ class SecureNotesProvider extends BaseVaultProvider {
 
   SecureNotesProvider(): super(HomeProvider().repoDB);
 
-  String? get targetUrl {
-    if (entity == null) return null;
-    final detail = VaultItemLoginDetail.fromJson(entity!.detail);
-    return detail.loginUri;
-  }
 
-  VaultItemLoginContent? _content;
-  VaultItemLoginContent? get content => _content;
-  set content(VaultItemLoginContent? value) {
+  VaultItemSecureNoteContent? _content;
+  VaultItemSecureNoteContent? get content => _content;
+  set content(VaultItemSecureNoteContent? value) {
     _content = value;
     notifyListeners();
   }
@@ -41,11 +38,52 @@ class SecureNotesProvider extends BaseVaultProvider {
         Log.e("decrypt login detail content failed: $e", tag: _tag);
       });
       Log.d("decrypted content: $decryptContent", tag: _tag);
-      content = VaultItemLoginContent.fromJson(jsonDecode(decryptContent));
+      _content = VaultItemSecureNoteContent.fromJson(jsonDecode(decryptContent));
     } catch (e) {
       Log.e("exception occur: $e", tag: _tag);
     }
     loading = false;
     return null;
+  }
+
+  Future<bool> secureNodeUpdate(
+      {required String title,
+        required String note,
+        }) async {
+    // whether create new entity or not
+    entity ??= VaultItemEntity(
+        id: generateItemId(),
+        createTime: DateTime.now().millisecondsSinceEpoch,
+        updateTime: DateTime.now().millisecondsSinceEpoch,
+        useTime: DateTime.now().millisecondsSinceEpoch,
+        isDeleted: false,
+        name: title,
+        detail: null,
+        type: VaultItemType.note.index);
+    // whether create new content or not
+    content ??= VaultItemSecureNoteContent(
+        title: title, note: note);
+    // update content
+    content!.title = title;
+    content!.note = note;
+
+    String? encryptedContent;
+    await CryptoManager()
+        .encryptText(text: jsonEncode(content!.toJson()))
+        .then((value) => encryptedContent = value)
+        .catchError((e) {
+      Log.e("encrypt login detail content failed: $e", tag: _tag);
+    });
+    if (encryptedContent == null) {
+      return Future.error("vault entity detail's content encrypt failed");
+    }
+    // update entity
+    entity!.name = title;
+    entity!.detail = {
+      "content":encryptedContent
+    };
+    entity!.description = '';
+    //TODO update tags
+    return db.update(entity!);
   }
 }

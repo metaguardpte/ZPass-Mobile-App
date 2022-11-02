@@ -5,6 +5,9 @@ import 'package:zpass/modules/home/provider/tab_vault_item_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/tabs/tab_base_state.dart';
 import 'package:zpass/modules/home/tabs/tab_widget_helper.dart';
+import 'package:zpass/modules/vault/vault_routers.dart';
+import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/util/log_utils.dart';
 
 class TabNotesPage extends StatefulWidget {
   const TabNotesPage({Key? key}) : super(key: key);
@@ -43,5 +46,19 @@ class _TabNotesPageState extends TabBasePageState<TabNotesPage,
   @override
   String listGroupBy(VaultItemWrapper element) {
     return element.groupName;
+  }
+
+  @override
+  void onItemClicked(VaultItemWrapper item) {
+    // TODO: implement onItemClicked
+    NavigatorUtils.pushResult(context, RoutersVault.vaultSecureNotes,
+        (dynamic result) {
+      Log.d(
+          "${RoutersVault.vaultDetailLogin} router result: ${result?.toString()}",
+          tag: "TabLoginsPageState");
+      if (result["changed"] == true) {
+        provider.fetchData(reset: true);
+      }
+    }, arguments: {"item": item.raw});
   }
 }

@@ -6,8 +6,8 @@ part 'vault_item_entity.g.dart';
 class VaultItemEntity extends RecordEntity {
   String name;
   String? description;
-  String? secureTitle;
-  String? secureNote;
+  String? title;
+  String? note;
   dynamic detail;
   int type;
   bool? star;

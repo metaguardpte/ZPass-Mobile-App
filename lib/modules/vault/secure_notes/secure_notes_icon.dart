@@ -12,8 +12,6 @@ Widget buildSecureNotesIcon(BuildContext context, VaultItemEntity? entity) {
       decoration: BoxDecoration(
           color:const Color.fromRGBO(0,122,249,1),
           borderRadius: BorderRadius.circular(9)),
-      child: entity == null
-          ?const Icon(ZPassIcons.favNotes,size: 28,color: Colors.white,)
-          : renderVaultFavIcon(
-          vaultType: entity.type, iconUrl: parseVaultLoginIconUrl(entity)));
+      child: const Icon(ZPassIcons.favNotes,size: 28,color: Colors.white,)
+  );
 }

@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:zpass/main_initializer.dart';
-import 'package:zpass/modules/home/home_page_v2.dart';
 import 'package:zpass/modules/home/splash_page.dart';
 import 'package:zpass/modules/setting/provider/connectivity_provider.dart';
 import 'package:zpass/modules/setting/provider/locale_provider.dart';
@@ -87,7 +86,7 @@ class MyApp extends StatelessWidget {
       theme: theme ?? provider.getTheme(),
       darkTheme: provider.getTheme(isDarkMode: true),
       themeMode: provider.getThemeMode(),
-      home: HomePageV2(),
+      home: home ?? const SplashPage(),
       onGenerateRoute: Routers.router.generator,
       localizationsDelegates: const [
         S.delegate,
