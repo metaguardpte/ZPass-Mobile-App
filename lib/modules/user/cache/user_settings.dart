@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
 import 'package:zpass/modules/user/cache/user_storage.dart';
 import 'package:zpass/modules/user/model/user_setting_model.dart';
 
@@ -18,7 +19,20 @@ class UserSettings with UserStorage {
     _userSetting.backupAndSync = status;
     flush();
   }
-
+  set backupDate(String? time){
+    _userSetting.backupDate = time;
+    flush();
+  }
+  set syncDate(String? time){
+    _userSetting.syncDate = time;
+    flush();
+  }
+  updateBackupDate(){
+    _userSetting.backupDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+  }
+  updateSyncDate(){
+    _userSetting.syncDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+  }
   @override
   Future<dynamic> restore() async {
     final settingConfig = await read(_userSettingKey);

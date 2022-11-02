@@ -7,6 +7,8 @@ class UserSettingModel {
   bool? backupAndSync;
   String? syncProvider;
   String? language;
+  String? backupDate;
+  String? syncDate;
 
   UserSettingModel({this.backupAndSync,this.language,this.syncProvider});
 
