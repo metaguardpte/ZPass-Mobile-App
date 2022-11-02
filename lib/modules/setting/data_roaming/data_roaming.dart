@@ -40,8 +40,8 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   _handelSyncProviderModalShow() {
     if(_unlock()){
       pickSyncType(context, (type, index) {
+        _syncProviderType = type;
         setState(() {
-          _syncProviderType = type;
         });
       });
     }
@@ -233,7 +233,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
               )
                   : Container(),
               const Spacer(),
-              switchType ? Column(
+              (switchType && (_syncProviderType != null)) ? Column(
                 children: [
                   Container(
                     alignment: Alignment.center,
