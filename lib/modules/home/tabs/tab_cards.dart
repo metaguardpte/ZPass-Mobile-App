@@ -4,6 +4,8 @@ import 'package:zpass/modules/home/provider/tab_vault_item_provider.dart';
 import 'package:zpass/modules/home/provider/vault_item_type.dart';
 import 'package:zpass/modules/home/tabs/tab_base_state.dart';
 import 'package:zpass/modules/home/tabs/tab_widget_helper.dart';
+import 'package:zpass/modules/vault/vault_routers.dart';
+import 'package:zpass/routers/fluro_navigator.dart';
 
 class TabCardsPage extends StatefulWidget {
   const TabCardsPage({Key? key}) : super(key: key);
@@ -41,5 +43,17 @@ class _TabCardsPageState extends TabBasePageState<TabCardsPage,
   @override
   String listGroupBy(VaultItemWrapper element) {
     return element.groupName;
+  }
+
+  @override
+  void onItemClicked(VaultItemWrapper item) {
+    super.onItemClicked(item);
+    NavigatorUtils.pushResult(context, RoutersVault.vaultDetailCards, _refresh, arguments: {"item": item.raw});
+  }
+
+  _refresh(dynamic result) {
+    if (result["changed"] == true) {
+      provider.fetchData(reset: true);
+    }
   }
 }

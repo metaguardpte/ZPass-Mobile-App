@@ -17,19 +17,6 @@ class SettingPage extends StatefulWidget {
   State<SettingPage> createState() => _SettingPageState();
 }
 
-class UserInfo {
-  late String userName;
-  late String email;
-  late String head;
-  late String type;
-
-  UserInfo(
-      {required this.email,
-      required this.head,
-      required this.type,
-      required this.userName});
-}
-
 class _SettingPageState extends ProviderState<SettingPage, SettingProvider> {
   bool _fingerPrintType = false;
 
@@ -89,7 +76,7 @@ class _SettingPageState extends ProviderState<SettingPage, SettingProvider> {
                         borderRadius:
                         const BorderRadius.all(Radius.circular(50)),
                         child: LoadImage(
-                          userInfo.icon ?? '',
+                          userInfo.avatar ?? '',
                           width: 34,
                           height: 34,
                         ),
@@ -103,7 +90,7 @@ class _SettingPageState extends ProviderState<SettingPage, SettingProvider> {
                               children: [
                                 Material(
                                   child: Text(
-                                    userInfo.name ?? 'ZPASS',
+                                    userInfo.userName ?? 'ZPASS',
                                     style: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold),
@@ -124,7 +111,7 @@ class _SettingPageState extends ProviderState<SettingPage, SettingProvider> {
                                             color: const Color.fromRGBO(
                                                 73, 84, 255, 0.3000))),
                                     child: Text(
-                                      userInfo.type ?? 'zpass',
+                                      userInfo.type,
                                       style: const TextStyle(
                                           fontSize: 10,
                                           color:

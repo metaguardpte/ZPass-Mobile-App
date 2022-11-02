@@ -77,11 +77,11 @@
     }
   },
 
+  "planTypePilot": "Pilot",
   "registerTitleCreate": "Create your personal account",
   "registerTitlePassword": "Set your Master Password",
   "registerTitleSecret": "Keep your secret key created",
   "registerPlanType": "Plan Type",
-  "registerPlanTypePilot": "Pilot",
   "registerPlanTypeHint": "Select your account type",
   "businessEmail": "Business Email",
   "businessEmailHint": "Enter your business email",
@@ -137,7 +137,7 @@
   "profile":"Profile",
   "photo":"Photo",
   "fullName":"Full Name",
-  "planType":"planType",
+  "planType":"PlanType",
   "logout":"Logout",
   "logoutTitle":"Do you want to sign out of this account?",
   "signOut":"Sign Out",

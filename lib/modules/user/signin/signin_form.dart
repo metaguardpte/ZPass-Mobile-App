@@ -65,11 +65,15 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   _loginSuccess() {
-    UserProvider().profile.userEmail = Email;
-    UserProvider().profile.userSecretKey = SeKey;
     UserProvider().secretKeys.save(email: Email, secretKey: SeKey);
-    loadingDialog.dismiss(context);
-    NavigatorUtils.push(context, Routers.home, clearStack: true);
+    UserProvider().profile.tryUpdate().catchError((e) {
+      Log.e("tryUpdate user profile failed: $e");
+    }).whenComplete(() {
+      UserProvider().profile.userEmail = Email;
+      UserProvider().profile.userSecretKey = SeKey;
+      loadingDialog.dismiss(context);
+      NavigatorUtils.push(context, Routers.home, clearStack: true);
+    });
   }
 
   var SeKey = '';

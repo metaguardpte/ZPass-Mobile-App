@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/generated/l10n.dart';
+import 'package:zpass/modules/user/model/user_type.dart';
 import 'package:zpass/modules/user/register/register_provider.dart';
 import 'package:zpass/modules/user/register/view/register_page.dart';
 import 'package:zpass/modules/user/register/widgets/register_email_code.dart';
@@ -32,7 +33,7 @@ class RegisterBasicInformation extends StatefulWidget {
 }
 
 class _RegisterBasicInformationState extends ProviderState<RegisterBasicInformation, RegisterProvider> {
-  final List<String> _planTypes = [S.current.registerPlanTypePilot];
+  final List<String> _planTypes = UserType.values.map((t) => t.desc).toList();
   final ScrollController _controller = ScrollController();
 
   @override

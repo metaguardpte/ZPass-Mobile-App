@@ -108,7 +108,7 @@ class HttpClient {
     return options;
   }
 
-  Future<dynamic> requestNetwork(Method method, String url, {
+  Future<BaseResp> requestNetwork(Method method, String url, {
     Object? params,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,

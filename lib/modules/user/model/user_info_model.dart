@@ -1,26 +1,33 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
+import 'package:zpass/modules/user/model/user_type.dart';
 
 part 'user_info_model.g.dart';
 
 @JsonSerializable()
 class UserInfoModel {
+  @JsonKey(name: "id")
+  int userId;
+  int userType;
   String? email;
   String? secretKey;
-  String? icon;
-  String? name;
-  String? type;
+  String? avatar;
+  String? userName;
+  String? timezone;
   UserCryptoKeyModel? userCryptoKey;
 
-  UserInfoModel({this.email, this.icon, this.name, this.secretKey,this.userCryptoKey,this.type});
+  UserInfoModel({required this.userId, required this.userType});
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) =>
       _$UserInfoModelFromJson(json);
-  setValue(UserInfoModel value){
-    email = value.email;
-    secretKey = value.secretKey;
-    icon = value.icon;
-    name = value.name;
-  }
+
   Map<String, dynamic> toJson() => _$UserInfoModelToJson(this);
+
+  String get type {
+    if (userType >= 0 && userType < UserType.values.length) {
+      return UserType.values[userType].desc;
+    } else {
+      return "Unknown";
+    }
+  }
 }
