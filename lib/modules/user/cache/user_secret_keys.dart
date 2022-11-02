@@ -31,8 +31,11 @@ class UserSecretKeys with UserStorage {
     return Future.value();
   }
 
-  void save({required String email, required String secretKey}) =>
-      _loginUserList[email] = secretKey;
+  void save({required String email, required String secretKey}) {
+    _loginUserList[email] = secretKey;
+    flush();
+  }
+
 
   String? get({required String email}) => _loginUserList[email];
 }
