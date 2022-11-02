@@ -45,7 +45,7 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
       File file = File(zipFile);
       file.createSync(recursive: true);
       file.writeAsBytesSync(dataStore, mode: FileMode.write, flush: true);
-
+      Log.d("Success download google drive file to $zipFile");
       return _completer.complete(zipFile);
     }, onError: (error) {
       Log.e("download $fileId from google dirve failed:${error.toString()}");
@@ -80,8 +80,11 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
               drive.Media(sourceFile.openRead(), sourceFile.lengthSync()),
         );
       } else {
-        await _driveApi?.files.update(fileToUpload, zipFileId);
+        var uploadMedia = commons.Media(sourceFile.openRead(), sourceFile.lengthSync());
+        await _driveApi?.files.update(fileToUpload, zipFileId, uploadMedia: uploadMedia);
       }
+      Log.d("Success upload db file:($zipFileId) to google drive");
+
     } catch (e) {
       Log.e("upload to google dirve failed:${e.toString()}");
     }

@@ -19,8 +19,8 @@ abstract class BaseFileTransferManager {
   Future<String?> download(String userId) async {
     String localZipFile = await doDownload(userId);
     try {
-      String? decompressToPath = await P7zip.decompressZipToPath(
-          fromZip: localZipFile);
+      String? decompressToPath = await P7zip.decompressZipToPath(fromZip: localZipFile);
+      Log.d("Finish decompress zip file to $decompressToPath");
       return decompressToPath;
     } catch (e) {
       Log.e("decompress zip file failed after download:${e.toString()}");
@@ -48,10 +48,10 @@ abstract class BaseFileTransferManager {
         toBeArchivedFiles.add(f.path);
       }
       String zipFilePath = '$uniquePath$defaultZipFileName';
-      await P7zip.compressFileListToZip(
-          files: toBeArchivedFiles, toZip: zipFilePath);
+      String? compressedFile = await P7zip.compressFileListToZip(files: toBeArchivedFiles, toZip: zipFilePath);
+      Log.d("Finish compress files: $toBeArchivedFiles to $compressedFile");
 
-      await doUpload(zipFilePath, userId);
+      await doUpload(compressedFile!, userId);
     }catch (e) {
       Log.e("upload to google dirve failed:${e.toString()}");
     }
