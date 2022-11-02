@@ -67,6 +67,15 @@ class _DataRoamingPageState extends State<DataRoamingPage>
           _animationController.stop();
         });
       });
+      if(unzipDBFolder == null){
+        Toast.showError('There is no data online , please sync first');
+        setState(() {
+          onBackupStatus = false;
+          _animationController.stop();
+        });
+        return ;
+        
+      }
       DBSyncUnit.sync(unzipDBFolder!).then((value) {
         UserProvider().settings.updateBackupDate();
         setState(() {
