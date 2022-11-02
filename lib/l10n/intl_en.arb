@@ -199,8 +199,12 @@
   "vaultLoginName": "Login Name",
   "vaultLoginPwd": "Login Password",
   "vaultLoginURL": "Login Page URL",
-  "vaultNote": "Note",
   "vaultTag": "Tag",
+  "noSecureNotes":"Not added yet",
+  "none":"None",
+  "title":"Title",
+  "note":"Note",
+  "vaultNote":"Note",
   "vaultNone": "None",
   "vaultOther": "Other",
 

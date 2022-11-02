@@ -192,10 +192,23 @@
   "err_duplicate_login": "账户密码(页面链接和用户名)已存在。",
   "err_email_duplicate_domain_owner": "邮箱地址已经注册了商业帐号",
 
+  "noSecureNotes":"Not added yet",
+  "none":"None",
+  "title":"Title",
+  "note":"Note",
+
   "vaultTitle": "标题",
   "vaultLoginName": "登录账号",
   "vaultLoginPwd": "登录密码",
   "vaultLoginURL": "登录页面",
   "vaultNote": "备注",
-  "vaultTag": "标签"
+  "vaultTag": "标签",
+  "vaultNone": "None",
+  "vaultOther": "Other",
+
+  "vaultCardNumber": "Card Number",
+  "vaultExpiryDate": "Expiry Date",
+  "vaultCVV": "CVV",
+  "vaultZipOrPostalCode": "Zip or Postal Code",
+  "vaultCardPIN": "Card Pin"
 }

@@ -25,7 +25,8 @@ class UserProfile with UserStorage {
         flush();
         return true;
       } else {
-        throw StateError("failed to fetch user profile from server");
+        Log.d("failed to fetch user profile from server", tag: _tag);
+        return false;
       }
     });
   }
@@ -53,7 +54,7 @@ class UserProfile with UserStorage {
 
   @override
   Future<dynamic> clear() {
-    write(_kUserProfile, jsonEncode({}));
+    // write(_kUserProfile, jsonEncode({}));
     return Future.value();
   }
 

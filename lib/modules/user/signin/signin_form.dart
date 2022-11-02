@@ -55,7 +55,7 @@ class _SignInFormState extends State<SignInForm> {
     loadingDialog.show(context, barrierDismissible: false);
     CryptoManager().login(Email, Psw, AppConfig.serverUrl, SeKey).then((value) {
       UserProvider().profile.userCryptoKey = UserCryptoKeyModel.fromJson(value);
-      _loginSuccess();
+      _loginSuccess(loginRes: value);
       UserProvider().biometrics.putUserLastLoginTime(DateTime.now());
     }).catchError((error) {
       loadingDialog.dismiss(context);
@@ -64,13 +64,20 @@ class _SignInFormState extends State<SignInForm> {
     //submit
   }
 
-  _loginSuccess() {
+  _loginSuccess({dynamic loginRes}) {
     UserProvider().secretKeys.save(email: Email, secretKey: SeKey);
     UserProvider().profile.tryUpdate().catchError((e) {
       Log.e("tryUpdate user profile failed: $e");
     }).whenComplete(() {
       UserProvider().profile.userEmail = Email;
       UserProvider().profile.userSecretKey = SeKey;
+      if (loginRes != null) {
+        try {
+          UserProvider().profile.userCryptoKey = UserCryptoKeyModel.fromJson(loginRes);
+        } catch (e) {
+          Log.e("parse user crypto key model fail", tag: "SignInFormPage");
+        }
+      }
       loadingDialog.dismiss(context);
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     });
