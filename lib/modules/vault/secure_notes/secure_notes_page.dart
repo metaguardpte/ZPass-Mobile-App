@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zpass/extension/int_ext.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/vault/login/login_detail_helper.dart';
@@ -8,7 +7,6 @@ import 'package:zpass/modules/vault/model/vault_item_secure_note_content.dart';
 import 'package:zpass/modules/vault/secure_notes/secure_notes_icon.dart';
 import 'package:zpass/modules/vault/secure_notes/secure_notes_provider.dart';
 import 'package:zpass/modules/vault/vault_detail_base_state.dart';
-import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/styles.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -106,7 +104,6 @@ class _SecureNotesPageState
 
   @override
   Widget buildBody(bool editing) {
-    // TODO: implement buildBody
     return SingleChildScrollView(
         child: Selector<SecureNotesProvider, VaultItemSecureNoteContent?>(
             builder: (_, content, __) {
@@ -206,12 +203,11 @@ class _SecureNotesPageState
 
   @override
   SecureNotesProvider prepareProvider() {
-    // TODO: implement prepareProvider
+    // VaultItemSecureNoteContent: implement prepareProvider
     return SecureNotesProvider();
   }
 
   @override
-  // TODO: implement title
   String get title => S.current.tabSecureNotes;
 
   @override
@@ -220,7 +216,6 @@ class _SecureNotesPageState
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    Log.d('secureNodeUpdate -----');
     provider.secureNodeUpdate(
         title: _secureTitle.currentState!.text,
         note: _secureNote.currentState!.text).then((value) => Log.d('value.toString() ${value.toString()}'));
