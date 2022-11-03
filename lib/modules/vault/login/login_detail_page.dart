@@ -270,6 +270,7 @@ class _LoginDetailPageState
       ).then((succeed) {
         if (succeed) {
           Toast.show("Item saved");
+          provider.hasChange = true;
           // NavigatorUtils.goBackWithParams(context, {"changed": true});
         } else {
           Toast.showError("Failed to save item");

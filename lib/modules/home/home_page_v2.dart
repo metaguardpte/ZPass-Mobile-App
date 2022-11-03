@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/provider/home_provider.dart';
+import 'package:zpass/modules/home/provider/vault_item_type.dart';
+import 'package:zpass/modules/home/tabs/tab_base_state.dart';
 import 'package:zpass/modules/home/widgets/home_app_bar_builder.dart';
 import 'package:zpass/modules/home/widgets/home_bottom_bar_builder.dart';
 import 'package:zpass/modules/home/tabs/tab_cards.dart';
@@ -20,6 +22,7 @@ import 'package:zpass/modules/sync/sync_task.dart';
 import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/signin/signin_by_scanner.dart';
 import 'package:zpass/modules/vault/vault_item_picker.dart';
+import 'package:zpass/modules/vault/vault_routers.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
@@ -50,6 +53,10 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   late final List<Widget> _pageList;
   late final PageController _pageController = PageController();
   late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _tabLoginsKey = GlobalKey<TabBasePageState>();
+  final _tabNotesKey = GlobalKey<TabBasePageState>();
+  final _tabCardsKey = GlobalKey<TabBasePageState>();
+  final _tabIdentitiesKey = GlobalKey<TabBasePageState>();
 
   @override
   void initState() {
@@ -62,11 +69,11 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       TabItem(icon: ZPassIcons.identities, activeIcon: ZPassIcons.identitiesActive, title: S.current.tabIdentities),
     ];
     _pageList = [
-      const TabLoginsPage(),
-      const TabNotesPage(),
+      TabLoginsPage(key: _tabLoginsKey),
+      TabNotesPage(key: _tabNotesKey),
       Container(),
-      const TabCardsPage(),
-      const TabIdentitiesPage(),
+      TabCardsPage(key: _tabCardsKey),
+      TabIdentitiesPage(key: _tabIdentitiesKey),
     ];
     super.initState();
   }
@@ -110,7 +117,11 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       onTapNotify: (i) {
         var intercept = i == HomePageV2.dockedFake;
         if (intercept) {
-          pickVaultType(context);
+          VaultItemPicker(
+              data: VaultItemType.values.sublist(0, 4),
+              onItemSelected: _onVaultItemTap,
+              title: "Items")
+              .show(context);
         }
         return !intercept;
       },
@@ -129,6 +140,39 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       onPageChanged: (int index) => provider.homeTabIndex = index,
       children: _pageList,
     );
+  }
+
+  void _onVaultItemTap(type, index) {
+    Log.d("pick vault item type: $type");
+    switch (type) {
+      case VaultItemType.login:
+        NavigatorUtils.pushResult(
+          context,
+          RoutersVault.vaultDetailLogin,
+          (result) => _doRefresh(_tabLoginsKey, result),
+        );
+        break;
+      case VaultItemType.credit:
+        NavigatorUtils.pushResult(
+          context,
+          RoutersVault.vaultDetailCards,
+          (result) => _doRefresh(_tabCardsKey, result),
+        );
+        break;
+      case VaultItemType.note:
+        NavigatorUtils.pushResult(
+          context,
+          RoutersVault.vaultSecureNotes,
+          (result) => _doRefresh(_tabNotesKey, result),
+        );
+        break;
+    }
+  }
+
+  void _doRefresh(GlobalKey<TabBasePageState> key, dynamic result) {
+    if (result["changed"] == true) {
+      key.currentState?.provider.fetchData(reset: true);
+    }
   }
 
   bool _onBackPress() {
