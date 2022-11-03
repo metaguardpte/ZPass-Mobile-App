@@ -88,6 +88,9 @@ class _SignInFormState extends State<SignInForm> {
     _email = value;
     _secretKey = '';
     _secretGlobalKey.currentState?.fillText("");
+    if (_email.isEmpty) {
+      _buildUserBiometricsBtn();
+    }
   }
 
   _getPassword(value) {
@@ -232,7 +235,7 @@ class _SignInFormState extends State<SignInForm> {
         Gaps.vGap18,
         ZPassFormEditText(
           key: _secretGlobalKey,
-          initialText: _secretKey,
+          initialText: recode(_secretKey),
           hintText: S.current.seKey,
           filled: true,
           prefix: const Icon(ZPassIcons.icSignInSecretKey, color: Color(0xFF959BA7), size: 20),

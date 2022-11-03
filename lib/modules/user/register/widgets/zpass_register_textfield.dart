@@ -128,10 +128,7 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       child: Row(
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: widget.type == TextFieldType.selection ? _buildSelectionText() : _buildTextField(),
-            ),
+            child: widget.type == TextFieldType.selection ? _buildSelectionText() : _buildTextField(),
           ),
           _buildSuffixWidget(),
         ],
@@ -151,7 +148,15 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
       keyboardType: widget.textInputType,
       obscureText: widget.type == TextFieldType.password ? _isSecret : false,
       decoration: InputDecoration(
-        border: InputBorder.none,
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        disabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
         hintText: widget.hintText ?? "",
         hintStyle: const TextStyle(color: Color(0xFF93979D), fontSize: 13),
         suffixIcon: _buildCleanBtn(),
@@ -175,9 +180,12 @@ class _ZPassTextFieldState extends State<ZPassTextField> {
     Color textColor = Color(hasText ? 0xFF16181A : 0xFF93979D);
     return GestureDetector(
       onTap: widget.onSelectionTap,
-      child: Text(
-          hasText ? widget.selectionText! : (widget.hintText ?? ""),
-          style: TextStyle(fontSize: hasText ? 16 : 13, color: textColor),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Text(
+            hasText ? widget.selectionText! : (widget.hintText ?? ""),
+            style: TextStyle(fontSize: hasText ? 16 : 13, color: textColor),
+        ),
       ),
     );
   }

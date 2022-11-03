@@ -255,6 +255,9 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
 
   void fillText(String keyword) {
     _controller.text = keyword;
+    if (keyword.isEmpty) {
+      setState(() {});
+    }
   }
 
   void _onListenFocus() {
