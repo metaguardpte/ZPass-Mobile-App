@@ -5,6 +5,7 @@ import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_dialog.dart';
 import 'package:zpass/widgets/zpass_edittext.dart';
+import 'package:zpass/widgets/zpass_form_edittext.dart';
 
 import '../../generated/l10n.dart';
 
@@ -90,9 +91,9 @@ class ZPassConfirmDialog extends ZPassDialog {
   Widget _buildInputContainer(BuildContext context) {
     final textField = Container(
       padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: ZPassEditText(
+      child: ZPassFormEditText(
         prefix: Gaps.empty,
-        obscureText: true,
+        obscureText: inputObscureText!,
         autofocus: true,
         bgColor: Colors.white,
         focusBgColor: Colors.white,

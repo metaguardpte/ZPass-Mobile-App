@@ -10,13 +10,13 @@ import 'package:zpass/modules/user/model/user_login_info_model.dart';
 
 class UserBiometrics with UserStorage {
   static const String _kUserLoginInfo = "zpass-mobile-userLoginInfo";
-  static const int _userRequirePasswordDefaultDay = 14;
+  static const int _userRequirePasswordDefaultDay = 7;
 
   List<UserLoginInfoModel> _loginInfoList = [];
-  late UserInfoModel _userInfo;
+  // late UserInfoModel _userInfo;
 
   void setUserInfo(UserInfoModel info) {
-    _userInfo = info;
+    // _userInfo = info;
   }
 
   @protected
@@ -50,54 +50,48 @@ class UserBiometrics with UserStorage {
     return Future.value();
   }
 
-  void putUserBiometrics(bool isOpen) {
-    if (_userInfo.email == null || _userInfo.secretKey == null) return;
-    UserLoginInfoModel infoModel = _getCurrentUserLoginInfo();
+  void putUserBiometrics(bool isOpen, String email) {
+    UserLoginInfoModel infoModel = _getCurrentUserLoginInfo(email);
     infoModel.biometrics = isOpen;
     flush();
   }
 
-  bool getUserBiometrics() {
-    if (_userInfo.email == null || _userInfo.secretKey == null) return false;
-    final result = _loginInfoList.firstWhereOrNull((element) => element.email == _userInfo.email);
+  bool getUserBiometrics(String email) {
+    final result = _loginInfoList.firstWhereOrNull((element) => element.email == email);
     if (result == null) return false;
     return result.biometrics ?? false;
   }
 
-  int getRequirePasswordDay() {
-    if (_userInfo.email == null || _userInfo.secretKey == null) return _userRequirePasswordDefaultDay;
-    final result = _loginInfoList.firstWhereOrNull((element) => element.email == _userInfo.email);
+  int getRequirePasswordDay(String email) {
+    final result = _loginInfoList.firstWhereOrNull((element) => element.email == email);
     if (result == null) return _userRequirePasswordDefaultDay;
     return result.requirePasswordDay ?? _userRequirePasswordDefaultDay;
   }
 
-  void putRequirePasswordDay(int day) {
-    if (_userInfo.email == null || _userInfo.secretKey == null) return;
-    UserLoginInfoModel infoModel = _getCurrentUserLoginInfo();
+  void putRequirePasswordDay(String email, int day) {
+    UserLoginInfoModel infoModel = _getCurrentUserLoginInfo(email);
     infoModel.requirePasswordDay = day;
     flush();
   }
 
-  bool checkBiometricsIsExpired() {
-    if (_userInfo.email == null || _userInfo.secretKey == null) return true;
-    final result = _loginInfoList.firstWhereOrNull((element) => element.email == _userInfo.email);
+  bool checkBiometricsIsExpired(String email) {
+    final result = _loginInfoList.firstWhereOrNull((element) => element.email == email);
     if (result == null) return true;
     if (result.lastLoginTime == null) return true;
     int inDays = DateTime.now().difference(result.lastLoginTime!).inDays;
     return inDays > result.requirePasswordDay!;
   }
 
-  void putUserLastLoginTime(DateTime time) {
-    if (_userInfo.email == null || _userInfo.secretKey == null) return;
-    UserLoginInfoModel infoModel = _getCurrentUserLoginInfo();
+  void putUserLastLoginTime(DateTime time, String email) {
+    UserLoginInfoModel infoModel = _getCurrentUserLoginInfo(email);
     infoModel.lastLoginTime = time;
     flush();
   }
 
-  UserLoginInfoModel _getCurrentUserLoginInfo() {
-    UserLoginInfoModel? infoModel = _loginInfoList.firstWhereOrNull((element) => element.email == _userInfo.email);
+  UserLoginInfoModel _getCurrentUserLoginInfo(String email) {
+    UserLoginInfoModel? infoModel = _loginInfoList.firstWhereOrNull((element) => element.email == email);
     if (infoModel == null) {
-      infoModel = UserLoginInfoModel(email: _userInfo.email!);
+      infoModel = UserLoginInfoModel(email: email ?? "");
       _loginInfoList.add(infoModel);
     }
     return infoModel;

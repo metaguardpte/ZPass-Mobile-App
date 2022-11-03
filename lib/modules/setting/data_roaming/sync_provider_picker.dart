@@ -47,7 +47,7 @@ class SyncProviderPicker extends ZPassPickerDialog<SyncProviderType> {
 }
 
 void pickSyncType(BuildContext context,Function onChange) {
-  final data = SyncProviderType.values.sublist(0, 4);
+  final data = SyncProviderType.values.sublist(0, 1);
   itemSelected(SyncProviderType type, index) {
     Log.d("pick vault item type: $type");
     UserProvider().settings.syncProvider = type.name;

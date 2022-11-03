@@ -19,6 +19,7 @@ class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
   final bool enableCopy;
   final bool readOnly;
   final TextInputAction action;
+  final TextInputType? keyboardType;
   final double? borderRadius;
   final Widget? prefix;
   final String? initialText;
@@ -44,6 +45,7 @@ class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
     this.enableCopy = false,
     this.readOnly = false,
     this.action = TextInputAction.done,
+    this.keyboardType,
     this.onChanged,
     this.onSubmitted,
     this.autofocus = false,
@@ -103,6 +105,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
       maxLines: widget.maxLines,
       obscureText: widget.obscureText ? _isSecret : false,
       textInputAction: widget.action,
+      keyboardType: widget.keyboardType,
       onFieldSubmitted: (String val) {
         _focus.unfocus();
         widget.onSubmitted?.call(val);
@@ -134,6 +137,10 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
                 borderRadius: BorderRadius.circular(widget.borderRadius!),
               )
             : null,
+        border: widget.borderRadius != null ? OutlineInputBorder(
+          borderSide: BorderSide(color: widget.readOnly ? widget.borderColor : context.primaryColor, width: 0.5,),
+          borderRadius: BorderRadius.circular(widget.borderRadius!),
+        ) : null,
         filled: widget.filled,
         prefixIcon: widget.enablePrefix ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),

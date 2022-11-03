@@ -18,10 +18,18 @@ class CardsDetailProvider extends BaseVaultProvider {
     notifyListeners();
   }
 
+  List<String> _tags = [];
+  List<String> get tags => _tags;
+  set tags(List<String> value) {
+    _tags = value;
+    notifyListeners();
+  }
+
   @override
   Future analyticsData(VaultItemEntity? data) async {
     if (data == null) return null;
     entity = data;
+    tags = data.tags ?? [];
     Map<String, dynamic> detail = data.detail ?? {};
     if (detail.isEmpty) return null;
     editing = false;
@@ -47,7 +55,6 @@ class CardsDetailProvider extends BaseVaultProvider {
         String? zipCode,
         String? pin,
         String? note,
-        List<String>? tags
       }) async {
     // whether create new entity or not
     entity ??= VaultItemEntity(

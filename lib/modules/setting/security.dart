@@ -36,14 +36,14 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
  List<RowData> _rowDataList = [];
  String _confirmPassword = "";
  final _requirePasswordDays = [7, 14, 30];
+ String get _email => UserProvider().profile.data.email ?? "";
 
   @override
   void initState() {
     super.initState();
-    provider.userRequirePassword = S.current.settingRequirePasswordDays(
-        UserProvider().biometrics.getRequirePasswordDay());
-    _initDefaultRowData();
-    _initBiometricsRowData();
+    final day = UserProvider().biometrics.getRequirePasswordDay(_email);
+    provider.userRequirePassword = S.current.settingRequirePasswordDays(day);
+    _buildRow();
   }
 
  @override
@@ -70,6 +70,12 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
         )
       ],
     );
+  }
+
+  void _buildRow() {
+    _rowDataList = [];
+    _initDefaultRowData();
+    _initBiometricsRowData();
   }
 
   void _initDefaultRowData() {
@@ -109,7 +115,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
    final bool canAuth = await LocalAuthManager().canAuth();
    if (!canAuth) return;
 
-   final bool isOpen = UserProvider().biometrics.getUserBiometrics();
+   final bool isOpen = UserProvider().biometrics.getUserBiometrics(_email);
    if (Device.isAndroid) {
      final biometrics = RowData(
        text: S.current.UnlockWithBiometrics,
@@ -138,50 +144,53 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
      }
    }
 
-   final requirePassword = RowData(
-        text: S.current.settingRequirePassword,
-        icon: const Icon(ZPassIcons.icRequirePassword, size: 18),
-     right: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: _doSelectedRequirePassword,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Material(
-                  child: Selector<SettingProvider, String>(
-                    builder: (_, day, __) {
-                      return Text(
-                        day,
-                        style: widget.rightStyle,
-                        maxLines: 1,
-                        textAlign: TextAlign.right,
-                        overflow: TextOverflow.ellipsis,
-                      );
-                    },
-                    selector: (_, provider) => provider.userRequirePassword,
-                  ),
-                ),
-              ),
-            ),
-            Icon(ZPassIcons.icArrowRight, color: widget.rightColor, size: 10),
-          ],
-        ),
-      ),
-    );
-   _rowDataList.add(requirePassword);
+   if (isOpen) {
+     final requirePassword = RowData(
+       text: S.current.settingRequirePassword,
+       icon: const Icon(ZPassIcons.icRequirePassword, size: 18),
+       right: GestureDetector(
+         behavior: HitTestBehavior.opaque,
+         onTap: _doSelectedRequirePassword,
+         child: Row(
+           mainAxisSize: MainAxisSize.min,
+           children: [
+             Expanded(
+               child: Padding(
+                 padding: const EdgeInsets.only(right: 10),
+                 child: Material(
+                   child: Selector<SettingProvider, String>(
+                     builder: (_, day, __) {
+                       return Text(
+                         day,
+                         style: widget.rightStyle,
+                         maxLines: 1,
+                         textAlign: TextAlign.right,
+                         overflow: TextOverflow.ellipsis,
+                       );
+                     },
+                     selector: (_, provider) => provider.userRequirePassword,
+                   ),
+                 ),
+               ),
+             ),
+             Icon(ZPassIcons.icArrowRight, color: widget.rightColor, size: 10),
+           ],
+         ),
+       ),
+     );
+     _rowDataList.add(requirePassword);
+   }
     setState(() {});
  }
 
   Future<bool?> _doSwitchBiometrics(bool isOpen) async {
    if (!isOpen) {
-     UserProvider().biometrics.putUserBiometrics(false);
+     UserProvider().biometrics.putUserBiometrics(false, _email);
+     _buildRow();
      return Future.value(false);
    }
-   final bool auth = await LocalAuthManager().authenticate();
-   if (!auth) return Future.value(null);
+   // final bool auth = await LocalAuthManager().authenticate();
+   // if (!auth) return Future.value(null);
 
    return _showConfirmPasswordDialog();
   }
@@ -192,6 +201,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
     ZPassConfirmDialog(
       message: S.current.settingConfirmMasterPassword,
       isInput: true,
+      inputObscureText: true,
       onInputChange: (value) => _confirmPassword = value,
       onConfirmTap: () async {
         final result = await _doVerifyPassword();
@@ -217,7 +227,8 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
       Toast.showSpec("Master password is error");
       return await _showConfirmPasswordDialog();
     }
-    UserProvider().biometrics.putUserBiometrics(true);
+    _buildRow();
+    UserProvider().biometrics.putUserBiometrics(true, _email);
     return true;
   }
 
@@ -227,7 +238,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
       data: selections.toList(),
       title: S.current.settingRequirePassword,
       onItemSelected: (item, index) {
-        UserProvider().biometrics.putRequirePasswordDay(_requirePasswordDays[index]);
+        UserProvider().biometrics.putRequirePasswordDay(_email, _requirePasswordDays[index]);
         provider.userRequirePassword = item;
       },
     ).show(context);
