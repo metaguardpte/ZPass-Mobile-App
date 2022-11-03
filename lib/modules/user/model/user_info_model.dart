@@ -4,7 +4,7 @@ import 'package:zpass/modules/user/model/user_type.dart';
 
 part 'user_info_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class UserInfoModel {
   @JsonKey(name: "id")
   int userId;
