@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -37,14 +39,17 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   bool _unlock(){
     return !onBackupStatus && !onSyncStatus;
   }
-  _handelSyncProviderModalShow() {
-    if(_unlock()){
-      pickSyncType(context, (type, index) {
-        _syncProviderType = type;
-        setState(() {
-        });
-      });
+  Future<SyncProviderType?> _handelSyncProviderModalShow() async{
+    if(!_unlock()){
+     return Future.value(null);
     }
+    Completer<SyncProviderType?> lock = Completer();
+    pickSyncType(context, (type, index) {
+      _syncProviderType = type;
+      setState(() {});
+      lock.complete(type);
+    });
+    return lock.future;
   }
 
   BaseFileTransferManager _getFileTransferManager() {
@@ -58,6 +63,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       setState(() {});
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
       final userId = UserProvider().profile.data.userId;
+
       var unzipDBFolder =
           await fileTransferManager.download("$userId").catchError((err) {
         Log.d(
@@ -77,6 +83,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         
       }
       DBSyncUnit.sync(unzipDBFolder!).then((value) {
+        fileTransferManager.deleteTempAssets(unzipDBFolder);
         UserProvider().settings.updateBackupDate();
         setState(() {
           onBackupStatus = false;
@@ -94,6 +101,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   }
 
   _handelSync() {
+
     if (_unlock()) {
       onSyncStatus = true;
       _animationController.forward();
@@ -101,6 +109,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
       var localDBPath = ZPassDB().getDBPath();
       final userId = UserProvider().profile.data.userId;
+      Log.d('userId : $userId');
       fileTransferManager.upload(localDBPath, "$userId").then((value) {
         UserProvider().settings.updateSyncDate();
         setState(() {
@@ -109,6 +118,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         });
         Toast.showSuccess('${S.current.sync} ${S.current.successfully}');
       }).catchError((err) {
+        Toast.showError(err.toString());
         Log.d(
             'fileTransferManager download err -------------- > :  ${err.toString()}');
         setState(() {
@@ -142,11 +152,36 @@ class _DataRoamingPageState extends State<DataRoamingPage>
             defaultValue: switchType,
             onChange: (value) async {
               if (_unlock()) {
-                switchType = value;
-                UserProvider().settings.backupAndSync = value;
+                if(value && _syncProviderType == null){
+                  var providerType = await _handelSyncProviderModalShow();
+                  if(providerType != null){
+                    var account = await providerType.getAccount.catchError((err){
+                      Toast.showError(err.toString());
+                    });
+                    Log.d('account:$account');
+                    if(account != null){
+                      UserProvider().settings.syncAccount = account;
+                      switchType = value;
+                      UserProvider().settings.backupAndSync = value;
+                      setState(() {});
+                      return value;
+                    }
+                  }
+                  switchType = false;
+                  UserProvider().settings.backupAndSync = false;
+                  setState(() {});
+                  return false;
+
+                }
+                else{
+                  switchType = value;
+                  UserProvider().settings.backupAndSync = value;
+                  setState(() {});
+                  return value;
+                }
                 setState(() {});
               }
-              return value;
+              return switchType;
             },
           ))
     ];

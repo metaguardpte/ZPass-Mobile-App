@@ -14,7 +14,10 @@ class UserSettings with UserStorage {
     _userSetting.syncProvider = value;
     flush();
   }
-
+  set syncAccount(String status){
+    _userSetting.syncAccount = status;
+    flush();
+  }
   set backupAndSync(bool status){
     _userSetting.backupAndSync = status;
     flush();

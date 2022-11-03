@@ -7,7 +7,6 @@ import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
-import 'package:zpass/modules/user/signin/psw_input.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
 import 'package:zpass/plugin_bridge/local_auth/local_auth_manager.dart';
@@ -19,8 +18,8 @@ import 'package:zpass/util/device_utils.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_loading_dialog.dart';
-import 'package:zpass/widgets/load_image.dart';
-import 'package:zpass/modules/user/signin/zpass_input.dart';
+import 'package:zpass/widgets/zpass_button_gradient.dart';
+import 'package:zpass/widgets/zpass_form_edittext.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key, this.data}) : super(key: key);
@@ -35,108 +34,106 @@ class _SignInFormState extends State<SignInForm> {
   FocusNode focusNode = FocusNode();
   Widget _biometricsButton = Gaps.empty;
 
+  final _emailKey = GlobalKey<ZPassFormEditTextState>();
+  final _passwordKey = GlobalKey<ZPassFormEditTextState>();
+  final _secretGlobalKey = GlobalKey<ZPassFormEditTextState>();
+
+  String _secretKey = "";
+  String _password = "";
+  String _email = "";
+
   String recode(String code) {
     if (code.length < 9) return code;
     var str = code.substring(0, 8);
     return '$str **** **** ****';
   }
 
-  void handelSignIn() {
-    if (Email.isEmpty) {
+  void _handleSignIn() {
+    if (_email.isEmpty) {
       Toast.showError(S.current.signinTip + S.current.email);
       return;
-    } else if (Psw.isEmpty) {
+    } else if (_password.isEmpty) {
       Toast.showError(S.current.signinTip + S.current.password);
       return;
-    } else if (SeKey.isEmpty) {
+    } else if (_secretKey.isEmpty) {
       Toast.showError(S.current.signinTip + S.current.seKey);
       return;
     }
     loadingDialog.show(context, barrierDismissible: false);
-    CryptoManager().login(Email, Psw, AppConfig.serverUrl, SeKey).then((value) {
-      UserProvider().profile.userCryptoKey = UserCryptoKeyModel.fromJson(value);
-      _loginSuccess(loginRes: value);
-    }).catchError((error) {
+    CryptoManager()
+        .login(_email, _password, AppConfig.serverUrl, _secretKey)
+        .then(_loginSuccess)
+        .catchError((error) {
       loadingDialog.dismiss(context);
       Toast.showSpec(S.current.loginFail);
     });
     //submit
   }
 
-  _loginSuccess({dynamic loginRes}) {
-    UserProvider().secretKeys.save(email: Email, secretKey: SeKey);
+  _loginSuccess(value) {
+    UserProvider().secretKeys.save(email: _email, secretKey: _secretKey);
+    UserProvider().profile.setMainUser(_email);
+    UserProvider().profile.userCryptoKey = UserCryptoKeyModel.fromJson(value);
+    UserProvider().profile.userSecretKey = _secretKey;
+    UserProvider().biometrics.putUserLastLoginTime(DateTime.now(), _email);
     UserProvider().profile.tryUpdate().catchError((e) {
       Log.e("tryUpdate user profile failed: $e");
     }).whenComplete(() {
-      UserProvider().profile.userEmail = Email;
-      UserProvider().profile.userSecretKey = SeKey;
-      if (loginRes != null) {
-        try {
-          UserProvider().profile.userCryptoKey = UserCryptoKeyModel.fromJson(loginRes);
-        } catch (e) {
-          Log.e("parse user crypto key model fail", tag: "SignInFormPage");
-        }
-      }
-      UserProvider().biometrics.putUserLastLoginTime(DateTime.now(), Email);
       loadingDialog.dismiss(context);
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     });
   }
 
-  var SeKey = '';
-  var Psw = '';
-  var Email = '';
-  late TextEditingController SeKeyController = TextEditingController();
-  late TextEditingController emailController = TextEditingController();
-
-  getEmail(value) {
-    Email = value;
-    SeKey = '';
-    SeKeyController.text = '';
+  _getEmail(value) {
+    _email = value;
+    _secretKey = '';
+    _secretGlobalKey.currentState?.fillText("");
   }
 
-  getPsw(value) {
-    Psw = value;
+  _getPassword(value) {
+    _password = value;
   }
 
-  getSeKey(value) {
-    SeKey = value;
+  _getSecretKey(value) {
+    _secretKey = value;
   }
 
-  getQRCode() {
+  _getQRCode() {
     Permission.camera.request().then((status) {
       if (!status.isGranted) {
         Toast.showError(
             'No Camera Permission , Please go to the system settings to open the permission');
         return;
       }
-      NavigatorUtils.pushResult(context, RouterScanner.scanner, (dynamic data) {
-        try {
-          final params = Uri.parse(data['data']).queryParameters;
-          if (params['secretKey'] != null) {
-            SeKeyController.text = params['secretKey'] ?? "";
-            SeKey = params['secretKey']!;
-            emailController.text = params['email'] ?? "";
-            Email = params['email'] ?? "";
-            _buildUserBiometricsBtn();
-          } else {
-            Toast.showSpec('don`t get Secret Key');
-          }
-        } catch (e) {
-          Log.d(e.toString());
-          Toast.showSpec('don`t get Secret Key');
-        }
-      });
+      NavigatorUtils.pushResult(context, RouterScanner.scanner, _parseScanCodeResult);
     });
   }
 
+  _parseScanCodeResult(dynamic data) {
+    try {
+      final params = Uri.parse(data['data']).queryParameters;
+      final key = params['secretKey'] ?? "";
+      if (key.isNotEmpty) {
+        _secretKey = key;
+        _secretGlobalKey.currentState?.fillText(key);
+        final email = params['email'] ?? "";
+        _email = email;
+        _emailKey.currentState?.fillText(email);
+        _buildUserBiometricsBtn();
+      } else {
+        Toast.showSpec('don`t get Secret Key');
+      }
+    } catch (e) {
+      Log.d(e.toString());
+      Toast.showSpec('don`t get Secret Key');
+    }
+  }
+
   void _initDefaultValue() {
-    final userinfo = UserProvider().profile.data;
-    if ((userinfo.email ?? "").isEmpty) return;
-    Email = userinfo.email ?? "";
-    SeKey = userinfo.secretKey ?? "";
-    SeKeyController.text = recode(SeKey);
-    emailController.text = Email;
+    final userinfo = UserProvider().profile.getMainUser();
+    if ((userinfo?.email ?? "").isEmpty) return;
+    _email = userinfo?.email ?? "";
+    _secretKey = userinfo?.secretKey ?? "";
   }
 
   bool _canAutomaticAuthenticate() {
@@ -146,7 +143,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   Future<bool> _canAuthenticate() async {
-    if (!UserProvider().biometrics.getUserBiometrics(Email)) return false;
+    if (!UserProvider().biometrics.getUserBiometrics(_email)) return false;
     return await LocalAuthManager().canAuth();
   }
 
@@ -159,9 +156,9 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void _doAuthenticate() async {
-    final isExpired = UserProvider().biometrics.checkBiometricsIsExpired(Email);
+    final isExpired = UserProvider().biometrics.checkBiometricsIsExpired(_email);
     if (isExpired) {
-      int day = UserProvider().biometrics.getRequirePasswordDay(Email);
+      int day = UserProvider().biometrics.getRequirePasswordDay(_email);
       Toast.showSpec(S.current.requirePasswordToLoginMessage(day));
       return;
     }
@@ -172,7 +169,8 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void _doOfflineLogin() {
-    final userInfo = UserProvider().profile.data;
+    final userInfo = UserProvider().profile.getMainUser(email: _email);
+    if (userInfo == null) return;
     CryptoManager().offlineLogin(
       userInfo.email ?? "",
       userInfo.userCryptoKey?.masterKeyExported ?? "",
@@ -180,10 +178,21 @@ class _SignInFormState extends State<SignInForm> {
       userInfo.userCryptoKey?.personalDataKey ?? "",
       userInfo.userCryptoKey?.enterpriseDataKey ?? "",
     ).then((value) {
-      _loginSuccess();
+      UserProvider().profile.setMainUser(_email);
+      NavigatorUtils.push(context, Routers.home, clearStack: true);
     }).catchError((error) {
       Toast.showSpec(S.current.loginFail);
     });
+  }
+
+  void _fillSecretKey() {
+    final key = UserProvider().secretKeys.get(email: _email);
+    _buildUserBiometricsBtn();
+
+    if (key != null) {
+      _secretKey = key;
+      _secretGlobalKey.currentState?.fillText(recode(key));
+    }
   }
 
   @override
@@ -192,203 +201,169 @@ class _SignInFormState extends State<SignInForm> {
     _initDefaultValue();
     _buildUserBiometricsBtn();
     _checkLocalAuth();
-    // 添加listener监听
-    // 对应的TextField失去或者获取焦点都会回调此监听
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) {
-        // print('得到焦点');
-      } else {
-        var key = UserProvider().secretKeys.get(email: Email);
-        _buildUserBiometricsBtn();
-
-        if (key != null) {
-          SeKeyController.text = recode(key);
-          SeKey = key;
-        }
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  Widget _buildBody() {
     return Column(
       children: [
-        Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-            decoration: const BoxDecoration(
-                color: Color.fromRGBO(246, 246, 246, 1),
-                borderRadius: BorderRadius.all(Radius.circular(7.5))),
-            child: ZPassTextFieldWidget(
-              icon: const LoadAssetImage(
-                'signin/email@2x',
-                width: 20,
-                height: 20,
-              ),
-              onChanged: getEmail,
-              hintText: S.current.email,
-              controller: emailController,
-              focusNode: focusNode,
-            )),
-        Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-            decoration: const BoxDecoration(
-                color: Color.fromRGBO(246, 246, 246, 1),
-                borderRadius: BorderRadius.all(Radius.circular(7.5))),
-            child: PswInput(
-              onChange: getPsw,
-            )),
-        Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 18),
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-          decoration: const BoxDecoration(
-              color: Color.fromRGBO(246, 246, 246, 1),
-              borderRadius: BorderRadius.all(Radius.circular(7.5))),
-          child: Container(
-            child: ZPassTextFieldWidget(
-              icon: const LoadAssetImage(
-                'signin/safe@2x',
-                width: 20,
-                height: 20,
-              ),
-              controller: SeKeyController,
-              hintText: S.current.seKey,
-              onChanged: getSeKey,
-            ),
-          ),
+        ZPassFormEditText(
+          key: _emailKey,
+          initialText: _email,
+          hintText: S.current.email,
+          filled: true,
+          prefix: const Icon(ZPassIcons.icEmail, color: Color(0xFF959BA7), size: 20),
+          onChanged: _getEmail,
+          onUnFocus: _fillSecretKey,
         ),
-        GestureDetector(
-            onTap: handelSignIn,
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(0, 12, 0, 0),
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-              width: double.infinity,
-              alignment: Alignment.center,
+        Gaps.vGap18,
+        ZPassFormEditText(
+          key: _passwordKey,
+          hintText: S.current.password,
+          filled: true,
+          obscureText: true,
+          prefix: const Icon(ZPassIcons.icLock, color: Color(0xFF959BA7), size: 20),
+          onChanged: _getPassword,
+        ),
+        Gaps.vGap18,
+        ZPassFormEditText(
+          key: _secretGlobalKey,
+          initialText: _secretKey,
+          hintText: S.current.seKey,
+          filled: true,
+          prefix: const Icon(ZPassIcons.icSignInSecretKey, color: Color(0xFF959BA7), size: 20),
+          onChanged: _getSecretKey,
+        ),
+        Gaps.vGap24,
+        _buildSignInBtn(),
+        _buildDivider(),
+        _buildScanCodeBtn(),
+      ],
+    );
+  }
+
+  Widget _buildSignInBtn() {
+    return GestureDetector(
+        onTap: _handleSignIn,
+        child: Stack(
+          children: [
+            ZPassButtonGradient(
+              text: S.current.login,
               height: 46,
-              decoration: const BoxDecoration(
-                  color: Color.fromRGBO(246, 246, 246, 1),
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      stops: [
-                        0,
-                        1
-                      ],
-                      colors: [
-                        Color.fromRGBO(82, 115, 254, 1),
-                        Color.fromRGBO(67, 66, 255, 1)
-                      ]),
-                  borderRadius: BorderRadius.all(Radius.circular(23))),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Text(
-                      S.current.login,
-                      style: const TextStyle(fontSize: 16, color: Colors.white),
-                      textAlign: TextAlign.center,
+              borderRadius: 23,
+              startColor: const Color.fromRGBO(82, 115, 254, 1),
+              endColor: const Color.fromRGBO(67, 66, 255, 1),
+            ),
+            _biometricsButton
+          ],
+        ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      margin: const EdgeInsets.only(top: 80),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            height: 0.5,
+            color: const Color.fromRGBO(149, 155, 167, 0.42),
+          ),
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Text(
+              S.current.or,
+              style: const TextStyle(color: Color.fromRGBO(149, 155, 167, 1)),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScanCodeBtn() {
+    return GestureDetector(
+      onTap: _getQRCode,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+        alignment: Alignment.center,
+        width: 327,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+                width: 1, color: const Color.fromRGBO(73, 84, 255, 1)),
+            borderRadius: const BorderRadius.all(Radius.circular(23))),
+        // color: ,
+        child: Material(
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                    width: 30,
+                    child: Icon(
+                      ZPassIcons.icQrScan,
+                      size: 16,
+                      color: Color.fromRGBO(73, 84, 255, 1),
+                    )),
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  child: Text(
+                    S.current.siginScan,
+                    style: const TextStyle(
+                      color: Color.fromRGBO(73, 84, 255, 1),
                     ),
                   ),
-                  _biometricsButton,
-                ],
-              ),
-            )),
-        Container(
-          margin: const EdgeInsets.only(top: 80),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                height: 1,
-                color: const Color.fromRGBO(149, 155, 167, 0.42),
-              ),
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Text(
-                  S.current.or,
-                  style:
-                      const TextStyle(color: Color.fromRGBO(149, 155, 167, 1)),
-                ),
-              )
-            ],
-          ),
-        ),
-        GestureDetector(
-          onTap: getQRCode,
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-            alignment: Alignment.center,
-            width: 327,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                    width: 1, color: const Color.fromRGBO(73, 84, 255, 1)),
-                borderRadius: const BorderRadius.all(Radius.circular(23))),
-            // color: ,
-            child: Material(
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                        width: 30,
-                        child: Icon(
-                          ZPassIcons.icQrScan,
-                          size: 16,
-                          color: Color.fromRGBO(73, 84, 255, 1),
-                        )),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        S.current.siginScan,
-                        style: const TextStyle(
-                          color: Color.fromRGBO(73, 84, 255, 1),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+                )
+              ],
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
   void _buildUserBiometricsBtn() async {
     final canAuth = await _canAuthenticate();
     IconData icon = await _fetchBiometricsBtnIcon();
-    Widget biometricsBtn = Row(
-      children: [
-        const Spacer(),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 12),
-          child: VerticalDivider(
-            color: Color.fromRGBO(255, 255, 255, 0.28),
+    Widget biometricsBtn = Positioned(
+      right: 10,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 0.5,
+            height: 20,
+            color: const Color.fromRGBO(255, 255, 255, 0.28),
           ),
-        ),
-        Gaps.hGap5,
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: _doAuthenticate,
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            child: Icon(icon, size: 24, color: Colors.white,),
-          ),
-        )
-      ],
+          Gaps.hGap5,
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: _doAuthenticate,
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              child: Icon(icon, size: 24, color: Colors.white,),
+            ),
+          )
+        ],
+      ),
     );
     _biometricsButton = canAuth ? biometricsBtn : Gaps.empty;
    setState(() {});
   }
 
   Future<IconData> _fetchBiometricsBtnIcon() async {
-    final isExpired = UserProvider().biometrics.checkBiometricsIsExpired(Email);
+    final isExpired = UserProvider().biometrics.checkBiometricsIsExpired(_email);
     if (Device.isAndroid) return isExpired ? ZPassIcons.icBiometricsWarn : ZPassIcons.icBiometrics;
     final bool isSupportedFacID = await LocalAuthManager().isSupportedFaceID();
     return isSupportedFacID

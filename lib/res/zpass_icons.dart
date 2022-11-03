@@ -6,6 +6,10 @@ class ZPassIcons {
   static const _kFontFam = 'IconFont';
   static const String? _kFontPkg = null;
 
+  /// sign in page icon
+  static const IconData icEmail = IconData(0xe6d4, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData icSignInSecretKey = IconData(0xe6e9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
   /// home bottom navigation bar tab icon
   static const IconData logins = IconData(0xe6f0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData loginsActive = IconData(0xe6ed, fontFamily: _kFontFam, fontPackage: _kFontPkg);
