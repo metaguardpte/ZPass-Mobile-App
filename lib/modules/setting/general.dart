@@ -26,7 +26,7 @@ class _GeneralWidgetState extends State<GeneralWidget> {
     NavigatorUtils.pushResult(context, RouterSetting.dataRoaming,(dynamic data){
       var syncProvider = UserProvider().settings.data.syncProvider;
       var syncType = UserProvider().settings.data.backupAndSync;
-      if (syncProvider != null && syncType != null && syncType) {
+      if (syncProvider != null && (syncType ?? false)) {
         _syncProviderType = SyncProviderType.values
             .firstWhere((element) => element.name == syncProvider);
       } else {
