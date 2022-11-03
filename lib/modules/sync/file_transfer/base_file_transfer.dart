@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:zpass/plugin_bridge/p7zip/p7zip.dart';
 import 'package:zpass/util/log_utils.dart';
 
@@ -41,6 +42,8 @@ abstract class BaseFileTransferManager {
 
   ///source: directory that contains files to be archived
   Future upload(String source, String userId) async {
+    await flushDBBeforeSync();
+
     var tempDir = await getTemporaryDirectory();
     String uniquePath = '${tempDir.path}$separator${getUniqueDir()}$separator';
     _copyDir(source, uniquePath);
@@ -81,6 +84,11 @@ abstract class BaseFileTransferManager {
   String getUniqueDir() {
     return DateFormat("yyyy-MM-dd-hhmmss").format(DateTime.now());
   }
+
+  Future flushDBBeforeSync() async{
+    await ZPassDB().flush();
+  }
+
 
   void _copyDir(String fromDir, String toDir) {
     Directory newDir = Directory(toDir);

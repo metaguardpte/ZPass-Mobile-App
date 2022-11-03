@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:google_sign_in/google_sign_in.dart' as signIn;
 import 'package:path_provider/path_provider.dart';
+import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/sync/file_transfer/base_file_transfer.dart';
 import "package:http/http.dart" as http;
 import 'package:_discoveryapis_commons/_discoveryapis_commons.dart' as commons;
@@ -101,7 +102,7 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
 
   @override
   String getTransferType() {
-    return "Google Drive";
+    return SyncProviderType.googleDrive.name;
   }
 
   Future _signinUser() async {

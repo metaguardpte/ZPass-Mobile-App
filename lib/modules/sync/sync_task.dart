@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/sync/db_sync/db_sync.dart';
 import 'package:zpass/modules/sync/file_transfer/base_file_transfer.dart';
 import 'package:zpass/modules/sync/file_transfer/google_drive_file_transfer.dart';
@@ -13,21 +14,31 @@ class SyncTask {
   static Timer? timer;
 
   static void run() {
-    timer ??= Timer.periodic(period, (Timer t) => _doRun());
+    timer ??= Timer.periodic(period, (Timer t) => doRun());
   }
 
   static void cancel() {
     timer?.cancel();
   }
 
-  static void _doRun() async {
+  static void doRun() async {
     final userId = UserProvider().profile.data.userId;
     if (userId <= 0) {
       Log.d("Skip sync data due to empty userId");
       return;
     }
     String userIdInString = userId.toString();
-    BaseFileTransferManager fileTransferManager = _getFileTransferManager();
+    bool? enableBackup = UserProvider().settings.data.backupAndSync;
+    if (enableBackup == null || !enableBackup) {
+      Log.d("Skip sync data due to switch is off");
+      return;
+    }
+
+    BaseFileTransferManager? fileTransferManager = _getFileTransferManager();
+    if (fileTransferManager == null){
+      Log.d("Skip sync data due to empty TransferManager");
+      return;
+    }
     String transferType = fileTransferManager.getTransferType();
 
     try {
@@ -49,7 +60,19 @@ class SyncTask {
     }
   }
 
-  static BaseFileTransferManager _getFileTransferManager() {
-    return GoogleDriveFileTransferManager();
+  static BaseFileTransferManager? _getFileTransferManager() {
+    String? syncProvider = UserProvider().settings.data.syncProvider;
+    if (syncProvider == null) {
+      return null;
+    }
+    final syncType = SyncProviderType.values.byName(syncProvider);
+
+    switch (syncType) {
+      case SyncProviderType.googleDrive:
+        return GoogleDriveFileTransferManager();
+      default:
+        break;
+    }
+    return null;
   }
 }
