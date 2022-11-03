@@ -200,7 +200,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
           behavior: HitTestBehavior.opaque,
           onTap: () {
             if(_unlock()){
-              NavigatorUtils.goBack(context);
+              NavigatorUtils.goBackWithParams(context, {});
             }
           },
           child: const SizedBox(
@@ -217,7 +217,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       body: WillPopScope(
         onWillPop: () async {
           if(_unlock()){
-            return true;
+            NavigatorUtils.goBackWithParams(context, {});
           }
           return false;
         },

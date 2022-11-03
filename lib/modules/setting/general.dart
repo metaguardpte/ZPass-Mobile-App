@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
+import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/setting/router_settting.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/widgets/list.dart';
 
 class GeneralWidget extends StatefulWidget {
@@ -18,8 +20,30 @@ class GeneralWidget extends StatefulWidget {
 }
 
 class _GeneralWidgetState extends State<GeneralWidget> {
+  late SyncProviderType? _syncProviderType;
   _handelNavToDataRoamingSetting(){
-    NavigatorUtils.push(context, RouterSetting.dataRoaming);
+    // NavigatorUtils.pushResult(context, RouterScanner.scanner, _parseScanCodeResult);
+    NavigatorUtils.pushResult(context, RouterSetting.dataRoaming,(dynamic data){
+      var syncProvider = UserProvider().settings.data.syncProvider;
+      if (syncProvider != null) {
+        _syncProviderType = SyncProviderType.values
+            .firstWhere((element) => element.name == syncProvider);
+      } else {
+        _syncProviderType = null;
+      }
+      setState(() {});
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    var syncProvider = UserProvider().settings.data.syncProvider;
+    if (syncProvider != null) {
+      _syncProviderType = SyncProviderType.values
+          .firstWhere((element) => element.name == syncProvider);
+    } else {
+      _syncProviderType = null;
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -57,15 +81,32 @@ class _GeneralWidgetState extends State<GeneralWidget> {
             behavior: HitTestBehavior.opaque,
             onTap: _handelNavToDataRoamingSetting,
             child: Row(
-              children: [
+              children: _syncProviderType != null ? [
                 const Spacer(),
+                _syncProviderType?.icon ?? Container(),
                 Padding(
-                    padding: const EdgeInsets.only(right: 10,top: 10,bottom: 10),
+                    padding: const EdgeInsets.only(
+                        right: 10, left: 5),
                     child: Material(
                         child: Text(
-                      'OFF',
-                      style: widget.rightStyle,
-                    ))),
+                          _syncProviderType?.desc ?? '',
+                          style: widget.rightStyle,
+                        ))),
+                Icon(
+                  ZPassIcons.icArrowRight,
+                  color: widget.rightColor,
+                  size: 10,
+                )
+              ] : [
+                const Spacer(),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        right: 10, left: 5),
+                    child: Material(
+                        child: Text(
+                          S.current.off,
+                          style: widget.rightStyle,
+                        ))),
                 Icon(
                   ZPassIcons.icArrowRight,
                   color: widget.rightColor,
