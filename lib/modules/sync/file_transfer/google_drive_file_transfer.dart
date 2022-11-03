@@ -92,7 +92,16 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
       await _signinUser();
     }
 
-    return _account?.displayName;
+    String? displayName = _account?.displayName;
+    if (displayName == null){
+      return _account?.email;
+    }
+    return displayName;
+  }
+
+  @override
+  String getTransferType() {
+    return "Google Drive";
   }
 
   Future _signinUser() async {
