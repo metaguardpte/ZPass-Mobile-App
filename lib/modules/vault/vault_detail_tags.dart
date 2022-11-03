@@ -140,6 +140,8 @@ class VaultDetailTagsState extends State<VaultDetailTags> {
     String newTagValue = "";
     ZPassConfirmDialog(
       isInput: true,
+      message: S.current.vaultAddTag,
+      confirmText: S.current.actionSave,
       onInputChange: (value) => newTagValue = value,
       onConfirmTap: () => _addTag(newTagValue),
     ).show(context);

@@ -12,6 +12,7 @@ import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/styles.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/zpass_card.dart';
 import 'package:zpass/widgets/zpass_form_edittext.dart';
 
@@ -146,15 +147,33 @@ class _SecureNotesPageState
     if (!_formKey.currentState!.validate()) {
       return;
     }
+    if (!provider.editing) {
+      provider.editing = true;
+      return;
+    }
+    provider.editing = false;
     provider.secureNodeUpdate(
         title: _secureTitle.currentState!.text,
-        note: _secureNote.currentState!.text).then((value) => Log.d('value.toString() ${value.toString()}'));
-    provider.editing = !provider.editing;
+        note: _secureNote.currentState!.text).then((succeed) {
+     if (succeed) {
+       Toast.showSuccess("Item saved");
+       // NavigatorUtils.goBackWithParams(context, {"changed": true});
+     } else {
+       Toast.showError("Failed to save item");
+     }
+    });
+
   }
 
   @override
   void onCancelPress() {
     provider.tags = [...widget.data?.tags ?? []];
     _tagKey.currentState?.resetTag();
+  }
+
+  @override
+  Widget buildPopupMenu() {
+    if (widget.data == null) return Gaps.empty;
+    return super.buildPopupMenu();
   }
 }

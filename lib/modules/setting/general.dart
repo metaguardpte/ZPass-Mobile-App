@@ -48,29 +48,29 @@ class _GeneralWidgetState extends State<GeneralWidget> {
   @override
   Widget build(BuildContext context) {
     List<RowData> rowData = [
-      RowData(
-          text: S.current.Language,
-          icon: const Icon(
-            ZPassIcons.icLanguage,
-            size: 18,
-          ),
-          right: Row(
-            children: [
-              const Spacer(),
-              Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Material(
-                      child: Text(
-                    'English',
-                    style: widget.rightStyle,
-                  ))),
-              Icon(
-                ZPassIcons.icArrowRight,
-                color: widget.rightColor,
-                size: 10,
-              )
-            ],
-          )),
+      // RowData(
+      //     text: S.current.Language,
+      //     icon: const Icon(
+      //       ZPassIcons.icLanguage,
+      //       size: 18,
+      //     ),
+      //     right: Row(
+      //       children: [
+      //         const Spacer(),
+      //         Padding(
+      //             padding: const EdgeInsets.only(right: 10),
+      //             child: Material(
+      //                 child: Text(
+      //               'English',
+      //               style: widget.rightStyle,
+      //             ))),
+      //         Icon(
+      //           ZPassIcons.icArrowRight,
+      //           color: widget.rightColor,
+      //           size: 10,
+      //         )
+      //       ],
+      //     )),
       RowData(
           text: S.current.DataRoaming,
           icon: const Icon(
@@ -115,29 +115,29 @@ class _GeneralWidgetState extends State<GeneralWidget> {
               ],
             ),
           )),
-      RowData(
-          text: S.current.Clipboard,
-          icon: const Icon(
-            ZPassIcons.icClipboard,
-            size: 18,
-          ),
-          right: Row(
-            children: [
-              const Spacer(),
-              Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Material(
-                      child: Text(
-                    'Never',
-                    style: widget.rightStyle,
-                  ))),
-              Icon(
-                ZPassIcons.icArrowRight,
-                color: widget.rightColor,
-                size: 10,
-              )
-            ],
-          )),
+      // RowData(
+      //     text: S.current.Clipboard,
+      //     icon: const Icon(
+      //       ZPassIcons.icClipboard,
+      //       size: 18,
+      //     ),
+      //     right: Row(
+      //       children: [
+      //         const Spacer(),
+      //         Padding(
+      //             padding: const EdgeInsets.only(right: 10),
+      //             child: Material(
+      //                 child: Text(
+      //               'Never',
+      //               style: widget.rightStyle,
+      //             ))),
+      //         Icon(
+      //           ZPassIcons.icArrowRight,
+      //           color: widget.rightColor,
+      //           size: 10,
+      //         )
+      //       ],
+      //     )),
     ];
     return Column(
       children: [

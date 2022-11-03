@@ -74,7 +74,7 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
 
   void _buildRow() {
     _rowDataList = [];
-    _initDefaultRowData();
+    // _initDefaultRowData();
     _initBiometricsRowData();
   }
 

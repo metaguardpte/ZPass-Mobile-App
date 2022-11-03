@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/res/colors.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/styles.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/theme_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 
 class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
   final double height;
@@ -92,7 +94,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
     final suffixChildren = [
       Visibility(
           visible: widget.enableClear,
-          child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty),
+          child: _controller.text.isNotEmpty && _focus.hasFocus ? _buildClear() : Gaps.empty),
       Visibility(visible: widget.obscureText, child: _buildSecret()),
       Visibility(visible: widget.enableCopy, child: _buildCopy()),
       Gaps.hGap5,
@@ -225,6 +227,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
       onTap: () {
         if (_controller.text.isEmpty) return;
         Clipboard.setData(ClipboardData(text: _controller.text));
+        Toast.showSpec(S.current.registerSecretKeyCopyTips, type: ToastType.success);
       },
       child: const Padding(
         padding: EdgeInsets.all(6),
@@ -264,6 +267,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
     if (!_focus.hasFocus) {
       widget.onUnFocus?.call();
     }
+    setState(() {});
   }
 
   String get text => _controller.text;

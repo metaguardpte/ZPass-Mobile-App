@@ -86,7 +86,7 @@
   "sendCode": "Send Code",
   "resendCode": "Resend Code",
   "emailVerifyCodeHint": "Please enter verify code",
-  "emailHint": "Enter your Email",
+  "emailHint": "请输入您的邮箱",
   "emailInvalid": "Invalid email format",
   "registerEmailTips": "· Please enter a work email address only as we DO NOT \naccept web-mail addresses (gmail, yahoo, hotmail, etc.)",
   "domainName": "Domain Name",
@@ -143,8 +143,9 @@
 
   "loginFail":"Invalid email or password",
 
-  "actionConfirm": "Confirm",
-  "actionCancel": "Cancel",
+  "actionConfirm": "确认",
+  "actionCancel": "取消",
+  "actionSave": "保存",
 
   "err_activation_failed": "激活失败",
   "err_already_exist_in_domain": "已存在于域中",

@@ -103,7 +103,7 @@ class _LoginDetailPageState
                 hintText: emptyHint,
                 prefix: buildLoginFav(context, provider.entity),
                 filled: true,
-                enable: editing,
+                readOnly: !editing,
                 enableClear: editing,
                 enableCopy: !editing,
                 validator: (value) {
@@ -121,7 +121,7 @@ class _LoginDetailPageState
                 initialText: content?.loginUser,
                 hintText: emptyHint,
                 filled: true,
-                enable: editing,
+                readOnly: !editing,
                 enablePrefix: false,
                 enableClear: editing,
                 enableCopy: !editing,
@@ -141,7 +141,7 @@ class _LoginDetailPageState
                 hintText: emptyHint,
                 obscureText: !editing,
                 filled: true,
-                enable: editing,
+                readOnly: !editing,
                 enablePrefix: false,
                 enableClear: editing,
                 enableCopy: !editing,
@@ -160,15 +160,20 @@ class _LoginDetailPageState
                 initialText: provider.targetUrl,
                 hintText: emptyHint,
                 filled: true,
-                enable: editing,
+                readOnly: !editing,
                 enablePrefix: false,
                 enableClear: editing,
                 enableCopy: !editing,
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  String? val = value;
+                  if (val == null || value.isEmpty) {
                     return "Please enter login page url";
                   }
-                  if (!(value as String).isUrl) {
+                  String http = "http";
+                  if (!val.startsWith(http)) {
+                    val = "$http://$val";
+                  }
+                  if (!val.isUrl) {
                     return "Please enter valid url";
                   }
                   return null;
@@ -192,7 +197,7 @@ class _LoginDetailPageState
               initialText: content?.note,
               hintText: emptyHint,
               filled: true,
-              enable: editing,
+              readOnly: !editing,
               enablePrefix: false,
               enableClear: editing,
               enableCopy: !editing,
@@ -265,7 +270,7 @@ class _LoginDetailPageState
       ).then((succeed) {
         if (succeed) {
           Toast.show("Item saved");
-          NavigatorUtils.goBackWithParams(context, {"changed": true});
+          // NavigatorUtils.goBackWithParams(context, {"changed": true});
         } else {
           Toast.showError("Failed to save item");
         }
@@ -281,5 +286,11 @@ class _LoginDetailPageState
   void onCancelPress() {
     provider.tags = [...widget.data?.tags ?? []];
     _tagKey.currentState?.resetTag();
+  }
+
+  @override
+  Widget buildPopupMenu() {
+    if (widget.data == null) return Gaps.empty;
+    return super.buildPopupMenu();
   }
 }
