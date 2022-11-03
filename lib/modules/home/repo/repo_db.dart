@@ -40,7 +40,7 @@ class RepoDB extends RepoBase<VaultItemEntity> {
 
   @override
   Future<bool> remove(VaultItemEntity item) {
-    return _db.delete(item.getEntityKey());
+    return _db.softDelete(item.getEntityKey());
   }
 
   @override
