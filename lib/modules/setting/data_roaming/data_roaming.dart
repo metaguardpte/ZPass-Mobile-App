@@ -144,6 +144,10 @@ class _DataRoamingPageState extends State<DataRoamingPage>
               if (_unlock()) {
                 switchType = value;
                 UserProvider().settings.backupAndSync = value;
+                if(value && UserProvider().settings.data.syncProvider == null){
+                  _syncProviderType = SyncProviderType.googleDrive;
+                  UserProvider().settings.syncProvider = SyncProviderType.googleDrive.name;
+                }
                 setState(() {});
               }
               return value;
