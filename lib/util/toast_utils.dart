@@ -50,13 +50,14 @@ class Toast {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(_switchIcon(type), color: Colors.white,),
+            Icon(_switchIcon(type), color: Colors.white, size: 36,),
             Gaps.vGap8,
             Text(
               msg,
               maxLines: 8,
               overflow: TextOverflow.fade,
               style: const TextStyle(height: 1.3),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

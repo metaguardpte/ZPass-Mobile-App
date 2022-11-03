@@ -48,7 +48,7 @@ class UserProfile with UserStorage {
     final spData = await read(_kUserProfile);
     if (spData != null && spData != '') {
       try {
-        List<Map<String, dynamic>> temps = jsonDecode(spData);
+        List<dynamic> temps = jsonDecode(spData);
         _users = temps.map((e) => UserInfoModel.fromJson(e)).toList();
         _userInfo = getMainUser() ?? UserInfoModel(userId: -1, userType: -1);
       } catch (e) {

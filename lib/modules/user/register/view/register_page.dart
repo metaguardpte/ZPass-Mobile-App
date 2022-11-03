@@ -260,6 +260,12 @@ class RegisterState extends ProviderState<RegisterPage, RegisterProvider> {
   }
 
   _doCheckEmailVerifyCode() async {
+
+    if (provider.email.isEmpty) {
+      Toast.showSpec(S.current.emailHint);
+      return;
+    }
+
     if (provider.emailVerifyCode.isEmpty || provider.emailVerifyCode.length < 6) {
       Toast.show(S.current.emailVerifyCodeHint);
       return;
