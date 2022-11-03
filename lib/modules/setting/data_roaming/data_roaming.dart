@@ -94,6 +94,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   }
 
   _handelSync() {
+
     if (_unlock()) {
       onSyncStatus = true;
       _animationController.forward();
@@ -101,6 +102,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
       var localDBPath = ZPassDB().getDBPath();
       final userId = UserProvider().profile.data.userId;
+      Log.d('userId : $userId');
       fileTransferManager.upload(localDBPath, "$userId").then((value) {
         UserProvider().settings.updateSyncDate();
         setState(() {
@@ -109,6 +111,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         });
         Toast.showSuccess('${S.current.sync} ${S.current.successfully}');
       }).catchError((err) {
+        Toast.showError(err.toString());
         Log.d(
             'fileTransferManager download err -------------- > :  ${err.toString()}');
         setState(() {
