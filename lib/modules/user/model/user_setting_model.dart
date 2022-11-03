@@ -9,6 +9,7 @@ class UserSettingModel {
   String? language;
   String? backupDate;
   String? syncDate;
+  String? syncAccount;
 
   UserSettingModel({this.backupAndSync,this.language,this.syncProvider});
 

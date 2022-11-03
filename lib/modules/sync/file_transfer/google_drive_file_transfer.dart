@@ -49,7 +49,6 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
       return _completer.complete(zipFile);
     }, onError: (error) {
       Log.e("download $fileId from google dirve failed:${error.toString()}");
-      return _completer.completeError(zipFile);
     });
 
     return _completer.future;
@@ -65,42 +64,44 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
     drive.File fileToUpload = drive.File();
     fileToUpload.name = defaultZipFileName;
 
-    try {
-      var zipFileId = await _getDefaultFileId(_driveApi!, userId);
-      if (zipFileId == null) {
-        String? defaultFolderId = await _getDefaultDirId(_driveApi!);
-        String? userFolderId =
-            await _getUserDirId(_driveApi!, defaultFolderId!, userId);
+    var zipFileId = await _getDefaultFileId(_driveApi!, userId);
+    if (zipFileId == null) {
+      String? defaultFolderId = await _getDefaultDirId(_driveApi!);
+      String? userFolderId =
+          await _getUserDirId(_driveApi!, defaultFolderId!, userId);
 
-        fileToUpload.parents = [userFolderId!];
+      fileToUpload.parents = [userFolderId!];
 
-        await _driveApi?.files.create(
-          fileToUpload,
-          uploadMedia:
-              drive.Media(sourceFile.openRead(), sourceFile.lengthSync()),
-        );
-      } else {
-        var uploadMedia = commons.Media(sourceFile.openRead(), sourceFile.lengthSync());
-        await _driveApi?.files.update(fileToUpload, zipFileId, uploadMedia: uploadMedia);
-      }
-      Log.d("Success upload db file:($zipFileId) to google drive");
-
-    } catch (e) {
-      Log.e("upload to google dirve failed:${e.toString()}");
+      await _driveApi?.files.create(
+        fileToUpload,
+        uploadMedia:
+            drive.Media(sourceFile.openRead(), sourceFile.lengthSync()),
+      );
+    } else {
+      var uploadMedia =
+          commons.Media(sourceFile.openRead(), sourceFile.lengthSync());
+      await _driveApi?.files
+          .update(fileToUpload, zipFileId, uploadMedia: uploadMedia);
     }
+    Log.d("Success upload db file:($zipFileId) to google drive");
+  }
+
+  @override
+  Future<String?> getStorageAccount() async {
+    if (_account == null) {
+      await _signinUser();
+    }
+
+    return _account?.displayName;
   }
 
   Future _signinUser() async {
-    try {
-      _googleSignIn =
-          signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
-      _account = await _googleSignIn!.signIn();
-      final authHeaders = await _account!.authHeaders;
-      final authenticateClient = GoogleAuthClient(authHeaders);
-      _driveApi = drive.DriveApi(authenticateClient);
-    } catch (error) {
-      Log.e("google signin failed:$error");
-    }
+    _googleSignIn =
+        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+    _account = await _googleSignIn!.signIn();
+    final authHeaders = await _account!.authHeaders;
+    final authenticateClient = GoogleAuthClient(authHeaders);
+    _driveApi = drive.DriveApi(authenticateClient);
   }
 
   Future<void> _signOutUser() async {
