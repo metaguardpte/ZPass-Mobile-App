@@ -3,6 +3,7 @@ import 'package:sp_util/sp_util.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/base/network/httpclient.dart';
 import 'package:zpass/base/network/intercept.dart';
+import 'package:zpass/modules/sync/sync_task.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/res/constant.dart';
 import 'package:zpass/routers/routers.dart';
@@ -56,6 +57,10 @@ class MainInitializer {
   static Future<bool> initAfterAuthorize() async {
     // 初始化用户数据
     await UserProvider().restore();
+
+    // try to start sync task
+    SyncTask.run();
+
     final userInfo = UserProvider().profile.data;
     // 跳转登录或注册
     return userInfo.email != null && userInfo.secretKey != null;

@@ -16,6 +16,8 @@ abstract class BaseFileTransferManager {
 
   Future<String?> getStorageAccount();
 
+  String getTransferType();
+
   ///zip file path in dedicated storage
   Future<String> download(String userId) async {
     String localZipFile = await doDownload(userId);
