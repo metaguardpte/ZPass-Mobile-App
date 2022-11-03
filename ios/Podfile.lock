@@ -1,9 +1,9 @@
 PODS:
-  - AppAuth (1.6.0):
-    - AppAuth/Core (= 1.6.0)
-    - AppAuth/ExternalUserAgent (= 1.6.0)
-  - AppAuth/Core (1.6.0)
-  - AppAuth/ExternalUserAgent (1.6.0):
+  - AppAuth (1.5.0):
+    - AppAuth/Core (= 1.5.0)
+    - AppAuth/ExternalUserAgent (= 1.5.0)
+  - AppAuth/Core (1.5.0)
+  - AppAuth/ExternalUserAgent (1.5.0):
     - AppAuth/Core
   - connectivity (0.0.1):
     - Flutter
@@ -13,6 +13,9 @@ PODS:
   - flkv (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_lzma (0.0.1):
+    - Flutter
+    - PLzmaSDK (= 1.2.5)
   - flutter_secure_storage (3.3.1):
     - Flutter
   - FMDB (2.7.5):
@@ -21,14 +24,14 @@ PODS:
   - google_sign_in_ios (0.0.1):
     - Flutter
     - GoogleSignIn (~> 6.2)
-  - GoogleSignIn (6.2.4):
+  - GoogleSignIn (6.2.2):
     - AppAuth (~> 1.5)
     - GTMAppAuth (~> 1.3)
-    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
-  - GTMAppAuth (1.3.1):
-    - AppAuth/Core (~> 1.6)
-    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
-  - GTMSessionFetcher/Core (2.1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GTMAppAuth (1.3.0):
+    - AppAuth/Core (~> 1.4)
+    - GTMSessionFetcher/Core (~> 1.5)
+  - GTMSessionFetcher/Core (1.7.2)
   - image_picker_ios (0.0.1):
     - Flutter
   - local_auth_ios (0.0.1):
@@ -40,6 +43,12 @@ PODS:
     - Flutter
   - permission_handler_apple (9.0.4):
     - Flutter
+  - PLzmaSDK (1.2.5):
+    - PLzmaSDK/libplzma (= 1.2.5)
+    - PLzmaSDK/Swift (= 1.2.5)
+  - PLzmaSDK/libplzma (1.2.5)
+  - PLzmaSDK/Swift (1.2.5):
+    - PLzmaSDK/libplzma
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
@@ -67,6 +76,7 @@ DEPENDENCIES:
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - flkv (from `.symlinks/plugins/flkv/ios`)
   - Flutter (from `Flutter`)
+  - flutter_lzma (from `.symlinks/plugins/flutter_lzma/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
@@ -91,6 +101,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - MTBBarcodeScanner
+    - PLzmaSDK
     - Reachability
     - RxCocoa
     - RxRelay
@@ -105,6 +116,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flkv/ios"
   Flutter:
     :path: Flutter
+  flutter_lzma:
+    :path: ".symlinks/plugins/flutter_lzma/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   google_sign_in_ios:
@@ -133,23 +146,25 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/zpass_crypto/ios"
 
 SPEC CHECKSUMS:
-  AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
+  AppAuth: 80317d99ac7ff2801a2f18ff86b48cd315ed465d
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
   flkv: cb5eada41f2fc29688dd440361c3fac6dcd46e3d
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_lzma: 0b9fc06df53b3d81ef2e68f2739a25f9922f099f
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   google_sign_in_ios: 4f85eb9f937450765c8573bb85fd8cd6a5af675c
-  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
-  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
-  GTMSessionFetcher: ffbb25ec00ebcb5201adab0a56d808f6f1902d9f
+  GoogleSignIn: 3c68388ac221f379676e8f1cb115df3aaf73b93f
+  GTMAppAuth: 4d8f864896f3646f0c33baf38a28362f4c601e15
+  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
   image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
   local_auth_ios: 0d333dde7780f669e66f19d2ff6005f3ea84008d
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   p7zip: aa73c6329c17e83b59c23d7c0d4c8bb684474acd
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  PLzmaSDK: c9c98c848e5a36f2dae08db2645e9072b0426232
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
