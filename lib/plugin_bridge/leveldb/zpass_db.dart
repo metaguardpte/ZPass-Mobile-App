@@ -19,19 +19,18 @@ import 'record_entity.dart';
 /// Singleton
 ///
 class ZPassDB {
-
   ZPassDB._();
 
   static final ZPassDB _instance = ZPassDB._();
 
-  factory ZPassDB(){
+  factory ZPassDB() {
     return _instance;
   }
 
   bool _opened = false;
   late LevelDB _db;
 
-  Future<bool> put<E extends RecordEntity> (E entity) async {
+  Future<bool> put<E extends RecordEntity>(E entity) async {
     String key = entity.getEntityKey();
     if (key.isEmpty) {
       return false;
@@ -55,7 +54,11 @@ class ZPassDB {
       return null;
     }
 
-    return _toEntity(key, value);
+    var entity = _toEntity(key, value);
+    if (entity == null || entity.isDeleted) {
+      return null;
+    }
+    return entity as E;
   }
 
   Future<bool> delete(String? key) async {
@@ -64,6 +67,20 @@ class ZPassDB {
     }
 
     return _db.delete(key);
+  }
+
+  Future<bool> softDelete(String? key) async {
+    if (key == null || key.isEmpty) {
+      return false;
+    }
+    var value = await get(key);
+    if (value == null) {
+      return false;
+    }
+    value.isDeleted = true;
+    value.updateTime = DateTime.now().millisecondsSinceEpoch;
+
+    return put(value);
   }
 
   Future<List<E>> list<E extends RecordEntity>(EntityType type) async {
@@ -77,9 +94,10 @@ class ZPassDB {
       }
       var jsonStr = record.value;
       var entity = _toEntity(key, jsonStr) as E?;
-      if (entity == null) {
+      if (entity == null || entity.isDeleted) {
         continue;
       }
+
       entities.add(entity);
     }
     return entities;
@@ -90,7 +108,8 @@ class ZPassDB {
   ///
   /// group by: today, yesterday, week, month, null
   ///
-  Future<List<VaultItemEntity>> listVaultItemEntity(QueryContext queryContext) async {
+  Future<List<VaultItemEntity>> listVaultItemEntity(
+      QueryContext queryContext) async {
     var entityType = queryContext.entityType;
     if (entityType != EntityType.vaultItem) {
       return <VaultItemEntity>[];
@@ -105,7 +124,9 @@ class ZPassDB {
     }
 
     var itemType = queryContext.itemType;
-    entities = entities.where((element) => _filter(element, keyword, itemType)).toList();
+    entities = entities
+        .where((element) => _filter(element, keyword, itemType))
+        .toList();
 
     var sortBy = queryContext.sortBy;
     entities.sort((a, b) => _sort(a, b, sortBy));
@@ -116,7 +137,7 @@ class ZPassDB {
     return _db.flush();
   }
 
-  Future<void> open({String path=""}) async {
+  Future<void> open({String path = ""}) async {
     if (!_opened) {
       var dbPath = path;
       if (dbPath.isEmpty) {
@@ -141,7 +162,8 @@ class ZPassDB {
     }
   }
 
-  Future<List<E>> tempReadRemote<E extends RecordEntity>(String remoteDBPath, EntityType type) async {
+  Future<List<E>> tempReadRemote<E extends RecordEntity>(
+      String remoteDBPath, EntityType type) async {
     var tempDB = LevelDB(remoteDBPath);
     await tempDB.open();
     List<Record> records = await tempDB.list();
@@ -169,7 +191,7 @@ class ZPassDB {
 
   bool _filter(VaultItemEntity entity, String keyword, VaultItemType itemType) {
     var type = entity.type;
-    bool typeMatched = (type==itemType.index);
+    bool typeMatched = (type == itemType.index);
     if (!typeMatched) {
       return false;
     }
@@ -182,7 +204,8 @@ class ZPassDB {
     return name.contains(keyword);
   }
 
-  int _sort(VaultItemEntity thisEntity, VaultItemEntity anotherEntity, SortBy sortBy) {
+  int _sort(VaultItemEntity thisEntity, VaultItemEntity anotherEntity,
+      SortBy sortBy) {
     int? thisTime;
     int? anotherTime;
     if (sortBy == SortBy.useTime) {
@@ -194,15 +217,15 @@ class ZPassDB {
       anotherTime = anotherEntity.createTime;
     }
 
-    if (thisTime==null && anotherTime==null) {
+    if (thisTime == null && anotherTime == null) {
       return 0;
     }
 
-    if (thisTime==null) {
+    if (thisTime == null) {
       return -1;
     }
 
-    if (anotherTime==null) {
+    if (anotherTime == null) {
       return 1;
     }
 
@@ -210,7 +233,7 @@ class ZPassDB {
       return 0;
     }
 
-    if (thisTime > anotherTime)  {
+    if (thisTime > anotherTime) {
       return 1;
     }
 
