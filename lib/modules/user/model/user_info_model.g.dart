@@ -30,5 +30,5 @@ Map<String, dynamic> _$UserInfoModelToJson(UserInfoModel instance) =>
       'avatar': instance.avatar,
       'userName': instance.userName,
       'timezone': instance.timezone,
-      'userCryptoKey': instance.userCryptoKey,
+      'userCryptoKey': instance.userCryptoKey?.toJson(),
     };

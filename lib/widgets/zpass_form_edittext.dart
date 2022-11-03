@@ -34,6 +34,7 @@ class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
   final FunctionReturn<String?, dynamic>? validator;
   final bool filled;
   final EdgeInsets? contentPadding;
+  final NullParamCallback? onUnFocus;
 
   const ZPassFormEditText({this.hintText,
     this.initialText,
@@ -60,6 +61,7 @@ class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
     this.enable = true,
     this.filled = false,
     this.contentPadding,
+    this.onUnFocus,
     Key? key})
       : super(key: key);
 
@@ -75,10 +77,13 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
   late final TextEditingController _controller;
   bool _isSecret = true;
 
+
+
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.initialText);
+    _focus.addListener(_onListenFocus);
   }
 
   @override
@@ -90,6 +95,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
           child: _controller.text.isNotEmpty ? _buildClear() : Gaps.empty),
       Visibility(visible: widget.obscureText, child: _buildSecret()),
       Visibility(visible: widget.enableCopy, child: _buildCopy()),
+      Gaps.hGap5,
     ];
     final suffixIcon = Row(
       mainAxisSize: MainAxisSize.min,
@@ -179,13 +185,13 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
       ),
       onTap: () {
         /// https://github.com/flutter/flutter/issues/35848
-        SchedulerBinding.instance.addPostFrameCallback((_) {
+        // SchedulerBinding.instance.addPostFrameCallback((_) {
           _controller.text = '';
           if (widget.onChanged != null) {
             widget.onChanged!("");
           }
           setState(() {});
-        });
+        // });
       },
     );
   }
@@ -247,11 +253,18 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
     _controller.text = keyword;
   }
 
+  void _onListenFocus() {
+    if (!_focus.hasFocus) {
+      widget.onUnFocus?.call();
+    }
+  }
+
   String get text => _controller.text;
 
   @override
   void dispose() {
     super.dispose();
+    _focus.removeListener(_onListenFocus);
     _controller.dispose();
     _focus.dispose();
   }

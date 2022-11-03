@@ -9,7 +9,7 @@ part of 'user_login_info_model.dart';
 UserLoginInfoModel _$UserLoginInfoModelFromJson(Map<String, dynamic> json) =>
     UserLoginInfoModel(
       biometrics: json['biometrics'] as bool? ?? false,
-      requirePasswordDay: json['requirePasswordDay'] as int? ?? 14,
+      requirePasswordDay: json['requirePasswordDay'] as int? ?? 7,
       lastLoginTime: json['lastLoginTime'] == null
           ? null
           : DateTime.parse(json['lastLoginTime'] as String),
