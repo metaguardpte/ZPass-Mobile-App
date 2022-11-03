@@ -139,12 +139,16 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
             : null,
         focusedBorder: widget.borderRadius != null
             ? OutlineInputBorder(
-                borderSide: BorderSide(color: widget.readOnly ? widget.borderColor : context.primaryColor, width: 0.5,),
+                borderSide: BorderSide(color: context.isDark
+                    ? Colours.dark_material_bg
+                    : widget.borderColor, width: 0.5,),
                 borderRadius: BorderRadius.circular(widget.borderRadius!),
               )
             : null,
         border: widget.borderRadius != null ? OutlineInputBorder(
-          borderSide: BorderSide(color: widget.readOnly ? widget.borderColor : context.primaryColor, width: 0.5,),
+          borderSide: BorderSide(color: context.isDark
+              ? Colours.dark_material_bg
+              : widget.borderColor, width: 0.5,),
           borderRadius: BorderRadius.circular(widget.borderRadius!),
         ) : null,
         filled: widget.filled,

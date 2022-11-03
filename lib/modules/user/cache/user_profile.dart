@@ -80,7 +80,7 @@ class UserProfile with UserStorage {
     _mainUserEmail = email;
     UserInfoModel? user = _users.firstWhereOrNull((element) => element.email == email);
     if (user == null) {
-      user ??= UserInfoModel(userId: -1, userType: -1);
+      user = UserInfoModel(userId: -1, userType: -1);
       user.email = email;
       _users.add(user);
     }
