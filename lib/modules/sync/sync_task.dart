@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/sync/db_sync/db_sync.dart';
 import 'package:zpass/modules/sync/file_transfer/base_file_transfer.dart';
@@ -10,18 +8,16 @@ import 'package:zpass/util/log_utils.dart';
 import '../user/user_provider.dart';
 
 class SyncTask {
-  static const period = Duration(minutes: 30);
-  static Timer? timer;
+  static const int _periodInMinute = 30;
+  static DateTime _lastExecuteTime = DateTime.now();
 
-  static void run() {
-    timer ??= Timer.periodic(period, (Timer t) => doRun());
-  }
-
-  static void cancel() {
-    timer?.cancel();
-  }
-
-  static void doRun() async {
+  static void run() async {
+    int timeDiffer = DateTime.now().difference(_lastExecuteTime).inMinutes;
+    if (timeDiffer < 0 || timeDiffer <= _periodInMinute) {
+      Log.d(
+          "Skip sync data due to last synchronize time < $_periodInMinute minutes");
+      return;
+    }
     final userId = UserProvider().profile.data.userId;
     if (userId <= 0) {
       Log.d("Skip sync data due to empty userId");
@@ -35,7 +31,7 @@ class SyncTask {
     }
 
     BaseFileTransferManager? fileTransferManager = _getFileTransferManager();
-    if (fileTransferManager == null){
+    if (fileTransferManager == null) {
       Log.d("Skip sync data due to empty TransferManager");
       return;
     }
@@ -57,6 +53,8 @@ class SyncTask {
           " for zpass user:$userId");
     } catch (exception) {
       Log.e("Sync failed. type:$transferType, error:$exception");
+    } finally {
+      _lastExecuteTime = DateTime.now();
     }
   }
 

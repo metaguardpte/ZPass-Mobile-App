@@ -16,6 +16,7 @@ import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/setting/router_settting.dart';
 import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
 import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
+import 'package:zpass/modules/sync/sync_task.dart';
 import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/signin/signin_by_scanner.dart';
 import 'package:zpass/modules/vault/vault_item_picker.dart';
@@ -74,6 +75,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   void didChangeAppLifecycleState(AppLifecycleState state) {
     Log.d("APP State: ${state.toString()}", tag: "AppLifecycleState");
     if (state == AppLifecycleState.resumed) {
+      SyncTask.run();
     } else if (state == AppLifecycleState.paused) {
       provider.repoDB.flush();
     } else if (state == AppLifecycleState.detached) {

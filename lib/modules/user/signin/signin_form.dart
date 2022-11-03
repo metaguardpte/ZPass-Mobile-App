@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zpass/base/app_config.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/scanner/router_scanner.dart';
+import 'package:zpass/modules/sync/sync_task.dart';
 import 'package:zpass/modules/user/model/user_crypto_key_model.dart';
 import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/crypto/crypto_manager.dart';
@@ -79,6 +80,7 @@ class _SignInFormState extends State<SignInForm> {
     UserProvider().profile.tryUpdate().catchError((e) {
       Log.e("tryUpdate user profile failed: $e");
     }).whenComplete(() {
+      SyncTask.run();
       loadingDialog.dismiss(context);
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     });
@@ -182,6 +184,7 @@ class _SignInFormState extends State<SignInForm> {
       userInfo.userCryptoKey?.enterpriseDataKey ?? "",
     ).then((value) {
       UserProvider().profile.setMainUser(_email);
+      SyncTask.run();
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     }).catchError((error) {
       Toast.showSpec(S.current.loginFail);
