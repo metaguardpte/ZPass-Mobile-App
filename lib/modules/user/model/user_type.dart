@@ -1,10 +1,11 @@
 import 'package:zpass/generated/l10n.dart';
 
 enum UserType {
-  pilot(name: "Pilot");
+  pilot(name: "Pilot", value: 1);
 
   final String name;
-  const UserType({required this.name});
+  final int value;
+  const UserType({required this.name, required this.value});
 }
 
 extension UserTypeExt on UserType {
@@ -15,5 +16,14 @@ extension UserTypeExt on UserType {
       default:
         return name;
     }
+  }
+}
+
+extension UserTypeByValue on Iterable<UserType> {
+  UserType byValue(int value) {
+    for (var item in this) {
+      if (item.value == value) return item;
+    }
+    throw ArgumentError.value(value, "value", "No enum with that value");
   }
 }

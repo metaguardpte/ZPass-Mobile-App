@@ -90,10 +90,11 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
       note: _otherKey.currentState!.text,
     ).then((value) {
       if (!value) {
-        Toast.showSpec("Save fail");
+        Toast.showError("Save fail");
         return;
       }
-      NavigatorUtils.goBackWithParams(context, {"changed": true});
+      Toast.showSuccess("Save success");
+      // NavigatorUtils.goBackWithParams(context, {"changed": true});
     }).catchError((error) {
       Toast.showSpec(error.toString(), type: ToastType.error);
     });
@@ -103,6 +104,12 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
   void onCancelPress() {
     provider.tags = widget.data?.tags ?? [];
     _tagKey.currentState?.resetTag();
+  }
+
+  @override
+  Widget buildPopupMenu() {
+    if (widget.data == null) return Gaps.empty;
+    return super.buildPopupMenu();
   }
 
   void _fillFormTextValue() {

@@ -230,7 +230,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
 
   _onCopySecretKeyTap() {
     Clipboard.setData(ClipboardData(text: provider.secretKey));
-    Toast.show(S.current.registerSecretKeyCopyTips);
+    Toast.showSuccess(S.current.registerSecretKeyCopyTips);
   }
 
   _onSaveSecretKeyTap() async {

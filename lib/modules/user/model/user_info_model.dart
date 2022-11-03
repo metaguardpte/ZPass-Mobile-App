@@ -24,9 +24,9 @@ class UserInfoModel {
   Map<String, dynamic> toJson() => _$UserInfoModelToJson(this);
 
   String get type {
-    if (userType >= 0 && userType < UserType.values.length) {
-      return UserType.values[userType].desc;
-    } else {
+    try {
+      return UserType.values.byValue(userType).desc;
+    } on ArgumentError catch (_) {
       return "Unknown";
     }
   }
