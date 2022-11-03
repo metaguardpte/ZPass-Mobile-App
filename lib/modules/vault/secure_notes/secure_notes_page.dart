@@ -157,6 +157,7 @@ class _SecureNotesPageState
         note: _secureNote.currentState!.text).then((succeed) {
      if (succeed) {
        Toast.showSuccess("Item saved");
+       provider.hasChange = true;
        // NavigatorUtils.goBackWithParams(context, {"changed": true});
      } else {
        Toast.showError("Failed to save item");

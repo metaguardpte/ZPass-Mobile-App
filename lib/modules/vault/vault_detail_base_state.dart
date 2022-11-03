@@ -26,7 +26,13 @@ abstract class BaseVaultPageState<V extends StatefulWidget,
           final loading = tuple.item2;
           return Scaffold(
             appBar: buildAppBar(editing),
-            body: _buildBody(editing, loading),
+            body: WillPopScope(
+              onWillPop: () async {
+                _onBackTap();
+                return false;
+              },
+              child: _buildBody(editing, loading),
+            ),
           );
         },
         selector: (_, provider) => Tuple2(provider.editing, provider.loading));
@@ -128,7 +134,7 @@ abstract class BaseVaultPageState<V extends StatefulWidget,
 
   void _onBackTap() {
     if (!provider.editing) {
-      NavigatorUtils.goBack(context);
+      NavigatorUtils.goBackWithParams(context, {"changed": provider.hasChange});
       return;
     }
     onCancelPress();

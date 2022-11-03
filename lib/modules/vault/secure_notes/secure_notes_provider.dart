@@ -31,6 +31,7 @@ class SecureNotesProvider extends BaseVaultProvider {
 
   @override
   Future<dynamic> analyticsData(VaultItemEntity? data) async {
+    hasChange = false;
     if (data == null) return null;
     entity = data;
     tags = data.tags ?? [];

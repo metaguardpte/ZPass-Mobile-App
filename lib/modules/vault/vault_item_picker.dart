@@ -30,26 +30,3 @@ class VaultItemPicker extends ZPassPickerDialog<VaultItemType> {
     );
   }
 }
-
-void pickVaultType(BuildContext context) {
-  itemSelected(type, index) {
-    Log.d("pick vault item type: $type");
-    switch (type) {
-      case VaultItemType.login:
-        NavigatorUtils.push(context, RoutersVault.vaultDetailLogin);
-        break;
-      case VaultItemType.credit:
-        NavigatorUtils.push(context, RoutersVault.vaultDetailCards);
-        break;
-      case VaultItemType.note:
-        NavigatorUtils.push(context, RoutersVault.vaultSecureNotes);
-        break;
-    }
-  }
-
-  VaultItemPicker(
-      data: VaultItemType.values.sublist(0, 4),
-      onItemSelected: itemSelected,
-      title: "Items")
-      .show(context);
-}

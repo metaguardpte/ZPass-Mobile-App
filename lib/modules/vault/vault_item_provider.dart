@@ -38,6 +38,12 @@ abstract class BaseVaultProvider extends BaseProvider {
     notifyListeners();
   }
 
+  bool _hasChange = false;
+  bool get hasChange => _hasChange;
+  set hasChange(bool value) {
+    _hasChange = value;
+  }
+
   Future<dynamic> analyticsData(VaultItemEntity? data) {
     return Future.value(null);
   }

@@ -27,6 +27,7 @@ class CardsDetailProvider extends BaseVaultProvider {
 
   @override
   Future analyticsData(VaultItemEntity? data) async {
+    hasChange = false;
     if (data == null) return null;
     entity = data;
     tags = data.tags ?? [];

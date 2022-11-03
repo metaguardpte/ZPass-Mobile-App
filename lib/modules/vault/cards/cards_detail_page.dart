@@ -93,6 +93,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
         Toast.showError("Save fail");
         return;
       }
+      provider.hasChange = true;
       Toast.showSuccess("Save success");
       // NavigatorUtils.goBackWithParams(context, {"changed": true});
     }).catchError((error) {
