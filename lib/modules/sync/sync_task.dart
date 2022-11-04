@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/sync/db_sync/db_sync.dart';
 import 'package:zpass/modules/sync/file_transfer/base_file_transfer.dart';
@@ -11,10 +13,21 @@ class SyncTask {
   static const int _periodInMinute = 30;
   static DateTime? _lastExecuteTime;
 
+  static const period = Duration(minutes: _periodInMinute);
+  static Timer? timer;
+
+  static void startTimer() {
+    timer ??= Timer.periodic(period, (Timer t) => run());
+  }
+
+  static void cancel() {
+    timer?.cancel();
+  }
+
   static void run() async {
     if (_lastExecuteTime != null) {
       int timeDiffer = DateTime.now().difference(_lastExecuteTime!).inMinutes;
-      if (timeDiffer < 0 || timeDiffer <= _periodInMinute) {
+      if (timeDiffer < 0 || timeDiffer < _periodInMinute - 1) {
         Log.d(
             "Skip sync data due to last synchronize time < $_periodInMinute minutes");
         return;

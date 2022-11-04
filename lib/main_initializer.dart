@@ -58,8 +58,8 @@ class MainInitializer {
     // 初始化用户数据
     await UserProvider().restore();
 
-    // try to start sync task
-    SyncTask.run();
+    // try to start sync timer
+    SyncTask.startTimer();
 
     final userInfo = UserProvider().profile.data;
     // 跳转登录或注册
