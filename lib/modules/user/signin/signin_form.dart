@@ -78,12 +78,6 @@ class _SignInFormState extends State<SignInForm> {
     UserProvider().profile.userCryptoKey = UserCryptoKeyModel.fromJson(value);
     UserProvider().profile.userSecretKey = _secretKey;
     UserProvider().biometrics.putUserLastLoginTime(DateTime.now(), _email);
-    var lastUserBefore = await UserProvider().lastUser;
-    if(lastUserBefore != _secretKey){
-      //clean setting
-      UserProvider().settingClear();
-      UserProvider().setLastUser = _secretKey;
-    }
     UserProvider().profile.tryUpdate().catchError((e) {
       Log.e("tryUpdate user profile failed: $e");
     }).whenComplete(() {
