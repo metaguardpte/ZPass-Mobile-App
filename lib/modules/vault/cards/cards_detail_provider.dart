@@ -51,6 +51,7 @@ class CardsDetailProvider extends BaseVaultProvider {
   Future<bool> update(
       {required String title,
         required String number,
+        String? holder,
         String? expiry,
         String? cvv,
         String? zipCode,
@@ -73,6 +74,7 @@ class CardsDetailProvider extends BaseVaultProvider {
     content?.title = title;
     content?.number = number;
     content?.expiry = expiry;
+    content?.holder = holder;
     content?.cvv = cvv;
     content?.zipOrPostalCode = zipCode;
     content?.pin = pin;

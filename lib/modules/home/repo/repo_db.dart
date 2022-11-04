@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/repo/repo_base.dart';
+import 'package:zpass/modules/user/user_provider.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,6 +11,7 @@ import 'package:zpass/util/log_utils.dart';
 class RepoDB extends RepoBase<VaultItemEntity> {
 
   late ZPassDB _db;
+  ZPassDB get raw => _db;
 
   @override
   Future<bool> add(VaultItemEntity item) {
@@ -33,9 +37,12 @@ class RepoDB extends RepoBase<VaultItemEntity> {
   @override
   Future init() async {
     final dir = await getApplicationSupportDirectory();
-    Log.d("leveldb dir: $dir", tag: "RepoDB");
+    final userId = UserProvider().profile.data.userId;
+    final userDBDir = "${dir.path}/$userId";
+    Directory(userDBDir).createSync(recursive: true);//make sure all dirs are exist
+    Log.d("leveldb dir: $userDBDir", tag: "RepoDB");
     _db = ZPassDB();
-    return _db.open(path: "${dir.path}/leveldb");
+    return _db.open(path: "$userDBDir/leveldb");
   }
 
   @override

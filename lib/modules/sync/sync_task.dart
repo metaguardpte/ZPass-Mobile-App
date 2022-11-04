@@ -56,6 +56,9 @@ class SyncTask {
     try {
       var storageAccount = await fileTransferManager.getStorageAccount();
       var unzipDBFolder = await fileTransferManager.download(userIdInString);
+      if (unzipDBFolder == null) {
+        throw StateError("failed to download user's file");
+      }
       await DBSyncUnit.sync(unzipDBFolder);
       Log.d(
           "Success sync data from remote(type:$transferType, account:$storageAccount)"

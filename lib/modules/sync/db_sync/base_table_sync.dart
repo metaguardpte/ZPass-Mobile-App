@@ -1,4 +1,5 @@
 
+import 'package:zpass/modules/home/provider/home_provider.dart';
 import 'package:zpass/plugin_bridge/leveldb/query_context.dart';
 import 'package:zpass/plugin_bridge/leveldb/record_entity.dart';
 import 'package:zpass/plugin_bridge/leveldb/zpass_db.dart';
@@ -23,9 +24,8 @@ class BaseTableSyncUnit<T extends RecordEntity> {
     var changedEntities = getChanged(remoteMap, localMap);
     Log.d("changedEntities: ${changedEntities.length}",
         tag: "BaseTableSyncUnit");
-    _doSync(changedEntities);
-    postSync();
-    return;
+    await _doSync(changedEntities);
+    await postSync();
   }
 
   List<T> getChanged(Map<String, T> remoteMap, Map<String, T> localMap) {
@@ -37,7 +37,7 @@ class BaseTableSyncUnit<T extends RecordEntity> {
         return ;
       }
 
-      T? mergedEntity = getMergedEntity(remoteEntity, localEntity!);
+      T? mergedEntity = getMergedEntity(remoteEntity, localEntity);
       if (mergedEntity != null) {
         changed.add(mergedEntity);
       }
@@ -49,7 +49,8 @@ class BaseTableSyncUnit<T extends RecordEntity> {
   ///
   /// Empty method, override in VaultTableSyncUnit
   ///
-  void postSync() {
+  Future<void> postSync() {
+    return Future.value();
   }
 
   ///
@@ -124,13 +125,11 @@ class BaseTableSyncUnit<T extends RecordEntity> {
       return;
     }
 
-    var dbInstance = ZPassDB();
     for (var entity in changedEntities) {
-      final putRet = await dbInstance.put(entity);
+      final putRet = await HomeProvider().repoDB.raw.put(entity);
       Log.d("entity ${entity.getEntityKey()} put result: $putRet", tag: "BaseTableSyncUnit");
     }
-    final flushRet = await dbInstance.flush();
+    final flushRet = await HomeProvider().repoDB.raw.flush();
     Log.d("db instance flush result: $flushRet", tag: "BaseTableSyncUnit");
-    return;
   }
 }

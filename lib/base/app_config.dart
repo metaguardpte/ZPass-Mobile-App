@@ -10,5 +10,7 @@ class AppConfig {
 
   static const String _serverTest = "https://ro8d3r7nxb.execute-api.ap-southeast-1.amazonaws.com/Prod";
   static const String _serverDev = "https://l8ee0j8yb8.execute-api.ap-southeast-1.amazonaws.com/Prod";
+  static const String _serverPre = "https://i3j0hcc2q7.execute-api.ap-southeast-1.amazonaws.com/Prod";
+  static const String _serverProduct = "https://zv42of7gd4.execute-api.ap-southeast-1.amazonaws.com";
   static String get serverUrl => kReleaseMode ? _serverTest : _serverTest;
 }

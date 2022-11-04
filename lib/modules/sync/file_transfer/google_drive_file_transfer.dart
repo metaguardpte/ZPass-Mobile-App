@@ -28,8 +28,11 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
     }
 
     String? fileId = await _getDefaultFileId(_driveApi!, userId);
+    if (fileId == null) {
+      throw StateError("user's default file NOT exist: $userId");
+    }
     Object result = await _driveApi!.files
-        .get(fileId!, downloadOptions: commons.DownloadOptions.fullMedia);
+        .get(fileId, downloadOptions: commons.DownloadOptions.fullMedia);
     result as commons.Media;
 
     List<int> dataStore = [];
@@ -127,8 +130,11 @@ class GoogleDriveFileTransferManager extends BaseFileTransferManager {
   Future<String?> _getDefaultFileId(
       drive.DriveApi driveApi, String userId) async {
     final defaultFolderId = await _getDefaultDirId(driveApi);
+    if (defaultFolderId == null) {
+      throw StateError("user's default dir NOT exist: $userId");
+    }
     final userFolderId =
-        await _getUserDirId(driveApi, defaultFolderId!, userId);
+        await _getUserDirId(driveApi, defaultFolderId, userId);
 
     drive.FileList fileList = await driveApi.files.list(
       spaces: 'drive',
