@@ -75,6 +75,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
       TabCardsPage(key: _tabCardsKey),
       TabIdentitiesPage(key: _tabIdentitiesKey),
     ];
+    Future.delayed(const Duration(seconds: 2), () => SyncTask.run());
     super.initState();
   }
 
