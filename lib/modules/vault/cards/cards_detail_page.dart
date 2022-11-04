@@ -29,6 +29,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
   final _formKey = GlobalKey<FormState>();
   final _titleKey = GlobalKey<ZPassFormEditTextState>();
   final _numberKey = GlobalKey<ZPassFormEditTextState>();
+  final _holderKey = GlobalKey<ZPassFormEditTextState>();
   final _expiryKey = GlobalKey<ZPassFormEditTextState>();
   final _cvvKey = GlobalKey<ZPassFormEditTextState>();
   final _zipCodeKey = GlobalKey<ZPassFormEditTextState>();
@@ -83,6 +84,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
     provider.update(
       title: _titleKey.currentState!.text,
       number: _numberKey.currentState!.text,
+      holder: _holderKey.currentState!.text,
       expiry: _expiryKey.currentState!.text,
       cvv: _expiryKey.currentState!.text,
       zipCode: _expiryKey.currentState!.text,
@@ -116,6 +118,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
   void _fillFormTextValue() {
     _titleKey.currentState?.fillText(provider.content?.title ?? "");
     _numberKey.currentState?.fillText(provider.content?.number ?? "");
+    _holderKey.currentState?.fillText(provider.content?.holder ?? "");
     _expiryKey.currentState?.fillText(provider.content?.expiry ?? "");
     _cvvKey.currentState?.fillText(provider.content?.cvv ?? "");
     _zipCodeKey.currentState?.fillText(provider.content?.zipOrPostalCode ?? "");
@@ -138,6 +141,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
               prefixIcon: titleIcon,
               require: true,
               key: _titleKey,
+              validator: _validatorEditText
             ),
             Gaps.vGap15,
             _buildRow(
@@ -146,7 +150,8 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
               text: provider.content?.number,
               require: true,
               key: _numberKey,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true)
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: _validatorEditText
             )
           ],
         ),
@@ -159,6 +164,8 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
       child: Column(
         children: [
+          _buildRow(editing, S.current.vaultCardholderName, text: provider.content?.holder, key: _holderKey,),
+          Gaps.vGap15,
           _buildRow(editing, S.current.vaultExpiryDate, hint: "mm/yy", text: provider.content?.expiry, key: _expiryKey,),
           Gaps.vGap15,
           _buildRow(editing, S.current.vaultCVV, obscure: true, text: provider.content?.cvv, key: _cvvKey),
@@ -167,7 +174,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
           Gaps.vGap15,
           _buildRow(editing, S.current.vaultCardPIN, obscure: true, text: provider.content?.pin, key: _cardPinKey),
           Gaps.vGap15,
-          _buildRow(editing, S.current.vaultOther, text: provider.content?.note, key: _otherKey),
+          _buildRow(editing, S.current.vaultOther, text: provider.content?.note, maxLines: 3, key: _otherKey),
           _buildTagContainer(editing),
         ],
       ),
@@ -178,6 +185,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
       {String? text,
         Key? key,
         String? hint,
+        int maxLines = 1,
         Widget? prefixIcon,
         bool obscure = false,
         bool require = false,
@@ -196,11 +204,12 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
             enableCopy: !editing,
             readOnly: !editing,
             obscureText: obscure,
+            maxLines: maxLines,
             enableClear: editing,
             filled: !editing,
             keyboardType: keyboardType,
             borderColor: const Color(0xFFEBEBEE),
-            validator: validator ?? _validatorEditText,
+            validator: validator,
           )
         ],
       ),
