@@ -71,7 +71,8 @@ class _SignInFormState extends State<SignInForm> {
     //submit
   }
 
-  _loginSuccess(value) {
+  _loginSuccess(value) async{
+    _cleanUserSetting(_email);
     UserProvider().secretKeys.save(email: _email, secretKey: _secretKey);
     UserProvider().profile.setMainUser(_email);
     UserProvider().profile.userCryptoKey = UserCryptoKeyModel.fromJson(value);
@@ -183,6 +184,7 @@ class _SignInFormState extends State<SignInForm> {
       userInfo.userCryptoKey?.personalDataKey ?? "",
       userInfo.userCryptoKey?.enterpriseDataKey ?? "",
     ).then((value) {
+      _cleanUserSetting(_email);
       UserProvider().profile.setMainUser(_email);
       SyncTask.run();
       NavigatorUtils.push(context, Routers.home, clearStack: true);
@@ -190,7 +192,12 @@ class _SignInFormState extends State<SignInForm> {
       Toast.showSpec(S.current.loginFail);
     });
   }
-
+  void _cleanUserSetting(email){
+    var lastUserBefore = UserProvider().profile.getMainUser()?.email;
+    if(lastUserBefore != email){
+      UserProvider().settings.clear();
+    }
+  }
   void _fillSecretKey() {
     final key = UserProvider().secretKeys.get(email: _email);
     _buildUserBiometricsBtn();
