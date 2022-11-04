@@ -81,7 +81,6 @@ class _SignInFormState extends State<SignInForm> {
     UserProvider().profile.tryUpdate().catchError((e) {
       Log.e("tryUpdate user profile failed: $e");
     }).whenComplete(() {
-      SyncTask.run();
       loadingDialog.dismiss(context);
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     });
@@ -186,7 +185,6 @@ class _SignInFormState extends State<SignInForm> {
     ).then((value) {
       _cleanUserSetting(_email);
       UserProvider().profile.setMainUser(_email);
-      SyncTask.run();
       NavigatorUtils.push(context, Routers.home, clearStack: true);
     }).catchError((error) {
       Toast.showSpec(S.current.loginFail);
