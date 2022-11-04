@@ -44,7 +44,6 @@ class _DataRoamingPageState extends State<DataRoamingPage>
     if (!_unlock()) {
       return Future.value(null);
     }
-    var providerTypeOld = _syncProviderType;
     Completer<String?> lock = Completer();
     pickSyncType(context, (SyncProviderType? type, index) async {
 
@@ -70,14 +69,14 @@ class _DataRoamingPageState extends State<DataRoamingPage>
     return GoogleDriveFileTransferManager();
   }
 
-  _handelBackup() async {
+  _handleSync() async {
     if (_unlock()) {
       onBackupStatus = true;
       _animationController.forward();
       setState(() {});
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
       final userId = UserProvider().profile.data.userId;
-
+      final action = S.current.sync;
       var unzipDBFolder =
           await fileTransferManager.download("$userId").catchError((err) {
         Log.d(
@@ -88,7 +87,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         });
       });
       if (unzipDBFolder == null) {
-        Toast.showError('There is no data online , please sync first');
+        Toast.show('$action completed, no data online.');
         setState(() {
           onBackupStatus = false;
           _animationController.stop();
@@ -102,10 +101,10 @@ class _DataRoamingPageState extends State<DataRoamingPage>
           onBackupStatus = false;
           _animationController.stop();
         });
-        Toast.showSuccess('${S.current.backup} ${S.current.successfully}');
+        Toast.showSuccess('$action ${S.current.successfully}');
       }).catchError((err) {
         Log.d('DBSync sync err -------------- > :  ${err.toString()}');
-        Toast.showError('${S.current.backup} ${S.current.failed}');
+        Toast.showError('$action ${S.current.failed}');
         setState(() {
           onBackupStatus = false;
           _animationController.stop();
@@ -114,7 +113,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
     }
   }
 
-  _handelSync() {
+  _handleBackup() {
     if (_unlock()) {
       onSyncStatus = true;
       _animationController.forward();
@@ -122,17 +121,16 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
       var localDBPath = ZPassDB().getDBPath();
       final userId = UserProvider().profile.data.userId;
-      Log.d('userId : $userId');
+      final action = S.current.backup;
       fileTransferManager.upload(localDBPath, "$userId").then((value) {
         UserProvider().settings.updateSyncDate();
         setState(() {
           onSyncStatus = false;
           _animationController.stop();
         });
-        Toast.showSuccess('${S.current.sync} ${S.current.successfully}');
+        Toast.showSuccess('$action ${S.current.successfully}');
       }).catchError((err) {
-        // Toast.showError(err.toString());
-        Toast.showError('${S.current.sync} ${S.current.failed}');
+        Toast.showError('$action ${S.current.failed}');
         Log.d(
             'fileTransferManager upload err -------------- > :  ${err.toString()}');
         setState(() {
@@ -280,7 +278,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                         Container(
                           alignment: Alignment.center,
                           child: GestureDetector(
-                            onTap: _handelBackup,
+                            onTap: _handleBackup,
                             behavior: HitTestBehavior.opaque,
                             child: Container(
                               alignment: Alignment.center,
@@ -333,7 +331,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                         Container(
                           alignment: Alignment.center,
                           child: GestureDetector(
-                            onTap: _handelSync,
+                            onTap: _handleSync,
                             behavior: HitTestBehavior.opaque,
                             child: Container(
                               alignment: Alignment.center,
