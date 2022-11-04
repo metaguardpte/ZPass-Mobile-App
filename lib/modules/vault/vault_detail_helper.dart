@@ -4,7 +4,10 @@ import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/model/vault_item_login_detail.dart';
 import 'package:zpass/res/resources.dart';
 import 'package:zpass/res/zpass_icons.dart';
+import 'package:zpass/util/credit_card_type_detector.dart';
 import 'package:zpass/util/theme_utils.dart';
+
+final List<String> _supportCreditCards = ["maestro","jcb", "mastercard", "discover", "unionPay", "visa", "dinersClub", "amex"];
 
 String? parseVaultLoginIconUrl(VaultItemEntity? entity) {
   if (entity == null) {
@@ -28,6 +31,13 @@ String? parseVaultLoginIconUrl(VaultItemEntity? entity) {
       return null;
     }
   }
+}
+
+String? parseVaultCardsIcon(String number) {
+  if (number.isEmpty) return null;
+  var type = detectCCType(number);
+  if (!_supportCreditCards.contains(type.name)) return null;
+  return "card/ic_${type.name}";
 }
 
 Widget buildHint(BuildContext context, String hint, {bool require = false}) {

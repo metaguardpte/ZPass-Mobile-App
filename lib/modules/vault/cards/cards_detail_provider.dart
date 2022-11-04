@@ -25,6 +25,13 @@ class CardsDetailProvider extends BaseVaultProvider {
     notifyListeners();
   }
 
+  String? _cardNumber;
+  String? get cardNumber => _cardNumber;
+  set cardNumber(String? value) {
+    _cardNumber = value;
+    notifyListeners();
+  }
+
   @override
   Future analyticsData(VaultItemEntity? data) async {
     hasChange = false;
@@ -41,6 +48,7 @@ class CardsDetailProvider extends BaseVaultProvider {
         Log.e("content decrypt error:${error.toString()}");
       });
       content = VaultItemCardsContent.fromJson(jsonDecode(decryptStr));
+      cardNumber = content?.number;
     } catch (e) {
       Log.e("content decrypt catch:${e.toString()}");
     }

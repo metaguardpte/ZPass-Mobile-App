@@ -76,6 +76,7 @@ dependencies:
   googleapis: ^9.2.0
   google_sign_in: ^5.4.2
   uuid: ^3.0.6
+  mask_text_input_formatter: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -112,6 +113,7 @@ flutter:
     - assets/images/favicon/2.0x/
     - assets/images/favicon/3.0x/
     - assets/images/setting/
+    - assets/images/card/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

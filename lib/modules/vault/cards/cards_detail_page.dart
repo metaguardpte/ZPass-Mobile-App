@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
@@ -15,6 +16,7 @@ import 'package:zpass/extension/int_ext.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
+import 'package:zpass/widgets/load_image.dart';
 import 'package:zpass/widgets/zpass_card.dart';
 import 'package:zpass/widgets/zpass_form_edittext.dart';
 
@@ -132,8 +134,6 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
   }
 
   Widget _buildRequiredSection(bool editing) {
-    final titleIcon = buildRowIcon(context, ZPassIcons.favCard, backgroundColor: const Color(0xFF3FD495), color: Colors.white,);
-
     return ZPassCard(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
       child: Form(
@@ -144,7 +144,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
               editing,
               S.current.vaultTitle,
               text: provider.content?.title,
-              prefixIcon: titleIcon,
+              prefixIcon: _buildCardIcon(),
               require: true,
               key: _titleKey,
               validator: _validatorEditText,
@@ -158,7 +158,11 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
               require: true,
               key: _numberKey,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              validator: _validatorEditText
+              validator: _validatorEditText,
+              onUnFocus: () => provider.cardNumber = _numberKey.currentState?.text,
+              inputFormatters: [
+                MaskTextInputFormatter(mask: "#### #### #### #### ###")
+              ]
             )
           ],
         ),
@@ -173,7 +177,13 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
         children: [
           _buildRow(editing, S.current.vaultCardholderName, text: provider.content?.holder, key: _holderKey,),
           Gaps.vGap15,
-          _buildRow(editing, S.current.vaultExpiryDate, hint: "mm/yy", text: provider.content?.expiry, key: _expiryKey,),
+          _buildRow(editing, S.current.vaultExpiryDate,
+            hint: "mm/yy",
+            text: provider.content?.expiry,
+            key: _expiryKey,
+            inputFormatters: [MaskTextInputFormatter(mask: "##/##")],
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          ),
           Gaps.vGap15,
           _buildRow(editing, S.current.vaultCVV, obscure: true, text: provider.content?.cvv, maxLength: 4, key: _cvvKey),
           Gaps.vGap15,
@@ -188,6 +198,31 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
     );
   }
 
+  Widget _buildCardIcon() {
+    return Selector<CardsDetailProvider, String?>(
+      builder: (_, number, __) {
+        final type = parseVaultCardsIcon(number ?? "");
+        if (type == null) {
+          return buildRowIcon(
+            context,
+            ZPassIcons.favCard,
+            backgroundColor: const Color(0xFF3FD495),
+            color: Colors.white,
+          );
+        }
+        return SizedBox(
+          width: 34,
+          height: 34,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            child: LoadAssetImage(type),
+          ),
+        );
+      },
+      selector: (_, provider) => provider.cardNumber,
+    );
+  }
+
   Widget _buildRow(bool editing, String title,
       {String? text,
         Key? key,
@@ -198,6 +233,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
         bool obscure = false,
         bool require = false,
         TextInputType? keyboardType,
+        NullParamCallback? onUnFocus,
         final List<TextInputFormatter>? inputFormatters,
         FunctionReturn<String?, dynamic>? validator}) {
     return Container(
@@ -221,6 +257,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
             borderColor: const Color(0xFFEBEBEE),
             validator: validator,
             inputFormatters: inputFormatters,
+            onUnFocus: onUnFocus,
           )
         ],
       ),
@@ -282,14 +319,4 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
     return null;
   }
 
-  // List<TextInputFormatter> _textFieldFormatters({required String mask, required Map<String, RegExp>? filter, int maxLength = 100, }) {
-  //   return [
-  //     LengthLimitingTextInputFormatter(maxLength),
-  //     MaskTextInputFormatter(
-  //         mask: mask,
-  //         filter: filter,
-  //         type: MaskAutoCompletionType.lazy
-  //     )
-  //   ];
-  // }
 }
