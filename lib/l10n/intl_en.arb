@@ -24,7 +24,7 @@
   "createAccount":"Create Account",
   "zpassLink":"zpassapp.com",
   "signinTip":"Please input your ",
-  "signinOrNewTip":"Log in or create a new account to access your secure vault on your device.",
+  "signinOrNewTip":"Login or create a new account to access your secure vault on your device.",
   "siginScan":"Scan setup code",
   "or":"OR",
   "confirm":"Confirm",
@@ -211,8 +211,9 @@
   "vaultOther": "Other",
 
   "vaultCardNumber": "Card Number",
+  "vaultCardholderName": "Cardholder Name",
   "vaultExpiryDate": "Expiry Date",
   "vaultCVV": "CVV",
   "vaultZipOrPostalCode": "Zip or Postal Code",
-  "vaultCardPIN": "Card Pin"
+  "vaultCardPIN": "Card PIN"
 }
