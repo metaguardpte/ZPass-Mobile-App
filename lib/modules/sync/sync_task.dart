@@ -9,15 +9,18 @@ import '../user/user_provider.dart';
 
 class SyncTask {
   static const int _periodInMinute = 30;
-  static DateTime _lastExecuteTime = DateTime.now();
+  static DateTime? _lastExecuteTime;
 
   static void run() async {
-    int timeDiffer = DateTime.now().difference(_lastExecuteTime).inMinutes;
-    if (timeDiffer < 0 || timeDiffer <= _periodInMinute) {
-      Log.d(
-          "Skip sync data due to last synchronize time < $_periodInMinute minutes");
-      return;
+    if (_lastExecuteTime != null) {
+      int timeDiffer = DateTime.now().difference(_lastExecuteTime!).inMinutes;
+      if (timeDiffer < 0 || timeDiffer <= _periodInMinute) {
+        Log.d(
+            "Skip sync data due to last synchronize time < $_periodInMinute minutes");
+        return;
+      }
     }
+
     final userId = UserProvider().profile.data.userId;
     if (userId <= 0) {
       Log.d("Skip sync data due to empty userId");
@@ -69,8 +72,7 @@ class SyncTask {
       case SyncProviderType.googleDrive:
         return GoogleDriveFileTransferManager();
       default:
-        break;
+        return null;
     }
-    return null;
   }
 }

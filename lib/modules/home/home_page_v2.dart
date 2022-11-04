@@ -82,7 +82,6 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
   void didChangeAppLifecycleState(AppLifecycleState state) {
     Log.d("APP State: ${state.toString()}", tag: "AppLifecycleState");
     if (state == AppLifecycleState.resumed) {
-      SyncTask.run();
     } else if (state == AppLifecycleState.paused) {
       provider.repoDB.flush();
     } else if (state == AppLifecycleState.detached) {
