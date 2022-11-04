@@ -10,7 +10,6 @@ import 'package:zpass/modules/vault/model/vault_item_login_content.dart';
 import 'package:zpass/modules/vault/vault_detail_base_state.dart';
 import 'package:zpass/modules/vault/vault_detail_tags.dart';
 import 'package:zpass/res/resources.dart';
-import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
@@ -228,21 +227,27 @@ class _LoginDetailPageState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Visibility(
-            visible: provider.entity?.updateTime != null,
-            child: Row(
-              children: [
-                Icon(Icons.access_time, size: 15, color: context.textColor3),
-                Container(
-                  padding: const EdgeInsets.only(left: 3, right: 18),
-                  child: Text(
-                    "Update time: ${provider.entity?.updateTime.formatDateTime()}",
-                    style: TextStyles.textSize12
-                        .copyWith(color: context.textColor3),
-                  ),
+        Selector<LoginDetailProvider, int?>(
+          builder: (_, updateTime, __) {
+            return Visibility(
+                visible: updateTime != null,
+                child: Row(
+                  children: [
+                    Icon(Icons.access_time,
+                        size: 15, color: context.textColor3),
+                    Container(
+                      padding: const EdgeInsets.only(left: 3, right: 18),
+                      child: Text(
+                        "Update time: ${updateTime?.formatDateTime()}",
+                        style: TextStyles.textSize12.copyWith(color: context.textColor3),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            )),
+            );
+          },
+          selector: (_, provider) => provider.entity?.updateTime,
+        ),
         Visibility(
             visible: provider.entity?.createTime != null,
             child: Container(

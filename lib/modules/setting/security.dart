@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/generated/l10n.dart';
@@ -50,15 +51,18 @@ class _SecurityWidgetState extends ProviderState<SecurityWidget, SettingProvider
   Widget buildContent(BuildContext context) {
     return Column(
       children: [
-        Container(
-          alignment: Alignment.bottomLeft,
-          margin: const EdgeInsets.only(top: 16),
-          child: Material(
-            color: Colors.transparent,
-            child: Text(
-              S.current.General,
-              style: const TextStyle(
-                  color: Color.fromRGBO(149, 155, 167, 1), fontSize: 14),
+        Visibility(
+          visible: _rowDataList.isNotEmpty,
+          child: Container(
+            alignment: Alignment.bottomLeft,
+            margin: const EdgeInsets.only(top: 16),
+            child: Material(
+              color: Colors.transparent,
+              child: Text(
+                S.current.settingSecurity,
+                style: const TextStyle(
+                    color: Color.fromRGBO(149, 155, 167, 1), fontSize: 14),
+              ),
             ),
           ),
         ),

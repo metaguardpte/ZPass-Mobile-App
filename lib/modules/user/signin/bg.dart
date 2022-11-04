@@ -27,14 +27,18 @@ class BackWithLogo extends StatelessWidget {
             )),
         Positioned(
           left: 10,
-          top: 30,
-          child: IconButton(
-            icon:const Icon(ZPassIcons.icNavBack, color: Colors.white, size: 16),
-            padding:const EdgeInsets.all(0),
-            onPressed: () {
-              NavigatorUtils.push(
-                  context, Routers.loginOrNew, clearStack: true);
-            },),
+          top: 10,
+          child: SafeArea(
+            bottom: false,
+            right: false,
+            child: IconButton(
+              icon:const Icon(ZPassIcons.icNavBack, color: Colors.white, size: 16),
+              padding:const EdgeInsets.all(0),
+              onPressed: () {
+                NavigatorUtils.push(
+                    context, Routers.loginOrNew, clearStack: true);
+              },),
+          ),
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(0, 92.5, 0, 0),

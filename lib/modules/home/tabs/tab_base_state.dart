@@ -21,6 +21,8 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
 
   Future get preloadFuture => Future.delayed(const Duration(milliseconds: 500));
 
+  final _searchKey = GlobalKey<ZPassFormEditTextState>();
+
   @override
   void initState() {
     super.initState();
@@ -74,6 +76,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
   Widget _buildSearchInput() {
     return Expanded(
       child: ZPassFormEditText(
+        key: _searchKey,
         hintText: "Search",
         height: 35,
         action: TextInputAction.search,
@@ -152,7 +155,12 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
       ],
       onSelected: (VaultItemSortType sortType) {
         provider.sortType = sortType;
-        provider.fetchData(reset: true);
+        String text = _searchKey.currentState?.text ?? "";
+        if (text.isNotEmpty) {
+          provider.filterData(keyword: text);
+        } else {
+          provider.fetchData(reset: true);
+        }
       },
       child: _buildSorter(provider.sortType),
     );

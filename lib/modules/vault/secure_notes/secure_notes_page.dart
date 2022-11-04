@@ -10,11 +10,11 @@ import 'package:zpass/modules/vault/vault_detail_base_state.dart';
 import 'package:zpass/modules/vault/vault_detail_tags.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/res/styles.dart';
-import 'package:zpass/util/log_utils.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/zpass_card.dart';
 import 'package:zpass/widgets/zpass_form_edittext.dart';
+import 'package:zpass/extension/int_ext.dart';
 
 class SecureNotesPage extends StatefulWidget {
   final VaultItemEntity? data;
@@ -108,6 +108,8 @@ class _SecureNotesPageState
                       ),
                       Gaps.vGap16,
                       _buildTagContainer(editing),
+                      Gaps.vGap16,
+                      _buildTips(),
                     ],
                   ),
                 ),
@@ -128,6 +130,45 @@ class _SecureNotesPageState
               onTagChange: (value) => provider.tags = value,
             ),
           );
+  }
+
+  Widget _buildTips() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Selector<SecureNotesProvider, int?>(
+          builder: (_, updateTime, __) {
+            return Visibility(
+              visible: updateTime != null,
+              child: Row(
+                children: [
+                  Icon(Icons.access_time,
+                      size: 15, color: context.textColor3),
+                  Container(
+                    padding: const EdgeInsets.only(left: 3, right: 18),
+                    child: Text(
+                      "Update time: ${updateTime?.formatDateTime()}",
+                      style: TextStyles.textSize12.copyWith(color: context.textColor3),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          selector: (_, provider) => provider.entity?.updateTime,
+        ),
+        Visibility(
+            visible: provider.entity?.createTime != null,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+              child: Text(
+                "Create time: ${provider.entity?.createTime.formatDateTime()}",
+                style:
+                TextStyles.textSize12.copyWith(color: context.textColor3),
+              ),
+            )),
+      ],
+    );
   }
 
   @override

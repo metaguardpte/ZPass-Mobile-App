@@ -94,6 +94,7 @@ class CardsDetailProvider extends BaseVaultProvider {
     entity!.tags = tags;
     entity!.name = title;
     entity!.description = number;
+    entity!.updateTime = DateTime.now().millisecondsSinceEpoch;
     entity!.detail = {"cardType": "uatp", "content": encryptedContent};
     //TODO update tags
     return db.update(entity!);
