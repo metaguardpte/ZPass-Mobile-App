@@ -57,6 +57,7 @@
   "syncProvider":"Sync Provider",
   "backup":"Backup",
   "sync":"Sync",
+  "failed":"failed",
   "lastBackupTime":"Last Backup Time",
   "lastSyncTime":"Last Sync Time",
   "successfully":"Successfully",

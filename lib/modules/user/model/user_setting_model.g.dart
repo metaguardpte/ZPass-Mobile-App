@@ -13,7 +13,8 @@ UserSettingModel _$UserSettingModelFromJson(Map<String, dynamic> json) =>
       syncProvider: json['syncProvider'] as String?,
     )
       ..backupDate = json['backupDate'] as String?
-      ..syncDate = json['syncDate'] as String?;
+      ..syncDate = json['syncDate'] as String?
+      ..syncAccount = json['syncAccount'] as String?;
 
 Map<String, dynamic> _$UserSettingModelToJson(UserSettingModel instance) =>
     <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$UserSettingModelToJson(UserSettingModel instance) =>
       'language': instance.language,
       'backupDate': instance.backupDate,
       'syncDate': instance.syncDate,
+      'syncAccount': instance.syncAccount,
     };

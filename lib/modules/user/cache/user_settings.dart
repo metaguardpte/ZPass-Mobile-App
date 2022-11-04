@@ -14,8 +14,8 @@ class UserSettings with UserStorage {
     _userSetting.syncProvider = value;
     flush();
   }
-  set syncAccount(String status){
-    _userSetting.syncAccount = status;
+  set syncAccount(String account){
+    _userSetting.syncAccount = account;
     flush();
   }
   set backupAndSync(bool status){
@@ -32,9 +32,11 @@ class UserSettings with UserStorage {
   }
   updateBackupDate(){
     _userSetting.backupDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+    flush();
   }
   updateSyncDate(){
     _userSetting.syncDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+    flush();
   }
   @override
   Future<dynamic> restore() async {
