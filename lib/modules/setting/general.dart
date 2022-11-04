@@ -24,27 +24,25 @@ class _GeneralWidgetState extends State<GeneralWidget> {
   _handelNavToDataRoamingSetting(){
     // NavigatorUtils.pushResult(context, RouterScanner.scanner, _parseScanCodeResult);
     NavigatorUtils.pushResult(context, RouterSetting.dataRoaming,(dynamic data){
-      var syncProvider = UserProvider().settings.data.syncProvider;
-      var syncType = UserProvider().settings.data.backupAndSync;
-      if (syncProvider != null && (syncType ?? false)) {
-        _syncProviderType = SyncProviderType.values
-            .firstWhere((element) => element.name == syncProvider);
-      } else {
-        _syncProviderType = null;
-      }
+      initSync();
       setState(() {});
     });
   }
-  @override
-  void initState() {
-    super.initState();
+  void initSync(){
     var syncProvider = UserProvider().settings.data.syncProvider;
-    if (syncProvider != null) {
+    var syncType = UserProvider().settings.data.backupAndSync;
+    Log.d('provider:${syncProvider} syncType:${syncType}');
+    if (syncProvider != null && (syncType ?? false)) {
       _syncProviderType = SyncProviderType.values
           .firstWhere((element) => element.name == syncProvider);
     } else {
       _syncProviderType = null;
     }
+  }
+  @override
+  void initState() {
+    super.initState();
+    initSync();
   }
   @override
   Widget build(BuildContext context) {
