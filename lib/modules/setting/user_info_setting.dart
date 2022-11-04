@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/generated/l10n.dart';
+import 'package:zpass/modules/setting/widgets/user_avatar.dart';
 import 'package:zpass/modules/user/model/user_info_model.dart';
 import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/user_provider.dart';
@@ -50,21 +51,12 @@ class _UserInfoSettingPageState extends State<UserInfoSettingPage> {
           right: Row(
             children: [
               const Spacer(),
-              Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    child: LoadImage(
-                      userInfo.avatar ?? '',
-                      width: 34,
-                      height: 34,
-                    ),
-                  )),
-              Icon(
-                ZPassIcons.icArrowRight,
-                color: rightColor,
-                size: 10,
-              )
+              UserAvatar(url: userInfo.avatar, placeholder: userInfo.userName)
+              // Icon(
+              //   ZPassIcons.icArrowRight,
+              //   color: rightColor,
+              //   size: 10,
+              // )
             ],
           )),
       RowData(

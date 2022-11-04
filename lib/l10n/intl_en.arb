@@ -45,6 +45,7 @@
   },
 
   "General":"GENERAL",
+  "settingSecurity": "SECURITY",
   "Language":"Language",
   "DataRoaming":"Data Roaming",
   "Clipboard":"Clipboard",
