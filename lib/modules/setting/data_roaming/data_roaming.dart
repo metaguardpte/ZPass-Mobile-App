@@ -314,7 +314,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                   ),
                   Gaps.vGap10,
                   Text(
-                    '${S.current.lastBackupTime} ${UserProvider().settings.data.backupDate ?? ''}',
+                    UserProvider().settings.data.backupDate != null ? '${S.current.lastBackupTime} ${UserProvider().settings.data.backupDate}' : '',
                     style: const TextStyle(
                         color: Color.fromRGBO(149, 155, 167, 1), fontSize: 12),
                   ),
@@ -363,7 +363,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                   ),
                   Gaps.vGap10,
                   Text(
-                    '${S.current.lastSyncTime} ${UserProvider().settings.data.syncDate ?? ''}',
+                    UserProvider().settings.data.syncDate != null ? '${S.current.lastSyncTime} ${UserProvider().settings.data.syncDate}' : '',
                     style: const TextStyle(
                         color: Color.fromRGBO(149, 155, 167, 1), fontSize: 12),
                   ),
