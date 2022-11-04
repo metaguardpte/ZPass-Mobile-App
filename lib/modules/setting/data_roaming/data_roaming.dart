@@ -35,18 +35,33 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   late AnimationController _animationController;
   bool onSyncStatus = false;
   bool onBackupStatus = false;
-  bool _unlock(){
+
+  bool _unlock() {
     return !onBackupStatus && !onSyncStatus;
   }
-  Future<SyncProviderType?> _handelSyncProviderModalShow() async{
-    if(!_unlock()){
-     return Future.value(null);
+
+  Future<String?> _handelSyncProviderModalShow() async {
+    if (!_unlock()) {
+      return Future.value(null);
     }
-    Completer<SyncProviderType?> lock = Completer();
-    pickSyncType(context, (type, index) {
-      _syncProviderType = type;
-      setState(() {});
-      lock.complete(type);
+    var providerTypeOld = _syncProviderType;
+    Completer<String?> lock = Completer();
+    pickSyncType(context, (SyncProviderType? type, index) async {
+
+      var account = await type?.getAccount.catchError((err) {
+        Toast.showError(err.toString());
+      });
+      Log.d('account : $account');
+      if (account != null) {
+        UserProvider().settings.syncAccount = account;
+        _syncProviderType = type;
+        setState(() {});
+        lock.complete(account);
+        return true;
+      } else {
+        lock.complete(null);
+        return false;
+      }
     });
     return lock.future;
   }
@@ -72,14 +87,13 @@ class _DataRoamingPageState extends State<DataRoamingPage>
           _animationController.stop();
         });
       });
-      if(unzipDBFolder == null){
+      if (unzipDBFolder == null) {
         Toast.showError('There is no data online , please sync first');
         setState(() {
           onBackupStatus = false;
           _animationController.stop();
         });
-        return ;
-        
+        return;
       }
       DBSyncUnit.sync(unzipDBFolder).then((value) {
         fileTransferManager.deleteTempAssets(unzipDBFolder);
@@ -91,6 +105,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         Toast.showSuccess('${S.current.backup} ${S.current.successfully}');
       }).catchError((err) {
         Log.d('DBSync sync err -------------- > :  ${err.toString()}');
+        Toast.showError('${S.current.backup} ${S.current.failed}');
         setState(() {
           onBackupStatus = false;
           _animationController.stop();
@@ -100,7 +115,6 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   }
 
   _handelSync() {
-
     if (_unlock()) {
       onSyncStatus = true;
       _animationController.forward();
@@ -117,7 +131,8 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         });
         Toast.showSuccess('${S.current.sync} ${S.current.successfully}');
       }).catchError((err) {
-        Toast.showError(err.toString());
+        // Toast.showError(err.toString());
+        Toast.showError('${S.current.sync} ${S.current.failed}');
         Log.d(
             'fileTransferManager upload err -------------- > :  ${err.toString()}');
         setState(() {
@@ -151,28 +166,21 @@ class _DataRoamingPageState extends State<DataRoamingPage>
             defaultValue: switchType,
             onChange: (value) async {
               if (_unlock()) {
-                if(value && _syncProviderType == null){
-                  var providerType = await _handelSyncProviderModalShow();
-                  if(providerType != null){
-                    var account = await providerType.getAccount.catchError((err){
-                      Toast.showError(err.toString());
-                    });
+                if (value && _syncProviderType == null) {
+                  var account = await _handelSyncProviderModalShow();
+                  if (account != null) {
                     Log.d('account:$account');
-                    if(account != null){
-                      UserProvider().settings.syncAccount = account;
-                      switchType = value;
-                      UserProvider().settings.backupAndSync = value;
-                      setState(() {});
-                      return value;
-                    }
+
+                    switchType = value;
+                    UserProvider().settings.backupAndSync = value;
+                    setState(() {});
+                    return value;
                   }
                   switchType = false;
                   UserProvider().settings.backupAndSync = false;
                   setState(() {});
                   return false;
-
-                }
-                else{
+                } else {
                   switchType = value;
                   UserProvider().settings.backupAndSync = value;
                   setState(() {});
@@ -197,7 +205,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
-            if(_unlock()){
+            if (_unlock()) {
               NavigatorUtils.goBackWithParams(context, {});
             }
           },
@@ -214,7 +222,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       ),
       body: WillPopScope(
         onWillPop: () async {
-          if(_unlock()){
+          if (_unlock()) {
             NavigatorUtils.goBackWithParams(context, {});
           }
           return false;
@@ -231,143 +239,156 @@ class _DataRoamingPageState extends State<DataRoamingPage>
               Gaps.vGap16,
               switchType
                   ? ListWidget(
-                flex: 2,
-                rows: [
-                  RowData(
-                      text: S.current.syncProvider,
-                      right: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: _handelSyncProviderModalShow,
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 20),
-                            height: 50,
-                            child: Row(
-                              children: [
-                                const Spacer(),
-                                _syncProviderType?.icon ?? Container(),
-                                Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 10, left: 5),
-                                    child: Material(
-                                        child: Text(
-                                          _syncProviderType?.desc ?? '',
-                                          style: _rightTextStyle,
-                                        ))),
-                                Icon(
-                                  ZPassIcons.icArrowRight,
-                                  color: _rightColor,
-                                  size: 10,
-                                )
-                              ],
-                            ),
-                          )))
-                ],
-                withIcon: false,
-              )
+                      flex: 2,
+                      rows: [
+                        RowData(
+                            text: S.current.syncProvider,
+                            right: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: _handelSyncProviderModalShow,
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  height: 50,
+                                  child: Row(
+                                    children: [
+                                      const Spacer(),
+                                      _syncProviderType?.icon ?? Container(),
+                                      Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 10, left: 5),
+                                          child: Material(
+                                              child: Text(
+                                            _syncProviderType?.desc ?? '',
+                                            style: _rightTextStyle,
+                                          ))),
+                                      Icon(
+                                        ZPassIcons.icArrowRight,
+                                        color: _rightColor,
+                                        size: 10,
+                                      )
+                                    ],
+                                  ),
+                                )))
+                      ],
+                      withIcon: false,
+                    )
                   : Container(),
               const Spacer(),
-              (switchType && (_syncProviderType != null)) ? Column(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: _handelBackup,
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 46,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(73, 84, 255, 1),
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(23)),
-                            border: Border.all(
-                                width: 1,
-                                color: const Color.fromRGBO(73, 84, 255, 1))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: onBackupStatus
-                                    ? const CupertinoActivityIndicator(
-                                  color: Colors.white,
-                                  radius: 8,
-                                )
-                                    : const Icon(
-                                  ZPassIcons.icSync,
-                                  size: 20,
-                                  color: Colors.white,
-                                )),
-                            // Icon(icon),
-                            Text(
-                              S.current.backup,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            )
-                          ],
+              (switchType && (_syncProviderType != null))
+                  ? Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          child: GestureDetector(
+                            onTap: _handelBackup,
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 46,
+                              decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(73, 84, 255, 1),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(23)),
+                                  border: Border.all(
+                                      width: 1,
+                                      color: const Color.fromRGBO(
+                                          73, 84, 255, 1))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: onBackupStatus
+                                          ? const CupertinoActivityIndicator(
+                                              color: Colors.white,
+                                              radius: 8,
+                                            )
+                                          : const Icon(
+                                              ZPassIcons.icSync,
+                                              size: 20,
+                                              color: Colors.white,
+                                            )),
+                                  // Icon(icon),
+                                  Text(
+                                    S.current.backup,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Gaps.vGap10,
-                  Text(
-                    UserProvider().settings.data.backupDate != null ? '${S.current.lastBackupTime} ${UserProvider().settings.data.backupDate}' : '',
-                    style: const TextStyle(
-                        color: Color.fromRGBO(149, 155, 167, 1), fontSize: 12),
-                  ),
-                  Gaps.vGap24,
-                  Container(
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: _handelSync,
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 46,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(73, 84, 255, 0.0800),
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(23)),
-                            border: Border.all(
-                                width: 1,
-                                color: const Color.fromRGBO(73, 84, 255, 1))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: onSyncStatus
-                                    ? const CupertinoActivityIndicator(
-                                  color: Color.fromRGBO(73, 84, 255, 1),
-                                  radius: 8,
-                                )
-                                    : const Icon(
-                                  ZPassIcons.icSync,
-                                  size: 20,
-                                  color: Color.fromRGBO(73, 84, 255, 1),
-                                )),
-                            Text(
-                              S.current.sync,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Color.fromRGBO(73, 84, 255, 1),
-                                  fontSize: 16),
-                            )
-                          ],
+                        Gaps.vGap10,
+                        Text(
+                          UserProvider().settings.data.backupDate != null
+                              ? '${S.current.lastBackupTime} ${UserProvider().settings.data.backupDate}'
+                              : '',
+                          style: const TextStyle(
+                              color: Color.fromRGBO(149, 155, 167, 1),
+                              fontSize: 12),
                         ),
-                      ),
-                    ),
-                  ),
-                  Gaps.vGap10,
-                  Text(
-                    UserProvider().settings.data.syncDate != null ? '${S.current.lastSyncTime} ${UserProvider().settings.data.syncDate}' : '',
-                    style: const TextStyle(
-                        color: Color.fromRGBO(149, 155, 167, 1), fontSize: 12),
-                  ),
-                  Gaps.vGap24,
-                ],
-              ) : Container()
+                        Gaps.vGap24,
+                        Container(
+                          alignment: Alignment.center,
+                          child: GestureDetector(
+                            onTap: _handelSync,
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 46,
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromRGBO(73, 84, 255, 0.0800),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(23)),
+                                  border: Border.all(
+                                      width: 1,
+                                      color: const Color.fromRGBO(
+                                          73, 84, 255, 1))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: onSyncStatus
+                                          ? const CupertinoActivityIndicator(
+                                              color: Color.fromRGBO(
+                                                  73, 84, 255, 1),
+                                              radius: 8,
+                                            )
+                                          : const Icon(
+                                              ZPassIcons.icSync,
+                                              size: 20,
+                                              color: Color.fromRGBO(
+                                                  73, 84, 255, 1),
+                                            )),
+                                  Text(
+                                    S.current.sync,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color: Color.fromRGBO(73, 84, 255, 1),
+                                        fontSize: 16),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Gaps.vGap10,
+                        Text(
+                          UserProvider().settings.data.syncDate != null
+                              ? '${S.current.lastSyncTime} ${UserProvider().settings.data.syncDate}'
+                              : '',
+                          style: const TextStyle(
+                              color: Color.fromRGBO(149, 155, 167, 1),
+                              fontSize: 12),
+                        ),
+                        Gaps.vGap24,
+                      ],
+                    )
+                  : Container()
             ],
           ),
         ),

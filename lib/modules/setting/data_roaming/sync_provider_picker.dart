@@ -15,6 +15,7 @@ class SyncProviderPicker extends ZPassPickerDialog<SyncProviderType> {
   @override
   Widget renderItem(BuildContext context, SyncProviderType item, int index) {
     var Account = UserProvider().settings.data.syncAccount;
+    Log.d('Account------:${Account}');
     return Container(
       margin:const EdgeInsets.only(left: 24,right: 24),
       alignment: Alignment.centerLeft,
@@ -53,12 +54,14 @@ class SyncProviderPicker extends ZPassPickerDialog<SyncProviderType> {
   }
 }
 
-void pickSyncType(BuildContext context,Function onChange) {
+void pickSyncType(BuildContext context,Function onChange){
   final data = SyncProviderType.values.sublist(0, 1);
-  itemSelected(SyncProviderType type, index) {
+  itemSelected(SyncProviderType type, index) async {
     Log.d("pick vault item type: $type");
-    UserProvider().settings.syncProvider = type.name;
-    onChange(type,index);
+    bool changeType = await onChange(type,index);
+    if(changeType){
+      UserProvider().settings.syncProvider = type.name;
+    }
   }
   var syncProvider = UserProvider().settings.data.syncProvider;
   SyncProviderType? onSelect;
