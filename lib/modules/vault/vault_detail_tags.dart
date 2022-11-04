@@ -6,6 +6,7 @@ import 'package:zpass/res/styles.dart';
 import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/theme_utils.dart';
+import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_confirm_dialog.dart';
 
 class VaultDetailTags extends StatefulWidget {
@@ -156,6 +157,11 @@ class VaultDetailTagsState extends State<VaultDetailTags> {
   }
 
   void _addTag(String newTag) {
+    if (newTag.isEmpty) {
+      Toast.showError("Please enter tag");
+      _showAddTagDialog();
+      return;
+    }
     _tags.add(newTag);
     if (widget.onTagChange != null) {
       widget.onTagChange!.call(_tags);

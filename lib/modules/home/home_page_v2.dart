@@ -18,7 +18,6 @@ import 'package:zpass/modules/scanner/router_scanner.dart';
 import 'package:zpass/modules/setting/router_settting.dart';
 import 'package:zpass/modules/setting/widgets/locale_dialog.dart';
 import 'package:zpass/modules/setting/widgets/theme_dialog.dart';
-import 'package:zpass/modules/sync/sync_task.dart';
 import 'package:zpass/modules/user/router_user.dart';
 import 'package:zpass/modules/user/signin/signin_by_scanner.dart';
 import 'package:zpass/modules/vault/vault_item_picker.dart';
@@ -117,7 +116,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
         var intercept = i == HomePageV2.dockedFake;
         if (intercept) {
           VaultItemPicker(
-              data: VaultItemType.values.sublist(0, 4),
+              data: VaultItemType.values.sublist(0, 3),
               onItemSelected: _onVaultItemTap,
               title: "Items")
               .show(context);

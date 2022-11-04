@@ -88,6 +88,7 @@ class SecureNotesProvider extends BaseVaultProvider {
     // update entity
     entity!.name = title;
     entity!.tags = tags;
+    entity!.updateTime = DateTime.now().millisecondsSinceEpoch;
     entity!.detail = {
       "content":encryptedContent
     };

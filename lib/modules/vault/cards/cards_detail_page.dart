@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
@@ -8,9 +9,11 @@ import 'package:zpass/modules/vault/vault_detail_base_state.dart';
 import 'package:zpass/modules/vault/vault_detail_helper.dart';
 import 'package:zpass/modules/vault/vault_detail_tags.dart';
 import 'package:zpass/res/gaps.dart';
+import 'package:zpass/res/styles.dart';
 import 'package:zpass/res/zpass_icons.dart';
-import 'package:zpass/routers/fluro_navigator.dart';
+import 'package:zpass/extension/int_ext.dart';
 import 'package:zpass/util/callback_funcation.dart';
+import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/util/toast_utils.dart';
 import 'package:zpass/widgets/zpass_card.dart';
 import 'package:zpass/widgets/zpass_form_edittext.dart';
@@ -54,7 +57,9 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
               children: [
                 _buildRequiredSection(editing),
                 Gaps.vGap15,
-                _buildOptionalSection(editing)
+                _buildOptionalSection(editing),
+                Gaps.vGap15,
+                _buildTips(),
               ],
             );
           },
@@ -128,6 +133,7 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
 
   Widget _buildRequiredSection(bool editing) {
     final titleIcon = buildRowIcon(context, ZPassIcons.favCard, backgroundColor: const Color(0xFF3FD495), color: Colors.white,);
+
     return ZPassCard(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
       child: Form(
@@ -141,13 +147,14 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
               prefixIcon: titleIcon,
               require: true,
               key: _titleKey,
-              validator: _validatorEditText
+              validator: _validatorEditText,
             ),
             Gaps.vGap15,
             _buildRow(
               editing,
               S.current.vaultCardNumber,
               text: provider.content?.number,
+              maxLength: 19,
               require: true,
               key: _numberKey,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -168,11 +175,11 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
           Gaps.vGap15,
           _buildRow(editing, S.current.vaultExpiryDate, hint: "mm/yy", text: provider.content?.expiry, key: _expiryKey,),
           Gaps.vGap15,
-          _buildRow(editing, S.current.vaultCVV, obscure: true, text: provider.content?.cvv, key: _cvvKey),
+          _buildRow(editing, S.current.vaultCVV, obscure: true, text: provider.content?.cvv, maxLength: 4, key: _cvvKey),
           Gaps.vGap15,
           _buildRow(editing, S.current.vaultZipOrPostalCode, text: provider.content?.zipOrPostalCode, key: _zipCodeKey),
           Gaps.vGap15,
-          _buildRow(editing, S.current.vaultCardPIN, obscure: true, text: provider.content?.pin, key: _cardPinKey),
+          _buildRow(editing, S.current.vaultCardPIN, obscure: true, text: provider.content?.pin, maxLength: 12, key: _cardPinKey),
           Gaps.vGap15,
           _buildRow(editing, S.current.vaultOther, text: provider.content?.note, maxLines: 3, key: _otherKey),
           _buildTagContainer(editing),
@@ -186,10 +193,12 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
         Key? key,
         String? hint,
         int maxLines = 1,
+        int maxLength = 100,
         Widget? prefixIcon,
         bool obscure = false,
         bool require = false,
         TextInputType? keyboardType,
+        final List<TextInputFormatter>? inputFormatters,
         FunctionReturn<String?, dynamic>? validator}) {
     return Container(
       child: Column(
@@ -207,9 +216,11 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
             maxLines: maxLines,
             enableClear: editing,
             filled: !editing,
+            maxLength: maxLength,
             keyboardType: keyboardType,
             borderColor: const Color(0xFFEBEBEE),
             validator: validator,
+            inputFormatters: inputFormatters,
           )
         ],
       ),
@@ -225,10 +236,60 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
     );
   }
 
+  Widget _buildTips() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Selector<CardsDetailProvider, int?>(
+          builder: (_, updateTime, __) {
+            return Visibility(
+              visible: updateTime != null,
+              child: Row(
+                children: [
+                  Icon(Icons.access_time,
+                      size: 15, color: context.textColor3),
+                  Container(
+                    padding: const EdgeInsets.only(left: 3, right: 18),
+                    child: Text(
+                      "Update time: ${updateTime?.formatDateTime()}",
+                      style: TextStyles.textSize12.copyWith(color: context.textColor3),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          selector: (_, provider) => provider.entity?.updateTime,
+        ),
+        Visibility(
+            visible: provider.entity?.createTime != null,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+              child: Text(
+                "Create time: ${provider.entity?.createTime.formatDateTime()}",
+                style:
+                TextStyles.textSize12.copyWith(color: context.textColor3),
+              ),
+            )),
+      ],
+    );
+  }
+
   String? _validatorEditText(value) {
     if (value == null || value.isEmpty) {
       return "Please enter item name";
     }
     return null;
   }
+
+  // List<TextInputFormatter> _textFieldFormatters({required String mask, required Map<String, RegExp>? filter, int maxLength = 100, }) {
+  //   return [
+  //     LengthLimitingTextInputFormatter(maxLength),
+  //     MaskTextInputFormatter(
+  //         mask: mask,
+  //         filter: filter,
+  //         type: MaskAutoCompletionType.lazy
+  //     )
+  //   ];
+  // }
 }

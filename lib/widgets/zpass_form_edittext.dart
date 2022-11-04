@@ -37,6 +37,7 @@ class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
   final bool filled;
   final EdgeInsets? contentPadding;
   final NullParamCallback? onUnFocus;
+  final List<TextInputFormatter>? inputFormatters;
 
   const ZPassFormEditText({this.hintText,
     this.initialText,
@@ -64,6 +65,7 @@ class ZPassFormEditText extends StatefulWidget implements PreferredSizeWidget {
     this.filled = false,
     this.contentPadding,
     this.onUnFocus,
+    this.inputFormatters,
     Key? key})
       : super(key: key);
 
@@ -172,7 +174,7 @@ class ZPassFormEditTextState extends State<ZPassFormEditText> {
         isDense: true,
         contentPadding: widget.contentPadding,
       ),
-      inputFormatters: [
+      inputFormatters: widget.inputFormatters ?? [
         LengthLimitingTextInputFormatter(widget.maxLength)
       ],
     );
