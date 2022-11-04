@@ -113,6 +113,7 @@ flutter:
     - assets/images/favicon/2.0x/
     - assets/images/favicon/3.0x/
     - assets/images/setting/
+    - assets/images/card/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

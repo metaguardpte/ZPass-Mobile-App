@@ -40,6 +40,17 @@ class VaultItemWrapper {
     switch (type) {
       case VaultItemType.login:
         return parseVaultLoginIconUrl(raw);
+      case VaultItemType.credit:
+        var contentData = {};
+        if (decryptContent != null) {
+          try {
+            contentData = jsonDecode(decryptContent);
+            return parseVaultCardsIcon(contentData["number"]);
+          } catch (e) {
+            Log.e("failed to decode decryptContent data to JSON");
+          }
+        }
+        return null;
       default:
         return null;
     }
@@ -56,6 +67,16 @@ class VaultItemWrapper {
             .decryptText(text: detail.content)
             .catchError((e) {
           Log.e("decrypt login detail content failed: $e");
+        });
+        Log.d("decrypted content: $decryptContent");
+        break;
+      case VaultItemType.credit:
+        final content = raw.detail["content"];
+        Log.d("encrypted content: $content");
+        decryptContent = await CryptoManager()
+            .decryptText(text: content)
+            .catchError((e) {
+          Log.e("decrypt cards detail content failed: $e");
         });
         Log.d("decrypted content: $decryptContent");
         break;
