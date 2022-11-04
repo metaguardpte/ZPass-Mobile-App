@@ -32,7 +32,6 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   late List<RowData> _backupAndSync;
   late Color _rightColor;
   late TextStyle _rightTextStyle;
-  late AnimationController _animationController;
   bool onSyncStatus = false;
   bool onBackupStatus = false;
 
@@ -71,8 +70,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
 
   _handleSync() async {
     if (_unlock()) {
-      onBackupStatus = true;
-      _animationController.forward();
+      onSyncStatus = true;
       setState(() {});
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
       final userId = UserProvider().profile.data.userId;
@@ -82,15 +80,13 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         Log.d(
             'fileTransferManager download err -------------- > :  ${err.toString()}');
         setState(() {
-          onBackupStatus = false;
-          _animationController.stop();
+          onSyncStatus = false;
         });
       });
       if (unzipDBFolder == null) {
         Toast.show('$action completed, no data online.');
         setState(() {
-          onBackupStatus = false;
-          _animationController.stop();
+          onSyncStatus = false;
         });
         return;
       }
@@ -98,16 +94,14 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         fileTransferManager.deleteTempAssets(unzipDBFolder);
         UserProvider().settings.updateBackupDate();
         setState(() {
-          onBackupStatus = false;
-          _animationController.stop();
+          onSyncStatus = false;
         });
         Toast.showSuccess('$action ${S.current.successfully}');
       }).catchError((err) {
         Log.d('DBSync sync err -------------- > :  ${err.toString()}');
         Toast.showError('$action ${S.current.failed}');
         setState(() {
-          onBackupStatus = false;
-          _animationController.stop();
+          onSyncStatus = false;
         });
       });
     }
@@ -115,8 +109,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
 
   _handleBackup() {
     if (_unlock()) {
-      onSyncStatus = true;
-      _animationController.forward();
+      onBackupStatus = true;
       setState(() {});
       BaseFileTransferManager fileTransferManager = _getFileTransferManager();
       var localDBPath = ZPassDB().getDBPath();
@@ -125,8 +118,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       fileTransferManager.upload(localDBPath, "$userId").then((value) {
         UserProvider().settings.updateSyncDate();
         setState(() {
-          onSyncStatus = false;
-          _animationController.stop();
+          onBackupStatus = false;
         });
         Toast.showSuccess('$action ${S.current.successfully}');
       }).catchError((err) {
@@ -134,8 +126,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         Log.d(
             'fileTransferManager upload err -------------- > :  ${err.toString()}');
         setState(() {
-          onSyncStatus = false;
-          _animationController.stop();
+          onBackupStatus = false;
         });
       });
     }
@@ -144,8 +135,6 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-        duration: const Duration(seconds: 300), vsync: this);
 
     var syncProvider = UserProvider().settings.data.syncProvider;
     if (syncProvider != null) {
@@ -397,6 +386,5 @@ class _DataRoamingPageState extends State<DataRoamingPage>
   @override
   void dispose() {
     super.dispose();
-    _animationController.dispose();
   }
 }
