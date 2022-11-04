@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
@@ -158,7 +159,10 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
               require: true,
               key: _numberKey,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              validator: _validatorEditText
+              validator: _validatorEditText,
+              inputFormatters: [
+                MaskTextInputFormatter(mask: "#### #### #### #### ###")
+              ]
             )
           ],
         ),
@@ -173,7 +177,13 @@ class _CardsDetailPageState extends BaseVaultPageState<CardsDetailPage, CardsDet
         children: [
           _buildRow(editing, S.current.vaultCardholderName, text: provider.content?.holder, key: _holderKey,),
           Gaps.vGap15,
-          _buildRow(editing, S.current.vaultExpiryDate, hint: "mm/yy", text: provider.content?.expiry, key: _expiryKey,),
+          _buildRow(editing, S.current.vaultExpiryDate,
+            hint: "mm/yy",
+            text: provider.content?.expiry,
+            key: _expiryKey,
+            inputFormatters: [MaskTextInputFormatter(mask: "##/##")],
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          ),
           Gaps.vGap15,
           _buildRow(editing, S.current.vaultCVV, obscure: true, text: provider.content?.cvv, maxLength: 4, key: _cvvKey),
           Gaps.vGap15,
