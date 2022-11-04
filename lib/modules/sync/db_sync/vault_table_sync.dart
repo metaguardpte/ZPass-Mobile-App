@@ -51,7 +51,7 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
   /// 4. Merge tags in all Login entities
   ///
   @override
-  void postSync() async {
+  Future<void> postSync() async {
     QueryContext queryContext = QueryContext("", EntityType.vaultItem, VaultItemType.login, SortBy.createTime);
     var logins = await ZPassDB().listVaultItemEntity(queryContext);
     var loginWrappers = <LoginEntityWrapper>[];
@@ -81,7 +81,7 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
     });
 
     for (var entity in changed) {
-      ZPassDB().put(entity);
+      await ZPassDB().put(entity);
     }
   }
 

@@ -20,9 +20,10 @@ abstract class BaseFileTransferManager {
   String getTransferType();
 
   ///zip file path in dedicated storage
-  Future<String> download(String userId) async {
-    String localZipFile = await doDownload(userId);
+  Future<String?> download(String userId) async {
+    String? localZipFile;
     try {
+      localZipFile = await doDownload(userId);
       String? decompressToPath =
           await P7zip.decompressZipToPath(fromZip: localZipFile);
       if (decompressToPath == null){
@@ -33,8 +34,11 @@ abstract class BaseFileTransferManager {
 
       Log.d("Finish decompress zip file to $decompressToPath");
       return decompressToPath;
+    } catch(e) {
+      Log.e("failed to download and extract user's file, reason: $e");
+      return null;
     } finally {
-      if (File(localZipFile).existsSync()) {
+      if (localZipFile != null && File(localZipFile).existsSync()) {
         File(localZipFile).delete();
       }
     }

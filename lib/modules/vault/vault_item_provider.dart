@@ -4,6 +4,9 @@ import 'package:zpass/base/base_provider.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
 import 'package:zpass/modules/home/repo/repo_db.dart';
 
+///
+/// Base provider for VaultItem Detail
+///
 abstract class BaseVaultProvider extends BaseProvider {
 
   @protected

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/modules/setting/data_roaming/provider/sync_provider.dart';
 import 'package:zpass/modules/setting/data_roaming/sync_provider_picker.dart';
@@ -82,7 +81,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
         return ;
         
       }
-      DBSyncUnit.sync(unzipDBFolder!).then((value) {
+      DBSyncUnit.sync(unzipDBFolder).then((value) {
         fileTransferManager.deleteTempAssets(unzipDBFolder);
         UserProvider().settings.updateBackupDate();
         setState(() {
@@ -120,7 +119,7 @@ class _DataRoamingPageState extends State<DataRoamingPage>
       }).catchError((err) {
         Toast.showError(err.toString());
         Log.d(
-            'fileTransferManager download err -------------- > :  ${err.toString()}');
+            'fileTransferManager upload err -------------- > :  ${err.toString()}');
         setState(() {
           onSyncStatus = false;
           _animationController.stop();
@@ -179,7 +178,6 @@ class _DataRoamingPageState extends State<DataRoamingPage>
                   setState(() {});
                   return value;
                 }
-                setState(() {});
               }
               return switchType;
             },
