@@ -47,7 +47,7 @@ flutter pub global run intl_utils:generate
 
 ## JSON Auto Generate
 
-`ZPass Mobile`遵循`Flutter`开发规范，依赖`json_serializable`和`build_runner`来管理工程源代码中的`JSON`实体自动化解析模版，因此每次源代码中修改了`JSON`对象时，须在工程根目录下运行以下`JSON`模版代码同步命令：
+`ZPass Mobile` follows the `Flutter` development specification and relies on `json_serializable` and `build_runner` to manage the `JSON` entity automatic parsing template in the project source code. Therefore, every time the `JSON` object is modified in the source code, it must be Run the following `JSON` template code synchronization command in the project root directory
 
 ```shell
 flutter pub run build_runner build --delete-conflicting-outputs
@@ -55,7 +55,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 ## Repository synchronize
 
-`ZPass`工程以`git submodules`方式依赖自研或第三方源代码`plugins`，因此每次重新`clone`或有源代码`plugins`更新时，须在工程根目录下运行以下`git submodules`同步命令：
+The `ZPass Mobile` project relies on self-developed or third-party source code `plugins` in the form of `git submodules`, so every time you re `clone` or update the source code `plugins`, you must run the following synchronization command
 
 ```shell
 git submodule update --init --recursive
