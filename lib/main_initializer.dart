@@ -12,38 +12,38 @@ import 'package:zpass/util/log_utils.dart';
 
 class MainInitializer {
   ///
-  /// 用户未授权初始化
+  /// Initialize before user authorize
   ///
-  /// IMPORTANT 请勿在此处添加任何需要用户权限授权的代码
+  /// IMPORTANT: do NOT initialize any module which require permission
   ///
   static Future<void> initBeforeAuthorize() async {
-    // rpc通道初始化
+    // rpc
     RpcManager.instance.startListening();
-    // sp初始化
+    // sp
     await SpUtil.getInstance();
-    // 初始化路由
+    // route
     Routers.initRoutes();
-    // 日志
+    // log
     Log.init();
-    // 网络
+    // dio
     _initDio();
   }
 
   static void _initDio() {
     final List<Interceptor> interceptors = <Interceptor>[];
 
-    /// 统一添加身份验证请求头
+    /// add token interceptor
     interceptors.add(AuthInterceptor());
 
-    /// 刷新Token
+    /// add token refresh interceptor
     interceptors.add(TokenInterceptor());
 
-    /// 打印Log(生产模式去除)
+    /// add log interceptor (debug only)
     if (!Constant.inProduction) {
       interceptors.add(LoggingInterceptor());
     }
 
-    /// 适配数据(根据自己的数据结构，可自行选择添加)
+    /// add data format interceptor
     interceptors.add(AdapterInterceptor());
     configDio(
       baseUrl: AppConfig.serverUrl,
@@ -52,17 +52,17 @@ class MainInitializer {
   }
 
   ///
-  /// 用户授权后初始化
+  /// Initialize after user authorize
   ///
   static Future<bool> initAfterAuthorize() async {
-    // 初始化用户数据
+    // restore user related cache
     await UserProvider().restore();
 
     // try to start sync timer
     SyncTask.startTimer();
 
     final userInfo = UserProvider().profile.data;
-    // 跳转登录或注册
+    // whether cached user data exist or not
     return userInfo.email != null && userInfo.secretKey != null;
   }
 }

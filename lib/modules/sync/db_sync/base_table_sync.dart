@@ -54,12 +54,14 @@ class BaseTableSyncUnit<T extends RecordEntity> {
   }
 
   ///
-  /// 1. 同步的过程是根据id查找local或者remote中的新entity，如果发现了就新增一条记录，
-  /// 比如：再local中没有的记录在remote中发现存在，就在local中新增那条记录。
-  // 2. 当两边都存在相同ID的记录时，那就需要使用updateTime来判断那条记录是最新的，使用新的来覆盖旧的记录。
-  // 3. 记录在local或者remote被标识为delete的，两边都会标识为delete，而且记录也会根据第二条更新
-  // 4. restoreTime的优先级会高于updateTime，如果发现restoreTime的的时间更新后，
-  // 直接用restoreTime最新的那条记录覆盖，只有当restoreTime的值一样的情况下才会判断updateTime和isDeleted字段。
+  /// 1. detect entity exist ro not according to record id;
+  ///    add the entity to local if it's just exist in remote;
+  ///    add the entity to remote if it's just exist in local;
+  /// 2. if entity exist in both local and remote, update it with the newer updateTime one;
+  /// 3. if entity is marked delete either in local or remote, mark delete on both side;
+  /// 4. the priority of restoreTime is higher than updateTime;
+  ///    update both side with the newer restoreTime one;
+  ///    check updateTime and isDeleted just restoreTime is the same;
   ///
   T? getMergedEntity(T remoteT, T localT) {
     var remoteRestoreTime = remoteT.restoreTime;

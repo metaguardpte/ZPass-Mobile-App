@@ -93,7 +93,6 @@ class SecureNotesProvider extends BaseVaultProvider {
       "content":encryptedContent
     };
     entity!.description = '';
-    //TODO update tags
     return db.update(entity!);
   }
 }

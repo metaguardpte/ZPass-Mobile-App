@@ -13,6 +13,7 @@ class UserProvider {
   late final UserSettings _settings;
   late final UserBiometrics _biometrics;
   late final UserSecretKeys _secretKeys;
+
   UserProfile get profile => _profile;
   UserSecretKeys get secretKeys => _secretKeys;
   UserSettings get settings => _settings;

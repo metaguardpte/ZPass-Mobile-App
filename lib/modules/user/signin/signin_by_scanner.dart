@@ -1,5 +1,4 @@
 import 'package:zpass/base/api/login_service.dart';
-import 'package:zpass/util/log_utils.dart';
 
 class SignInByScanner {
   final _loginRequest = LoginServices();

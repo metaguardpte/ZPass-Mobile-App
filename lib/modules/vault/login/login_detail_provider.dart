@@ -102,7 +102,6 @@ class LoginDetailProvider extends BaseVaultProvider {
     entity!.tags = tags;
     entity!.detail = detail.toJson();
     entity!.updateTime = DateTime.now().millisecondsSinceEpoch;
-    //TODO update tags
     return db.update(entity!);
   }
 }

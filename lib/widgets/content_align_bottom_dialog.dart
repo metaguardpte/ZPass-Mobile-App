@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:zpass/util/theme_utils.dart';
 
 ///
-/// 内容靠底的弹窗
-/// example
+/// Align Bottom Dialog
 ///
-/// 弹窗自定义
+/// example
 ///
 /// class DemoBottomDialog extends ContentAlignBottomDialog {
 ///   @override
@@ -19,7 +18,7 @@ import 'package:zpass/util/theme_utils.dart';
 ///   }
 /// }
 ///
-/// 调用方式
+/// usage
 ///
 /// DemoBottomDialog().show(context, isDismissible: false);
 ///

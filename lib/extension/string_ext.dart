@@ -2,9 +2,9 @@ const String passwordRegExpStr = r"^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^
 const String emailRegExpStr = r"^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
 
 extension StringExt on String {
-  // 邮箱验证
+  // email
   bool get isEmail => RegExp(emailRegExpStr).hasMatch(this);
-  // 密码, 大写字母，小写字母，数字，特殊符号，四选三
+  // password
   bool get isValidPassword => RegExp(passwordRegExpStr).hasMatch(this);
   // url
   bool get isUrl => RegExp(r"^(?:http|https)://[\w\-_]+(?:\.[\w\-_]+)+[\w\-.,@?^=%&:/~\\+#]*$").hasMatch(this);

@@ -42,22 +42,22 @@ class TokenInterceptor extends QueuedInterceptor {
         return (json.decode(response.data.toString()) as Map<String, dynamic>)['access_token'] as String;
       }
     } catch(e) {
-      Log.e('刷新Token失败！');
+      Log.e('Failed to refresh token');
     }
     return null;
   }
 
   @override
   Future<void> onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) async {
-    //401代表token过期
+    //401 token expired
     if (response.statusCode == ExceptionHandle.unauthorized) {
-      Log.d('-----------自动刷新Token------------');
-      final String? accessToken = await getToken(); // 获取新的accessToken
+      Log.d('-----------Auto Refresh Token------------');
+      final String? accessToken = await getToken(); // fetch new accessToken
       Log.e('-----------NewToken: $accessToken ------------');
       SpUtil.putString(Constant.accessToken, accessToken ?? "");
 
       if (accessToken != null) {
-        // 重新请求失败接口
+        // perform last failed request
         final RequestOptions request = response.requestOptions;
         request.headers['Authorization'] = 'Bearer $accessToken';
 
@@ -67,8 +67,8 @@ class TokenInterceptor extends QueuedInterceptor {
         );
 
         try {
-          Log.e('----------- 重新请求接口 ------------');
-          /// 避免重复执行拦截器，使用tokenDio
+          Log.e('----------- re-request interface ------------');
+          /// use _tokenDio to avoid loop
           final Response<dynamic> response = await _tokenDio!.request<dynamic>(request.path,
             data: request.data,
             queryParameters: request.queryParameters,
@@ -116,9 +116,8 @@ class LoggingInterceptor extends Interceptor{
     } else {
       Log.e('ResponseCode: ${response.statusCode}');
     }
-    // 输出结果
     Log.json(response.data.toString());
-    Log.d('----------End: $duration 毫秒----------');
+    Log.d('----------End: $duration milliseconds----------');
     super.onResponse(response, handler);
   }
   
@@ -130,7 +129,7 @@ class LoggingInterceptor extends Interceptor{
 }
 
 ///
-/// 转换成Restful API风格的Response
+/// Transform to Restful API Response
 ///
 class AdapterInterceptor extends Interceptor{
 
@@ -155,7 +154,7 @@ class AdapterInterceptor extends Interceptor{
     String content = response.data?.toString() ?? '';
     if (response.statusCode == ExceptionHandle.success ||
         response.statusCode == ExceptionHandle.successNoContent) {
-      /// 成功时，直接格式化返回
+      /// succeed, format response
       if (content.isEmpty) {
         content = "{}";
       }
@@ -166,7 +165,7 @@ class AdapterInterceptor extends Interceptor{
         content = "{}";
       }
 
-      /// 错误数据格式化后返回
+      /// failed, format error
       result = sprintf(_respFormat, [response.statusCode, content]);
     }
     response.data = result;

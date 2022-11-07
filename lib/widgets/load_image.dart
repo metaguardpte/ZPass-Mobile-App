@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:zpass/util/image_utils.dart';
 
-/// 图片加载（支持本地与网络图片）
+/// Load image from assets/url
 class LoadImage extends StatelessWidget {
   
   const LoadImage(this.image, {
@@ -55,7 +55,7 @@ class LoadImage extends StatelessWidget {
   }
 }
 
-/// 加载本地资源图片
+/// Assets Image
 class LoadAssetImage extends StatelessWidget {
   
   const LoadAssetImage(this.image, {
@@ -89,7 +89,6 @@ class LoadAssetImage extends StatelessWidget {
       cacheHeight: cacheHeight,
       fit: fit,
       color: color,
-      /// 忽略图片语义
       excludeFromSemantics: true,
     );
   }

@@ -21,15 +21,15 @@ class ExceptionHandle {
   static const int unknownError = 9999;
 
   static final Map<int, NetError> _errorMap = <int, NetError>{
-    netError             :   NetError(netError, '网络异常，请检查你的网络！'),
-    parseError           :   NetError(parseError, '数据解析错误！'),
-    socketError          :   NetError(socketError, '网络异常，请检查你的网络！'),
-    httpError            :   NetError(httpError, '服务器异常，请稍后重试！'),
-    connectTimeoutError  :   NetError(connectTimeoutError, '连接超时！'),
-    sendTimeoutError     :   NetError(sendTimeoutError, '请求超时！'),
-    receiveTimeoutError  :   NetError(receiveTimeoutError, '响应超时！'),
-    cancelError          :   NetError(cancelError, '取消请求'),
-    unknownError         :   NetError(unknownError, '未知异常'),
+    netError             :   NetError(netError, 'Network error'),
+    parseError           :   NetError(parseError, 'Parse data error'),
+    socketError          :   NetError(socketError, 'Network error'),
+    httpError            :   NetError(httpError, 'Server error, try again.'),
+    connectTimeoutError  :   NetError(connectTimeoutError, 'Connect timeout'),
+    sendTimeoutError     :   NetError(sendTimeoutError, 'Request timeout'),
+    receiveTimeoutError  :   NetError(receiveTimeoutError, 'Receive timeout'),
+    cancelError          :   NetError(cancelError, 'Request canceled'),
+    unknownError         :   NetError(unknownError, 'Unknown error'),
   };
 
   static NetError handleException(dynamic error) {

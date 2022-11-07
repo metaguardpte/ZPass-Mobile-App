@@ -3,10 +3,10 @@ import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/widgets/dialog/zpass_dialog.dart';
 import 'package:zpass/util/theme_utils.dart';
 
-/// 使用：
+/// Usage:
 /// final loadingDialog = LoadingDialog();
-/// 显示：loadingDialog.show(context);
-/// 消失：loadingDialog.dismiss(context);
+/// loadingDialog.show(context);
+/// loadingDialog.dismiss(context);
 class ZPassLoadingDialog extends ZPassDialog {
   late final String _text;
 

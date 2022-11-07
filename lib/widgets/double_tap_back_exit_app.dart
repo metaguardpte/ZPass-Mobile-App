@@ -6,7 +6,7 @@ import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/toast_utils.dart';
 
-/// 双击返回退出
+/// Double tab back to exit
 class DoubleTapBackExitApp extends StatefulWidget {
   final NullParamFunctionReturn<bool>? backConsumer;
 
@@ -18,7 +18,7 @@ class DoubleTapBackExitApp extends StatefulWidget {
   });
 
   final Widget child;
-  /// 两次点击返回按钮的时间间隔
+  /// duration between taps
   final Duration duration;
 
   @override
@@ -52,7 +52,7 @@ class _DoubleTapBackExitAppState extends State<DoubleTapBackExitApp> {
       return Future.value(false);
     }
     Toast.cancelToast();
-    /// 不推荐使用 `dart:io` 的 exit(0)
+    /// exit(0) from dart:io is NOT recommended
     if (Platform.isAndroid) {
       // SystemNavigatorProxy.exit();
       await SystemNavigator.pop();

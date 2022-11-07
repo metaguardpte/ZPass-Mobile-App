@@ -9,7 +9,6 @@ class SlideTransitionX extends AnimatedWidget {
     required this.child,
   })
       : super(key: key, listenable: position) {
-    // 偏移在内部处理
     switch (direction) {
       case AxisDirection.up:
         _tween = Tween(begin: const Offset(0, 1), end: const Offset(0, 0));
@@ -33,7 +32,6 @@ class SlideTransitionX extends AnimatedWidget {
 
   final Widget child;
 
-  //退场（出）方向
   final AxisDirection direction;
 
   late final Tween<Offset> _tween;

@@ -135,7 +135,7 @@ class _HomePageV2State extends ProviderState<HomePageV2, HomeProvider> with Widg
 
   Widget _buildPageView() {
     return PageView(
-      physics: const NeverScrollableScrollPhysics(), // 禁止滑动
+      physics: const NeverScrollableScrollPhysics(), // never scroll
       controller: _pageController,
       onPageChanged: (int index) => provider.homeTabIndex = index,
       children: _pageList,

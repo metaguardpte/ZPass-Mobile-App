@@ -22,17 +22,17 @@ Future<void> main() async {
 //  debugProfilePaintsEnabled = true;
 //  debugRepaintRainbowEnabled = true;
 
-  /// 确保初始化完成
+  /// ensure initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 强制竖屏
+  // force orientation portrait
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   Provider.debugCheckInvalidValueType = null;
-  //不申请任何权限的最小同步初始化
+  // initialize app before user authorize
   await MainInitializer.initBeforeAuthorize();
 
-  /// 异常处理
+  /// handle uncaught error globally
   handleError(() => runApp(const MyApp()));
 }
 
@@ -59,7 +59,6 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    /// Toast 配置
     return OKToast(
         backgroundColor: Colors.black54,
         dismissOtherOnShow: true,
@@ -78,11 +77,11 @@ class MyApp extends StatelessWidget {
       ThemeProvider provider, LocaleProvider localeProvider) {
     return MaterialApp(
       title: 'ZPass',
-      // showPerformanceOverlay: true, //显示性能标签
-      // debugShowCheckedModeBanner: false, // 去除右上角debug的标签
+      // showPerformanceOverlay: true, // display performance overlay
+      // debugShowCheckedModeBanner: false, // remove debug label
       // checkerboardRasterCacheImages: true,
-      // showSemanticsDebugger: true, // 显示语义视图
-      // checkerboardOffscreenLayers: true, // 检查离屏渲染
+      // showSemanticsDebugger: true, // display semantics debugger
+      // checkerboardOffscreenLayers: true, // check board offscreen layer
       theme: theme ?? provider.getTheme(),
       darkTheme: provider.getTheme(isDarkMode: true),
       themeMode: provider.getThemeMode(),
@@ -101,13 +100,12 @@ class MyApp extends StatelessWidget {
         RouterObserver(),
       ],
       builder: (BuildContext context, Widget? child) {
-        /// 仅针对安卓
         if (Device.isAndroid) {
-          /// 切换深色模式会触发此方法，这里设置导航栏颜色
+          /// set theme for system navigation bar
           ThemeUtils.setSystemNavigationBar(provider.getThemeMode());
         }
 
-        /// 保证文字大小不受手机系统设置影响 https://www.kikt.top/posts/flutter/layout/dynamic-text/
+        /// force text scale factor to 1.0
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
           child: GestureDetector(
@@ -117,7 +115,6 @@ class MyApp extends StatelessWidget {
         );
       },
 
-      /// 因为使用了fluro，这里设置主要针对Web
       onUnknownRoute: (_) {
         return MaterialPageRoute<void>(
           builder: (BuildContext context) => const NotFoundPage(),

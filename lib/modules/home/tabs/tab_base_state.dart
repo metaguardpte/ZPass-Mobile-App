@@ -207,7 +207,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
   }
 
   ///
-  /// 分组列表自定义 **** start
+  /// Custom group list **** start
   ///
   @protected
   String listGroupBy(T element);
@@ -258,7 +258,7 @@ abstract class TabBasePageState<V extends StatefulWidget, T,
   @protected
   bool get floatingHeader => false;
   ///
-  /// 分组列表自定义 **** end
+  /// Custom group list **** end
   ///
 
   @protected

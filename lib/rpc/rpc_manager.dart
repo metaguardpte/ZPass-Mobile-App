@@ -32,7 +32,7 @@ class RpcManager {
   RpcManager._internal();
 
   void startPreLoad() {
-    /// 需要预加载的数据在这里处理
+    /// preload data here
   }
 
   void startListening() {
@@ -131,7 +131,7 @@ class RpcManager {
     return null;
   }
 
-  /// 主动发送接口（Dart to Native）
+  /// Dart to Native
   Future<dynamic> invoke(String clazz, String method, {dynamic args}) {
     var arguments = <String, dynamic> {
       rpcParamClass: clazz,

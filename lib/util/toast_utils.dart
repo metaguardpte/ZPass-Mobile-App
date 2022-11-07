@@ -6,7 +6,6 @@ import 'package:zpass/res/zpass_icons.dart';
 
 enum ToastType { warning, error, info ,success}
 
-/// Toast工具类
 class Toast {
   static ToastFuture? show(String? msg) {
     if (msg == null) {

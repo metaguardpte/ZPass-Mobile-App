@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/res/colors.dart';

@@ -6,42 +6,42 @@ abstract class RepoBase<T> {
   List<T> rawData = [];
 
   ///
-  /// 执行repo初始化
+  /// for repo initializing
   ///
   Future<dynamic> init();
 
   ///
-  /// 条件查询
+  /// query by conditions
   ///
   Future<List<T>> query(QueryContext queryContext);
 
   ///
-  /// 删除数据项
+  /// remove item
   ///
   Future<bool> remove(T item);
 
   ///
-  /// 条件删除数据项
+  /// remove item by condition
   ///
   bool removeBy(String condition);
 
   ///
-  /// 增加数据项
+  /// add item
   ///
   Future<bool> add(T item);
 
   ///
-  /// 增加数据列表
+  /// add items
   ///
   bool addAll(List<T> items);
 
   ///
-  /// 修改数据项
+  /// update item
   ///
   Future<bool> update(T item);
 
   ///
-  /// 写入数据，执行io操作
+  /// flush repo, for IO operating
   ///
   Future<bool> flush();
 

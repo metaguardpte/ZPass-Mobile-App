@@ -124,7 +124,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
     );
   }
 
-  /// 构建pdf布局样式
+  /// construct layout for pdf
   _buildPDFWidget(pw.Image logo) {
     PdfColor color = const PdfColor.fromInt(0xFF4342FF);
     PdfColor subColor = const PdfColor.fromInt(0xFF5273FE);
@@ -214,7 +214,7 @@ class _RegisterSecretKeyState extends ProviderState<RegisterSecretKey, RegisterP
             )
         ),
         pw.Spacer(),
-        /// zpass邮箱和官网
+        /// ZPass email and website
         pw.Container(
           alignment: pw.Alignment.center,
           child: pw.Text(AppConfig.zpassWebsite, style: pw.TextStyle(fontSize: 13, color: color)),

@@ -3,7 +3,6 @@ import 'dart:convert' as convert;
 import 'package:common_utils/common_utils.dart';
 import 'package:zpass/res/constant.dart';
 
-/// 输出Log工具类
 class Log {
 
   static const String tag = 'ZPASS-LOG';

@@ -16,19 +16,9 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  bool? _isUserAuthorized;
 
   @override
   void initState() {
-    // FlutterLinkfox.isUserAuthorized.then((isUserAuthorized) {
-    //   Log.d("isUserAuthorized => $isUserAuthorized");
-    //   if(isUserAuthorized == false) {
-    //     _isUserAuthorized = false;
-    //     Future.delayed(const Duration(milliseconds: 350), () => setState(() {}));
-    //   } else {
-    //     Future.delayed(const Duration(milliseconds: 1000), () => widget.authCallback(context));
-    //   }
-    // });
     super.initState();
     Future.delayed(const Duration(seconds: 2), () async {
       // fake auth

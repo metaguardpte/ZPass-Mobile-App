@@ -20,10 +20,10 @@ class Routers {
   static final FluroRouter router = FluroRouter();
 
   static void initRoutes() {
-    /// 指定路由跳转错误返回页
+    /// specify unregistered route
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-        debugPrint('未找到目标页');
+        debugPrint('Page Not Found');
         return const NotFoundPage();
       });
     router.define(loginOrNew, handler:Handler(
@@ -33,14 +33,14 @@ class Routers {
       handlerFunc: (BuildContext? context, Map<String, List<String>> params) => const HomePageV2()));
 
     _listRouter.clear();
-    /// 各自路由由各自模块管理，统一在此添加初始化
+    /// register every route module
     _listRouter.add(RoutersVault());
     _listRouter.add(RouterScanner());
     _listRouter.add(RouterUser());
     _listRouter.add(RouterRegister());
     _listRouter.add(RouterSetting());
 
-    /// 初始化路由
+    /// initialize router
     void initRouter(IRouterProvider routerProvider) {
       routerProvider.initRouter(router);
     }

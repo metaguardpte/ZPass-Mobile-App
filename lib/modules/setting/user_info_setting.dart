@@ -8,7 +8,6 @@ import 'package:zpass/res/zpass_icons.dart';
 import 'package:zpass/routers/fluro_navigator.dart';
 import 'package:zpass/widgets/dialog/zpass_confirm_dialog.dart';
 import 'package:zpass/widgets/list.dart';
-import 'package:zpass/widgets/load_image.dart';
 
 class UserInfoSettingPage extends StatefulWidget {
   const UserInfoSettingPage({Key? key}) : super(key: key);

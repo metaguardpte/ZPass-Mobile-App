@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/res/resources.dart';
 
-/// 间隔
-/// 官方做法：https://github.com/flutter/flutter/pull/54394
+/// Gaps
+/// Official solution：https://github.com/flutter/flutter/pull/54394
 class Gaps {
   
-  /// 水平间隔
+  /// horizontal
   static const Widget hGap4 = SizedBox(width: Dimens.gap_dp4);
   static const Widget hGap5 = SizedBox(width: Dimens.gap_dp5);
   static const Widget hGap8 = SizedBox(width: Dimens.gap_dp8);
@@ -16,7 +16,7 @@ class Gaps {
   static const Widget hGap24 = SizedBox(width: Dimens.gap_dp24);
   static const Widget hGap32 = SizedBox(width: Dimens.gap_dp32);
   
-  /// 垂直间隔
+  /// vertical
   static const Widget vGap4 = SizedBox(height: Dimens.gap_dp4);
   static const Widget vGap5 = SizedBox(height: Dimens.gap_dp5);
   static const Widget vGap8 = SizedBox(height: Dimens.gap_dp8);
@@ -44,7 +44,4 @@ class Gaps {
   );
   
   static const Widget empty = SizedBox.shrink();
-
-  /// 补充一种空Widget实现 https://github.com/letsar/nil
-  /// https://github.com/flutter/flutter/issues/78159
 }

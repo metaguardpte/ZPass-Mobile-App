@@ -74,10 +74,8 @@ class _UnderlinePainter extends BoxPainter {
 
   Rect _indicatorRectFor(Rect rect, TextDirection textDirection) {
     final Rect indicator = insets.resolve(textDirection).deflateRect(rect);
-    //希望的宽度
-    double wantWidth = width;
-    //取中间坐标
-    double cw = (indicator.left + indicator.right) / 2;
+    double wantWidth = width; // desired with
+    double cw = (indicator.left + indicator.right) / 2; // compute center coordinate
     double top = arrange == IndicatorArrange.bottom ? indicator.bottom - borderSide.width : indicator.top;
     return Rect.fromLTWH(cw - wantWidth / 2, top, wantWidth, borderSide.width);
   }

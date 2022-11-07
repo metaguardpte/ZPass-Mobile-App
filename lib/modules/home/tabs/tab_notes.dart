@@ -50,7 +50,6 @@ class _TabNotesPageState extends TabBasePageState<TabNotesPage,
 
   @override
   void onItemClicked(VaultItemWrapper item) {
-    // TODO: implement onItemClicked
     NavigatorUtils.pushResult(context, RoutersVault.vaultSecureNotes,
         (dynamic result) {
       Log.d(

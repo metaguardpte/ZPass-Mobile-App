@@ -45,25 +45,22 @@ class ThemeProvider extends ChangeNotifier {
         brightness: isDarkMode ? Brightness.dark : Brightness.light,
         secondary: isDarkMode ? Colours.dark_app_main : Colours.app_main,
       ),
-      // Tab指示器颜色
+      // Tab indicator color
       indicatorColor: isDarkMode ? Colours.dark_app_main : Colours.app_main,
-      // 页面背景色
+      // scaffold background
       scaffoldBackgroundColor: isDarkMode ? Colours.secondBackground_dark : Colours.secondBackground,
-      // 主要用于Material背景色
+      // material background
       canvasColor: isDarkMode ? Colours.dark_material_bg : Colors.white,
-      // 文字选择色（输入框选择文字等）
       // textSelectionColor: Colours.app_main.withAlpha(70),
       // textSelectionHandleColor: Colours.app_main,
-      // 稳定版：1.23 变更(https://flutter.dev/docs/release/breaking-changes/text-selection-theme)
+      // stable 1.23 change: (https://flutter.dev/docs/release/breaking-changes/text-selection-theme)
       textSelectionTheme: TextSelectionThemeData(
         selectionColor: Colours.app_main.withAlpha(70),
         selectionHandleColor: Colours.app_main,
         cursorColor: Colours.app_main,
       ),
       textTheme: TextTheme(
-        // TextField输入文字颜色
         subtitle1: isDarkMode ? TextStyles.textDark : TextStyles.text,
-        // Text文字样式
         bodyText2: isDarkMode ? TextStyles.textDark : TextStyles.text,
         subtitle2: isDarkMode ? TextStyles.textDarkGray12 : TextStyles.textGray12,
       ),

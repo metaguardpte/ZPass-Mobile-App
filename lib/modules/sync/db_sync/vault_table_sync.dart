@@ -97,11 +97,11 @@ class VaultTableSyncUnit extends BaseTableSyncUnit<VaultItemEntity> {
 
   ///decrypt content:
   ///{
-  // 	"loginUser": "nn@tempmail.cn",
-  // 	"loginPassword": "abc123!!!",
-  // 	"oneTimePassword": "123",
-  // 	"passwordUpdateTime": "2022-10-27T01:59:55.858Z"
-  // }
+  /// 	"loginUser": "nn@tempmail.cn",
+  /// 	"loginPassword": "abc123!!!",
+  /// 	"oneTimePassword": "123",
+  /// 	"passwordUpdateTime": "2022-10-27T01:59:55.858Z"
+  ///}
   Future<LoginEntityWrapper> _toLoginWrapper(VaultItemEntity raw) async {
     var detail = raw.detail;
     var vaultItemLoginDetail = VaultItemLoginDetail.fromJson(detail);

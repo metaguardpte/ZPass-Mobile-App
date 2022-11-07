@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'routers.dart';
 
-/// fluro的路由跳转工具类
 class NavigatorUtils {
   
   static void push(BuildContext context, String path,
@@ -40,26 +39,23 @@ class NavigatorUtils {
     });
   }
 
-  /// 返回
   static void goBack(BuildContext context) {
     unfocus();
     Navigator.pop(context);
   }
 
-  /// 带参数返回
   static void goBackWithParams(BuildContext context, Object result) {
     unfocus();
     Navigator.pop<Object>(context, result);
   }
   
-  /// 跳到WebView页
   static void goWebViewPage(BuildContext context, String title, String url) {
-    //fluro 不支持传中文,需转换
+    //chinese is unsupported in Fluro, encode all parameters
     push(context, '${Routers.webViewPage}?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(url)}');
   }
 
   static void unfocus() {
-    // 使用下面的方式，会触发不必要的build。
+    // this solution will trigger unnecessary build
     // FocusScope.of(context).unfocus();
     // https://github.com/flutter/flutter/issues/47128#issuecomment-627551073
     FocusManager.instance.primaryFocus?.unfocus();

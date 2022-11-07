@@ -45,7 +45,7 @@ class RegisterProvider extends BaseProvider {
     notifyListeners();
   }
 
-  // 注册步骤索引
+  // register step index
   int _stepIndex = 0;
   int get stepIndex => _stepIndex;
   set stepIndex(int index) {
@@ -98,7 +98,7 @@ class RegisterProvider extends BaseProvider {
     _secretKey = value;
   }
 
-  // 构建二维码链接
+  // generate QRCode url
   String get buildQRCodeUrl => "${AppConfig.zpassDownloadUrl}?email=$email&secretKey=$secretKey";
 
   Map<String, dynamic> _activationPayload = {};

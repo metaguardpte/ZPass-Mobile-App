@@ -10,7 +10,7 @@ class BaseProvider with ChangeNotifier {
 
   /// add [StreamSubscription] to [compositeSubscription]
   ///
-  /// 在 [dispose]的时候能进行取消
+  /// dispose subscriptions in [dispose]
   addSubscription(StreamSubscription subscription){
     compositeSubscription.add(subscription);
   }

@@ -28,7 +28,7 @@ class _HomePageState extends ProviderState<HomePage, HomeProvider>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      /// 显示状态栏和导航栏
+      /// display status bar and navigation bar
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     });
     WidgetsBinding.instance.addObserver(this);
@@ -68,7 +68,7 @@ class _HomePageState extends ProviderState<HomePage, HomeProvider>
 
   Widget _buildPageView() {
     return PageView(
-      physics: const NeverScrollableScrollPhysics(), // 禁止滑动
+      physics: const NeverScrollableScrollPhysics(), // never scroll
       controller: _pageController,
       onPageChanged: (int index) => provider.homeTabIndex = index,
       children: _pageList,

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:zpass/widgets/dialog/zpass_loading_dialog.dart';
 
-/// 使用：
-/// 自定义 dialog 可继承 LinkFoxDialog，然后在 build 函数构造一个 Widget 即可，里面就可以随便玩了
-/// 无需更新状态 - 可参考：LoadingDialog 的实现
-/// 需更新状态 - 可参考：ProgressDialog 的实现
+/// Usage:
+/// Extends ZPassDialog，build widget in build function.
+/// For stateless, check [ZPassLoadingDialog];
 abstract class ZPassDialog {
   var _isShowing = false;
 
-  /// barrierDismissible：点击空白处 or 点击返回键 消失，默认为 true = 消失
-  /// pauseBackground：是否pause背景widget（上一个页面）
+  /// barrierDismissible: click outside or press back to dismiss
   Future<bool> show(BuildContext context,
       {bool barrierDismissible = true,
       Color barrierColor = const Color(0x80000000),
@@ -31,7 +30,6 @@ abstract class ZPassDialog {
       routeSettings: const RouteSettings(name: "zpass_dialog"),
       builder: (context) {
         return WillPopScope(
-            //返回键事件拦截
             onWillPop: () async => barrierDismissible,
             child: Scaffold(
               backgroundColor: Colors.transparent,

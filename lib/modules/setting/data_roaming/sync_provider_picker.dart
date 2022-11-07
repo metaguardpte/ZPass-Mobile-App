@@ -14,8 +14,8 @@ class SyncProviderPicker extends ZPassPickerDialog<SyncProviderType> {
   final SyncProviderType? onSelect;
   @override
   Widget renderItem(BuildContext context, SyncProviderType item, int index) {
-    var Account = UserProvider().settings.data.syncAccount;
-    Log.d('Account------:${Account}');
+    var account = UserProvider().settings.data.syncAccount;
+    Log.d('Account------:$account');
     return Container(
       margin:const EdgeInsets.only(left: 24,right: 24),
       alignment: Alignment.centerLeft,
@@ -39,7 +39,7 @@ class SyncProviderPicker extends ZPassPickerDialog<SyncProviderType> {
           const Spacer(),
           onSelect?.name == item.name ? Row(
             children: [
-              Text(Account ?? ''),
+              Text(account ?? ''),
               Gaps.hGap4,
               const Icon(
                 Icons.check,

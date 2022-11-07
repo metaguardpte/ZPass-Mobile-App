@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:zpass/modules/user/register/widgets/zpass_register_textfield.dart';
+import 'package:zpass/generated/l10n.dart';
 import 'package:zpass/res/gaps.dart';
 import 'package:zpass/util/callback_funcation.dart';
 import 'package:zpass/util/theme_utils.dart';
 import 'package:zpass/widgets/dialog/zpass_dialog.dart';
-import 'package:zpass/widgets/zpass_edittext.dart';
 import 'package:zpass/widgets/zpass_form_edittext.dart';
-
-import '../../generated/l10n.dart';
 
 class ZPassConfirmDialog extends ZPassDialog {
   final String? message;

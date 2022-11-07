@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zpass/modules/home/model/vault_item_entity.dart';
-import 'package:zpass/modules/home/tabs/tab_widget_helper.dart';
-import 'package:zpass/modules/vault/vault_detail_helper.dart';
 import 'package:zpass/res/zpass_icons.dart';
-import 'package:zpass/util/theme_utils.dart';
 
 Widget buildSecureNotesIcon(BuildContext context, VaultItemEntity? entity) {
   return Container(

@@ -31,7 +31,7 @@ class _GeneralWidgetState extends State<GeneralWidget> {
   void initSync(){
     var syncProvider = UserProvider().settings.data.syncProvider;
     var syncType = UserProvider().settings.data.backupAndSync;
-    Log.d('provider:${syncProvider} syncType:${syncType}');
+    Log.d('provider:$syncProvider syncType:$syncType');
     if (syncProvider != null && (syncType ?? false)) {
       _syncProviderType = SyncProviderType.values
           .firstWhere((element) => element.name == syncProvider);
